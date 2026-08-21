@@ -1,4 +1,4 @@
-import { writeFileSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import type { SchoolsResponse } from "./types.js";
@@ -69,33 +69,19 @@ const html = `<!DOCTYPE html>
     <h4>Record Type</h4>
     ${legend}
   </div>
-  <script>
-    const points = ${JSON.stringify(points)};
-
-    const map = L.map('map').setView([40.7128, -74.006], 10);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19,
-    }).addTo(map);
-
-    for (const p of points) {
-      L.circleMarker([p.lat, p.lng], {
-        radius: 5,
-        fillColor: p.color,
-        color: '#fff',
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.85,
-      })
-        .bindPopup(\`<b>\${p.name}</b><br>\${p.type}<br>\${p.address}, \${p.city}\`)
-        .addTo(map);
-    }
-  </script>
+  <script>const __points = ${JSON.stringify(points)};</script>
+  <script src="./map-client.js"></script>
 </body>
 </html>`;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const outPath = resolve(__dirname, "../map.html");
+const outDir = resolve(__dirname, "..");
+
+const outPath = resolve(outDir, "map.html");
 writeFileSync(outPath, html, "utf-8");
-console.log(`Written to ${outPath}`);
+
+const clientSrc = resolve(__dirname, "map-client.js");
+const clientOut = resolve(outDir, "map-client.js");
+writeFileSync(clientOut, readFileSync(clientSrc, "utf-8"), "utf-8");
+
+console.log(`Written to ${outPath} + map-client.js`);
