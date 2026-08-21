@@ -1,3 +1,4 @@
+"use strict";
 const map = L.map("map").setView([40.7128, -74.006], 10);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -15,4 +16,3 @@ for (const p of __points) {
         .bindPopup(`<b>${p.name}</b><br>${p.type}<br>${p.address}, ${p.city}`)
         .addTo(map);
 }
-export {};

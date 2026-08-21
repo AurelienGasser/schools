@@ -1,12 +1,10 @@
-import type { SchoolFeature } from "./types.js";
-
 declare const L: any;
 declare const __points: Array<{
   lat: number;
   lng: number;
   color: string;
   name: string;
-  type: SchoolFeature["attributes"]["RECORD_TYPE_DESC"];
+  type: string;
   city: string;
   address: string;
 }>;
