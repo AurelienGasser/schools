@@ -1,6 +1,7 @@
-import { writeFileSync, readFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
+import { execSync } from "node:child_process";
 import type { SchoolsResponse } from "./types.js";
 import schoolsJson from "../data/schools.json" with { type: "json" };
 
@@ -80,8 +81,10 @@ const outDir = resolve(__dirname, "..");
 const outPath = resolve(outDir, "map.html");
 writeFileSync(outPath, html, "utf-8");
 
-const clientSrc = resolve(__dirname, "map-client.js");
-const clientOut = resolve(outDir, "map-client.js");
-writeFileSync(clientOut, readFileSync(clientSrc, "utf-8"), "utf-8");
+const clientSrc = resolve(__dirname, "map-client.ts");
+execSync(
+  `pnpm exec tsc --target ES2022 --module ESNext --outDir ${outDir} --skipLibCheck --ignoreConfig ${clientSrc}`,
+  { stdio: "inherit" },
+);
 
 console.log(`Written to ${outPath} + map-client.js`);

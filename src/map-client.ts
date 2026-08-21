@@ -1,4 +1,15 @@
-// __points is injected by map.ts as a global before this script runs
+import type { SchoolFeature } from "./types.js";
+
+declare const L: any;
+declare const __points: Array<{
+  lat: number;
+  lng: number;
+  color: string;
+  name: string;
+  type: SchoolFeature["attributes"]["RECORD_TYPE_DESC"];
+  city: string;
+  address: string;
+}>;
 
 const map = L.map("map").setView([40.7128, -74.006], 10);
 
