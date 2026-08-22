@@ -101,10 +101,10 @@ function zoneCoords(name: string): ClipCoords {
   return polygons[name].flatMap((e) => e.coordinates) as ClipCoords;
 }
 
-// Compute the ring for each zone by subtracting the previous (smaller) zone
-const orderedZones = zonesSorted.map((z, i) => {
+// Rings mode: subtract each smaller zone from the next to get non-overlapping bands
+const ringZones = zonesSorted.map((z, i) => {
   const current = zoneCoords(z.name);
-  const ringCoords =
+  const coords =
     i === 0
       ? current
       : (polygonClipping.difference(current, zoneCoords(zonesSorted[i - 1].name)) as number[][][][]);
@@ -112,9 +112,19 @@ const orderedZones = zonesSorted.map((z, i) => {
     name: z.name,
     minutes: z.minutes,
     color: ZONE_COLORS[i] ?? "#6b7280",
-    entries: [{ coordinates: ringCoords }],
+    entries: [{ coordinates: coords }],
   };
 });
+
+// Cumulative mode: raw polygons largest-first so each smaller zone paints on top
+const cumulativeZones = [...zonesSorted]
+  .map((z, i) => ({
+    name: z.name,
+    minutes: z.minutes,
+    color: ZONE_COLORS[i] ?? "#6b7280",
+    entries: polygons[z.name].map((e) => ({ coordinates: e.coordinates })),
+  }))
+  .reverse();
 
 function commuteLabel(lng: number, lat: number): string {
   for (let i = 0; i < zonesSorted.length; i++) {
@@ -228,14 +238,19 @@ const html = `<!DOCTYPE html>
         <label class="toggle-row"><input type="checkbox" id="toggle-pins" checked />Pins</label>
         <label class="toggle-row"><input type="checkbox" id="toggle-circles" />Coverage circles</label>
       </div>
-        <label class="toggle-row"><input type="checkbox" id="toggle-polygons" checked />Commute zones</label>
+      <div class="control-section-label">Commute zones</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label class="radio-row"><input type="radio" name="zone-mode" value="none" />None</label>
+        <label class="radio-row"><input type="radio" name="zone-mode" value="rings" checked />Rings</label>
+        <label class="radio-row"><input type="radio" name="zone-mode" value="cumulative" />Overlapping</label>
+      </div>
     </div>
   </div>
   <div id="legend">
     <h4>Record Type</h4>
     ${legend}
   </div>
-  <script>const __points = ${JSON.stringify(points)};const __polygons = ${JSON.stringify(orderedZones)};</script>
+  <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones, cumulative: cumulativeZones })};</script>
   <script src="./map-client.js"></script>
 </body>
 </html>`;

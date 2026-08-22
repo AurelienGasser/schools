@@ -9,12 +9,13 @@ declare const __points: Array<{
   address: string;
   commute: string;
 }>;
-declare const __polygons: Array<{
+type ZoneSet = Array<{
   name: string;
   minutes: number;
   color: string;
   entries: Array<{ coordinates: number[][][][] }>;
 }>;
+declare const __polygonSets: { rings: ZoneSet; cumulative: ZoneSet };
 
 const MILES_TO_METERS = 1609.34;
 
@@ -29,25 +30,28 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 const circleLayer = L.layerGroup();
 const pinLayer = L.layerGroup().addTo(map);
 
-// Render all zones largest-first so each smaller zone paints on top, producing ring effect
-const polygonLayer = L.layerGroup().addTo(map);
-for (const zone of __polygons) {
-  for (const entry of zone.entries) {
-    L.geoJSON(
-      { type: "MultiPolygon", coordinates: entry.coordinates },
-      {
-        style: {
-          color: zone.color,
-          weight: 1.5,
-          opacity: 0.6,
-          fillColor: zone.color,
-          fillOpacity: 0.25,
+function buildLayer(zones: ZoneSet): any {
+  const layer = L.layerGroup();
+  for (const zone of zones) {
+    for (const entry of zone.entries) {
+      L.geoJSON(
+        { type: "MultiPolygon", coordinates: entry.coordinates },
+        {
+          style: { color: zone.color, weight: 1.5, opacity: 0.6, fillColor: zone.color, fillOpacity: 0.25 },
+          interactive: false,
         },
-        interactive: false,
-      },
-    ).addTo(polygonLayer);
+      ).addTo(layer);
+    }
   }
+  return layer;
 }
+
+const polygonLayers = {
+  rings: buildLayer(__polygonSets.rings),
+  cumulative: buildLayer(__polygonSets.cumulative),
+};
+let activePolygonLayer: any = polygonLayers.rings;
+map.addLayer(activePolygonLayer);
 
 // Geo-referenced coverage zones (radius in meters, scales with zoom)
 const zones = __points.map((p) =>
@@ -104,13 +108,22 @@ document.getElementById("panel-header")!.addEventListener("click", () => {
 for (const [id, layer] of [
   ["toggle-pins", pinLayer],
   ["toggle-circles", circleLayer],
-  ["toggle-polygons", polygonLayer],
 ] as Array<[string, any]>) {
   document.getElementById(id)!.addEventListener("change", (e) => {
     if ((e.target as HTMLInputElement).checked) map.addLayer(layer);
     else map.removeLayer(layer);
   });
 }
+
+// Zone mode radio buttons
+document.querySelectorAll('input[name="zone-mode"]').forEach((el) => {
+  el.addEventListener("change", (e) => {
+    const value = (e.target as HTMLInputElement).value as "none" | "rings" | "cumulative";
+    if (activePolygonLayer) map.removeLayer(activePolygonLayer);
+    activePolygonLayer = value === "none" ? null : polygonLayers[value];
+    if (activePolygonLayer) map.addLayer(activePolygonLayer);
+  });
+});
 
 // Radius slider
 const slider = document.getElementById("radius-slider") as HTMLInputElement;
