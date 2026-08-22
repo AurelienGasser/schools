@@ -8,6 +8,11 @@ declare const __points: Array<{
   city: string;
   address: string;
 }>;
+declare const __polygons: Array<{
+  coordinates: number[][][][];
+  color: string;
+  label: string;
+}>;
 
 const MILES_TO_METERS = 1609.34;
 
@@ -17,6 +22,28 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   maxZoom: 19,
 }).addTo(map);
+
+const polygonLayer = L.layerGroup().addTo(map);
+const circleLayer = L.layerGroup().addTo(map);
+const pinLayer = L.layerGroup().addTo(map);
+
+// MultiPolygon boundaries from data/polygons/
+for (const poly of __polygons) {
+  L.geoJSON(
+    { type: "MultiPolygon", coordinates: poly.coordinates },
+    {
+      style: {
+        color: poly.color,
+        weight: 2,
+        opacity: 0.7,
+        fillColor: poly.color,
+        fillOpacity: 0.1,
+      },
+    },
+  )
+    .bindPopup(poly.label)
+    .addTo(polygonLayer);
+}
 
 // Geo-referenced coverage zones (radius in meters, scales with zoom)
 const zones = __points.map((p) =>
@@ -28,7 +55,7 @@ const zones = __points.map((p) =>
     fillOpacity: 0.08,
     opacity: 0.2,
     interactive: false,
-  }).addTo(map),
+  }).addTo(circleLayer),
 );
 
 let selectedZone: any = null;
@@ -56,7 +83,7 @@ __points.forEach((p, i) => {
       selectedZone = zones[i];
       selectedZone.setStyle({ opacity: 0.85 });
     })
-    .addTo(map);
+    .addTo(pinLayer);
 });
 
 map.on("click", deselect);
@@ -66,6 +93,19 @@ const panel = document.getElementById("panel")!;
 document.getElementById("panel-header")!.addEventListener("click", () => {
   panel.classList.toggle("collapsed");
 });
+
+// Layer toggles
+const toggles: Array<[string, any]> = [
+  ["toggle-pins", pinLayer],
+  ["toggle-circles", circleLayer],
+  ["toggle-polygons", polygonLayer],
+];
+for (const [id, layer] of toggles) {
+  document.getElementById(id)!.addEventListener("change", (e) => {
+    if ((e.target as HTMLInputElement).checked) map.addLayer(layer);
+    else map.removeLayer(layer);
+  });
+}
 
 // Radius slider
 const slider = document.getElementById("radius-slider") as HTMLInputElement;

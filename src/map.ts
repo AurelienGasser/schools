@@ -1,4 +1,4 @@
-import { writeFileSync } from "fs";
+import { writeFileSync, readdirSync, readFileSync, existsSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "node:child_process";
@@ -29,6 +29,45 @@ const points = features.map((f) => ({
   city: f.attributes.PHYSCITY,
   address: f.attributes.PHYSADDRLINE1,
 }));
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const outDir = resolve(__dirname, "..");
+
+type PolygonEntry = {
+  coordinates: number[][][][];
+  color: string;
+  label: string;
+};
+
+const polygonsDir = resolve(__dirname, "../data/polygons");
+const polygons: PolygonEntry[] = existsSync(polygonsDir)
+  ? readdirSync(polygonsDir)
+      .filter((f) => f.endsWith(".json"))
+      .flatMap((f) => {
+        const raw = JSON.parse(readFileSync(resolve(polygonsDir, f), "utf-8"));
+        const label = f.replace(/\.json$/, "");
+        const features =
+          raw.type === "FeatureCollection"
+            ? raw.features
+            : raw.type === "Feature"
+              ? [raw]
+              : [{ geometry: raw, properties: {} }];
+        return features
+          .filter(
+            (feat: any) =>
+              feat.geometry?.type === "MultiPolygon" ||
+              feat.geometry?.type === "Polygon",
+          )
+          .map((feat: any) => ({
+            coordinates:
+              feat.geometry.type === "MultiPolygon"
+                ? feat.geometry.coordinates
+                : [feat.geometry.coordinates],
+            color: feat.properties?.color ?? "#10b981",
+            label: feat.properties?.label ?? feat.properties?.name ?? label,
+          }));
+      })
+  : [];
 
 const legend = Object.entries(COLORS)
   .map(
@@ -96,6 +135,8 @@ const html = `<!DOCTYPE html>
     .control-row { display: flex; flex-direction: column; gap: 6px; }
     .control-label { display: flex; justify-content: space-between; color: #444; }
     input[type=range] { width: 100%; accent-color: #3b82f6; }
+    .toggle-row { display: flex; align-items: center; gap: 8px; color: #444; cursor: pointer; }
+    .toggle-row input[type=checkbox] { accent-color: #3b82f6; width: 14px; height: 14px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -111,19 +152,21 @@ const html = `<!DOCTYPE html>
         </label>
         <input type="range" id="radius-slider" min="0.1" max="1.5" value="0.3" step="0.05" />
       </div>
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
+        <label class="toggle-row"><input type="checkbox" id="toggle-pins" checked />Pins</label>
+        <label class="toggle-row"><input type="checkbox" id="toggle-circles" checked />Coverage circles</label>
+        <label class="toggle-row"><input type="checkbox" id="toggle-polygons" checked />Polygons</label>
+      </div>
     </div>
   </div>
   <div id="legend">
     <h4>Record Type</h4>
     ${legend}
   </div>
-  <script>const __points = ${JSON.stringify(points)};</script>
+  <script>const __points = ${JSON.stringify(points)};const __polygons = ${JSON.stringify(polygons)};</script>
   <script src="./map-client.js"></script>
 </body>
 </html>`;
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const outDir = resolve(__dirname, "..");
 
 const outPath = resolve(outDir, "map.html");
 writeFileSync(outPath, html, "utf-8");

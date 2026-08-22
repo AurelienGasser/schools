@@ -5,6 +5,23 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxZoom: 19,
 }).addTo(map);
+const polygonLayer = L.layerGroup().addTo(map);
+const circleLayer = L.layerGroup().addTo(map);
+const pinLayer = L.layerGroup().addTo(map);
+// MultiPolygon boundaries from data/polygons/
+for (const poly of __polygons) {
+    L.geoJSON({ type: "MultiPolygon", coordinates: poly.coordinates }, {
+        style: {
+            color: poly.color,
+            weight: 2,
+            opacity: 0.7,
+            fillColor: poly.color,
+            fillOpacity: 0.1,
+        },
+    })
+        .bindPopup(poly.label)
+        .addTo(polygonLayer);
+}
 // Geo-referenced coverage zones (radius in meters, scales with zoom)
 const zones = __points.map((p) => L.circle([p.lat, p.lng], {
     radius: 0.5 * MILES_TO_METERS,
@@ -14,7 +31,7 @@ const zones = __points.map((p) => L.circle([p.lat, p.lng], {
     fillOpacity: 0.08,
     opacity: 0.2,
     interactive: false,
-}).addTo(map));
+}).addTo(circleLayer));
 let selectedZone = null;
 const deselect = () => {
     if (selectedZone) {
@@ -38,7 +55,7 @@ __points.forEach((p, i) => {
         selectedZone = zones[i];
         selectedZone.setStyle({ opacity: 0.85 });
     })
-        .addTo(map);
+        .addTo(pinLayer);
 });
 map.on("click", deselect);
 // Collapsible panel
@@ -46,6 +63,20 @@ const panel = document.getElementById("panel");
 document.getElementById("panel-header").addEventListener("click", () => {
     panel.classList.toggle("collapsed");
 });
+// Layer toggles
+const toggles = [
+    ["toggle-pins", pinLayer],
+    ["toggle-circles", circleLayer],
+    ["toggle-polygons", polygonLayer],
+];
+for (const [id, layer] of toggles) {
+    document.getElementById(id).addEventListener("change", (e) => {
+        if (e.target.checked)
+            map.addLayer(layer);
+        else
+            map.removeLayer(layer);
+    });
+}
 // Radius slider
 const slider = document.getElementById("radius-slider");
 const radiusLabel = document.getElementById("radius-value");
