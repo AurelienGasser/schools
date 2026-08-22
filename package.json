@@ -26,6 +26,7 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "lodash": "^4.18.1"
+    "lodash": "^4.18.1",
+    "polygon-clipping": "^0.15.7"
   }
 }

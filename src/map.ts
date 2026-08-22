@@ -2,6 +2,7 @@ import { writeFileSync, readdirSync, readFileSync, existsSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "node:child_process";
+import polygonClipping from "polygon-clipping";
 import type { SchoolsResponse } from "./types.js";
 import schoolsJson from "../data/schools.json" with { type: "json" };
 
@@ -91,18 +92,29 @@ const zonesSorted = polygonFiles
   .filter((z) => !isNaN(z.minutes))
   .sort((a, b) => a.minutes - b.minutes);
 
-// Colors assigned in ascending order (green → orange → red); rendered largest-first so each paints over the previous
+// Colors assigned in ascending order: green (close) → orange → red (far)
 const ZONE_COLORS = ["#22c55e", "#16a34a", "#ca8a04", "#f97316", "#ef4444"];
 
-// Largest-first so each smaller zone paints on top, creating a ring effect with no geometry subtraction
-const orderedZones = [...zonesSorted]
-  .map((z, i) => ({
+type ClipCoords = [number, number][][][];
+
+function zoneCoords(name: string): ClipCoords {
+  return polygons[name].flatMap((e) => e.coordinates) as ClipCoords;
+}
+
+// Compute the ring for each zone by subtracting the previous (smaller) zone
+const orderedZones = zonesSorted.map((z, i) => {
+  const current = zoneCoords(z.name);
+  const ringCoords =
+    i === 0
+      ? current
+      : (polygonClipping.difference(current, zoneCoords(zonesSorted[i - 1].name)) as number[][][][]);
+  return {
     name: z.name,
     minutes: z.minutes,
     color: ZONE_COLORS[i] ?? "#6b7280",
-    entries: polygons[z.name].map((e) => ({ coordinates: e.coordinates })),
-  }))
-  .reverse();
+    entries: [{ coordinates: ringCoords }],
+  };
+});
 
 function commuteLabel(lng: number, lat: number): string {
   for (let i = 0; i < zonesSorted.length; i++) {
