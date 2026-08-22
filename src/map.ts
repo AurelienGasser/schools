@@ -20,16 +20,6 @@ const features = schools.features.filter(
   (f) => f.geometry?.x != null && f.geometry?.y != null,
 );
 
-const points = features.map((f) => ({
-  lng: f.geometry.x,
-  lat: f.geometry.y,
-  color: COLORS[f.attributes.RECORD_TYPE_DESC] ?? DEFAULT_COLOR,
-  name: f.attributes.LEGAL_NAME,
-  type: f.attributes.RECORD_TYPE_DESC,
-  city: f.attributes.PHYSCITY,
-  address: f.attributes.PHYSADDRLINE1,
-}));
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const outDir = resolve(__dirname, "..");
 
@@ -75,6 +65,53 @@ const polygonFiles: string[] = existsSync(polygonsDir)
 const polygons: Record<string, PolygonEntry[]> = Object.fromEntries(
   polygonFiles.map((name) => [name, loadPolygonFile(`${name}.json`)]),
 );
+
+function pointInRing(x: number, y: number, ring: number[][]): boolean {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i];
+    const [xj, yj] = ring[j];
+    if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
+      inside = !inside;
+  }
+  return inside;
+}
+
+function pointInMultiPolygon(x: number, y: number, coords: number[][][][]): boolean {
+  return coords.some(
+    (polygon) =>
+      pointInRing(x, y, polygon[0]) &&
+      polygon.slice(1).every((hole) => !pointInRing(x, y, hole)),
+  );
+}
+
+// Zones sorted ascending by minute value parsed from filename (e.g. "30-min" → 30)
+const zonesSorted = polygonFiles
+  .map((name) => ({ name, minutes: parseInt(name) }))
+  .filter((z) => !isNaN(z.minutes))
+  .sort((a, b) => a.minutes - b.minutes);
+
+function commuteLabel(lng: number, lat: number): string {
+  for (let i = 0; i < zonesSorted.length; i++) {
+    const { name, minutes } = zonesSorted[i];
+    if (polygons[name].some((e) => pointInMultiPolygon(lng, lat, e.coordinates))) {
+      return i === 0 ? `< ${minutes} min` : `${zonesSorted[i - 1].minutes}–${minutes} min`;
+    }
+  }
+  const last = zonesSorted.at(-1);
+  return last ? `> ${last.minutes} min` : "";
+}
+
+const points = features.map((f) => ({
+  lng: f.geometry.x,
+  lat: f.geometry.y,
+  color: COLORS[f.attributes.RECORD_TYPE_DESC] ?? DEFAULT_COLOR,
+  name: f.attributes.LEGAL_NAME,
+  type: f.attributes.RECORD_TYPE_DESC,
+  city: f.attributes.PHYSCITY,
+  address: f.attributes.PHYSADDRLINE1,
+  commute: zonesSorted.length ? commuteLabel(f.geometry.x, f.geometry.y) : "",
+}));
 
 const legend = Object.entries(COLORS)
   .map(

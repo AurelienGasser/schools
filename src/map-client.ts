@@ -7,6 +7,7 @@ declare const __points: Array<{
   type: string;
   city: string;
   address: string;
+  commute: string;
 }>;
 declare const __polygons: Record<
   string,
@@ -80,7 +81,7 @@ __points.forEach((p, i) => {
     opacity: 1,
     fillOpacity: 0.85,
   })
-    .bindPopup(`<b>${p.name}</b><br>${p.type}<br>${p.address}, ${p.city}`)
+    .bindPopup(`<b>${p.name}</b><br>${p.type}<br>${p.address}, ${p.city}${p.commute ? `<br>Commute: <b>${p.commute}</b>` : ""}`)
     .on("click", () => {
       deselect();
       selectedZone = zones[i];
