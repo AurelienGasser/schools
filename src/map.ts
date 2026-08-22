@@ -91,6 +91,19 @@ const zonesSorted = polygonFiles
   .filter((z) => !isNaN(z.minutes))
   .sort((a, b) => a.minutes - b.minutes);
 
+// Colors assigned in ascending order (green → orange → red); rendered largest-first so each paints over the previous
+const ZONE_COLORS = ["#22c55e", "#16a34a", "#ca8a04", "#f97316", "#ef4444"];
+
+// Largest-first so each smaller zone paints on top, creating a ring effect with no geometry subtraction
+const orderedZones = [...zonesSorted]
+  .map((z, i) => ({
+    name: z.name,
+    minutes: z.minutes,
+    color: ZONE_COLORS[i] ?? "#6b7280",
+    entries: polygons[z.name].map((e) => ({ coordinates: e.coordinates })),
+  }))
+  .reverse();
+
 function commuteLabel(lng: number, lat: number): string {
   for (let i = 0; i < zonesSorted.length; i++) {
     const { name, minutes } = zonesSorted[i];
@@ -203,18 +216,14 @@ const html = `<!DOCTYPE html>
         <label class="toggle-row"><input type="checkbox" id="toggle-pins" checked />Pins</label>
         <label class="toggle-row"><input type="checkbox" id="toggle-circles" />Coverage circles</label>
       </div>
-      <div class="control-section-label">Polygons</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <label class="radio-row"><input type="radio" name="polygon-file" value="" checked />None</label>
-        ${polygonFiles.map((name) => `<label class="radio-row"><input type="radio" name="polygon-file" value="${name}" />${name}</label>`).join("\n        ")}
-      </div>
+        <label class="toggle-row"><input type="checkbox" id="toggle-polygons" checked />Commute zones</label>
     </div>
   </div>
   <div id="legend">
     <h4>Record Type</h4>
     ${legend}
   </div>
-  <script>const __points = ${JSON.stringify(points)};const __polygons = ${JSON.stringify(polygons)};</script>
+  <script>const __points = ${JSON.stringify(points)};const __polygons = ${JSON.stringify(orderedZones)};</script>
   <script src="./map-client.js"></script>
 </body>
 </html>`;

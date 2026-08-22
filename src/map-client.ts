@@ -9,10 +9,12 @@ declare const __points: Array<{
   address: string;
   commute: string;
 }>;
-declare const __polygons: Record<
-  string,
-  Array<{ coordinates: number[][][][]; color: string; label: string }>
->;
+declare const __polygons: Array<{
+  name: string;
+  minutes: number;
+  color: string;
+  entries: Array<{ coordinates: number[][][][] }>;
+}>;
 
 const MILES_TO_METERS = 1609.34;
 
@@ -27,26 +29,24 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 const circleLayer = L.layerGroup();
 const pinLayer = L.layerGroup().addTo(map);
 
-// One layer group per polygon file; none added to map initially (radio defaults to "None")
-const polygonLayers: Record<string, any> = {};
-for (const [name, polys] of Object.entries(__polygons)) {
-  const group = L.layerGroup();
-  for (const poly of polys) {
+// Render all zones largest-first so each smaller zone paints on top, producing ring effect
+const polygonLayer = L.layerGroup().addTo(map);
+for (const zone of __polygons) {
+  for (const entry of zone.entries) {
     L.geoJSON(
-      { type: "MultiPolygon", coordinates: poly.coordinates },
+      { type: "MultiPolygon", coordinates: entry.coordinates },
       {
         style: {
-          color: poly.color,
-          weight: 2,
-          opacity: 0.7,
-          fillColor: poly.color,
-          fillOpacity: 0.1,
+          color: zone.color,
+          weight: 1.5,
+          opacity: 0.6,
+          fillColor: zone.color,
+          fillOpacity: 0.25,
         },
         interactive: false,
       },
-    ).addTo(group);
+    ).addTo(polygonLayer);
   }
-  polygonLayers[name] = group;
 }
 
 // Geo-referenced coverage zones (radius in meters, scales with zoom)
@@ -104,23 +104,13 @@ document.getElementById("panel-header")!.addEventListener("click", () => {
 for (const [id, layer] of [
   ["toggle-pins", pinLayer],
   ["toggle-circles", circleLayer],
+  ["toggle-polygons", polygonLayer],
 ] as Array<[string, any]>) {
   document.getElementById(id)!.addEventListener("change", (e) => {
     if ((e.target as HTMLInputElement).checked) map.addLayer(layer);
     else map.removeLayer(layer);
   });
 }
-
-// Polygon file radio buttons
-let activePolygonLayer: any = null;
-document.querySelectorAll('input[name="polygon-file"]').forEach((el) => {
-  el.addEventListener("change", (e) => {
-    if (activePolygonLayer) map.removeLayer(activePolygonLayer);
-    const value = (e.target as HTMLInputElement).value;
-    activePolygonLayer = polygonLayers[value] ?? null;
-    if (activePolygonLayer) map.addLayer(activePolygonLayer);
-  });
-});
 
 // Radius slider
 const slider = document.getElementById("radius-slider") as HTMLInputElement;

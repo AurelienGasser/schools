@@ -7,23 +7,21 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 const circleLayer = L.layerGroup();
 const pinLayer = L.layerGroup().addTo(map);
-// One layer group per polygon file; none added to map initially (radio defaults to "None")
-const polygonLayers = {};
-for (const [name, polys] of Object.entries(__polygons)) {
-    const group = L.layerGroup();
-    for (const poly of polys) {
-        L.geoJSON({ type: "MultiPolygon", coordinates: poly.coordinates }, {
+// Render all zones largest-first so each smaller zone paints on top, producing ring effect
+const polygonLayer = L.layerGroup().addTo(map);
+for (const zone of __polygons) {
+    for (const entry of zone.entries) {
+        L.geoJSON({ type: "MultiPolygon", coordinates: entry.coordinates }, {
             style: {
-                color: poly.color,
-                weight: 2,
-                opacity: 0.7,
-                fillColor: poly.color,
-                fillOpacity: 0.1,
+                color: zone.color,
+                weight: 1.5,
+                opacity: 0.6,
+                fillColor: zone.color,
+                fillOpacity: 0.25,
             },
             interactive: false,
-        }).addTo(group);
+        }).addTo(polygonLayer);
     }
-    polygonLayers[name] = group;
 }
 // Geo-referenced coverage zones (radius in meters, scales with zoom)
 const zones = __points.map((p) => L.circle([p.lat, p.lng], {
@@ -70,6 +68,7 @@ document.getElementById("panel-header").addEventListener("click", () => {
 for (const [id, layer] of [
     ["toggle-pins", pinLayer],
     ["toggle-circles", circleLayer],
+    ["toggle-polygons", polygonLayer],
 ]) {
     document.getElementById(id).addEventListener("change", (e) => {
         if (e.target.checked)
@@ -78,18 +77,6 @@ for (const [id, layer] of [
             map.removeLayer(layer);
     });
 }
-// Polygon file radio buttons
-let activePolygonLayer = null;
-document.querySelectorAll('input[name="polygon-file"]').forEach((el) => {
-    el.addEventListener("change", (e) => {
-        if (activePolygonLayer)
-            map.removeLayer(activePolygonLayer);
-        const value = e.target.value;
-        activePolygonLayer = polygonLayers[value] ?? null;
-        if (activePolygonLayer)
-            map.addLayer(activePolygonLayer);
-    });
-});
 // Radius slider
 const slider = document.getElementById("radius-slider");
 const radiusLabel = document.getElementById("radius-value");
