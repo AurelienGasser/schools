@@ -40,34 +40,41 @@ type PolygonEntry = {
 };
 
 const polygonsDir = resolve(__dirname, "../data/polygons");
-const polygons: PolygonEntry[] = existsSync(polygonsDir)
+
+function loadPolygonFile(f: string): PolygonEntry[] {
+  const raw = JSON.parse(readFileSync(resolve(polygonsDir, f), "utf-8"));
+  const fileLabel = f.replace(/\.json$/, "");
+  const features =
+    raw.type === "FeatureCollection"
+      ? raw.features
+      : raw.type === "Feature"
+        ? [raw]
+        : [{ geometry: raw, properties: {} }];
+  return features
+    .filter(
+      (feat: any) =>
+        feat.geometry?.type === "MultiPolygon" ||
+        feat.geometry?.type === "Polygon",
+    )
+    .map((feat: any) => ({
+      coordinates:
+        feat.geometry.type === "MultiPolygon"
+          ? feat.geometry.coordinates
+          : [feat.geometry.coordinates],
+      color: feat.properties?.color ?? "#10b981",
+      label: feat.properties?.label ?? feat.properties?.name ?? fileLabel,
+    }));
+}
+
+const polygonFiles: string[] = existsSync(polygonsDir)
   ? readdirSync(polygonsDir)
       .filter((f) => f.endsWith(".json"))
-      .flatMap((f) => {
-        const raw = JSON.parse(readFileSync(resolve(polygonsDir, f), "utf-8"));
-        const label = f.replace(/\.json$/, "");
-        const features =
-          raw.type === "FeatureCollection"
-            ? raw.features
-            : raw.type === "Feature"
-              ? [raw]
-              : [{ geometry: raw, properties: {} }];
-        return features
-          .filter(
-            (feat: any) =>
-              feat.geometry?.type === "MultiPolygon" ||
-              feat.geometry?.type === "Polygon",
-          )
-          .map((feat: any) => ({
-            coordinates:
-              feat.geometry.type === "MultiPolygon"
-                ? feat.geometry.coordinates
-                : [feat.geometry.coordinates],
-            color: feat.properties?.color ?? "#10b981",
-            label: feat.properties?.label ?? feat.properties?.name ?? label,
-          }));
-      })
+      .map((f) => f.replace(/\.json$/, ""))
   : [];
+
+const polygons: Record<string, PolygonEntry[]> = Object.fromEntries(
+  polygonFiles.map((name) => [name, loadPolygonFile(`${name}.json`)]),
+);
 
 const legend = Object.entries(COLORS)
   .map(
@@ -137,6 +144,9 @@ const html = `<!DOCTYPE html>
     input[type=range] { width: 100%; accent-color: #3b82f6; }
     .toggle-row { display: flex; align-items: center; gap: 8px; color: #444; cursor: pointer; }
     .toggle-row input[type=checkbox] { accent-color: #3b82f6; width: 14px; height: 14px; cursor: pointer; }
+    .radio-row { display: flex; align-items: center; gap: 8px; color: #444; cursor: pointer; }
+    .radio-row input[type=radio] { accent-color: #3b82f6; width: 14px; height: 14px; cursor: pointer; }
+    .control-section-label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #888; margin-top: 10px; margin-bottom: 4px; }
   </style>
 </head>
 <body>
@@ -155,7 +165,11 @@ const html = `<!DOCTYPE html>
       <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
         <label class="toggle-row"><input type="checkbox" id="toggle-pins" checked />Pins</label>
         <label class="toggle-row"><input type="checkbox" id="toggle-circles" checked />Coverage circles</label>
-        <label class="toggle-row"><input type="checkbox" id="toggle-polygons" checked />Polygons</label>
+      </div>
+      <div class="control-section-label">Polygons</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label class="radio-row"><input type="radio" name="polygon-file" value="" checked />None</label>
+        ${polygonFiles.map((name) => `<label class="radio-row"><input type="radio" name="polygon-file" value="${name}" />${name}</label>`).join("\n        ")}
       </div>
     </div>
   </div>

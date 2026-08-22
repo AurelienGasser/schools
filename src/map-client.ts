@@ -8,11 +8,10 @@ declare const __points: Array<{
   city: string;
   address: string;
 }>;
-declare const __polygons: Array<{
-  coordinates: number[][][][];
-  color: string;
-  label: string;
-}>;
+declare const __polygons: Record<
+  string,
+  Array<{ coordinates: number[][][][]; color: string; label: string }>
+>;
 
 const MILES_TO_METERS = 1609.34;
 
@@ -23,26 +22,30 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
 }).addTo(map);
 
-const polygonLayer = L.layerGroup().addTo(map);
 const circleLayer = L.layerGroup().addTo(map);
 const pinLayer = L.layerGroup().addTo(map);
 
-// MultiPolygon boundaries from data/polygons/
-for (const poly of __polygons) {
-  L.geoJSON(
-    { type: "MultiPolygon", coordinates: poly.coordinates },
-    {
-      style: {
-        color: poly.color,
-        weight: 2,
-        opacity: 0.7,
-        fillColor: poly.color,
-        fillOpacity: 0.1,
+// One layer group per polygon file; none added to map initially (radio defaults to "None")
+const polygonLayers: Record<string, any> = {};
+for (const [name, polys] of Object.entries(__polygons)) {
+  const group = L.layerGroup();
+  for (const poly of polys) {
+    L.geoJSON(
+      { type: "MultiPolygon", coordinates: poly.coordinates },
+      {
+        style: {
+          color: poly.color,
+          weight: 2,
+          opacity: 0.7,
+          fillColor: poly.color,
+          fillOpacity: 0.1,
+        },
       },
-    },
-  )
-    .bindPopup(poly.label)
-    .addTo(polygonLayer);
+    )
+      .bindPopup(poly.label)
+      .addTo(group);
+  }
+  polygonLayers[name] = group;
 }
 
 // Geo-referenced coverage zones (radius in meters, scales with zoom)
@@ -95,17 +98,23 @@ document.getElementById("panel-header")!.addEventListener("click", () => {
 });
 
 // Layer toggles
-const toggles: Array<[string, any]> = [
-  ["toggle-pins", pinLayer],
-  ["toggle-circles", circleLayer],
-  ["toggle-polygons", polygonLayer],
-];
-for (const [id, layer] of toggles) {
+for (const [id, layer] of [["toggle-pins", pinLayer], ["toggle-circles", circleLayer]] as Array<[string, any]>) {
   document.getElementById(id)!.addEventListener("change", (e) => {
     if ((e.target as HTMLInputElement).checked) map.addLayer(layer);
     else map.removeLayer(layer);
   });
 }
+
+// Polygon file radio buttons
+let activePolygonLayer: any = null;
+document.querySelectorAll('input[name="polygon-file"]').forEach((el) => {
+  el.addEventListener("change", (e) => {
+    if (activePolygonLayer) map.removeLayer(activePolygonLayer);
+    const value = (e.target as HTMLInputElement).value;
+    activePolygonLayer = polygonLayers[value] ?? null;
+    if (activePolygonLayer) map.addLayer(activePolygonLayer);
+  });
+});
 
 // Radius slider
 const slider = document.getElementById("radius-slider") as HTMLInputElement;
