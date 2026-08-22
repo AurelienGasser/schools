@@ -24,7 +24,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
 }).addTo(map);
 
-const circleLayer = L.layerGroup().addTo(map);
+const circleLayer = L.layerGroup();
 const pinLayer = L.layerGroup().addTo(map);
 
 // One layer group per polygon file; none added to map initially (radio defaults to "None")

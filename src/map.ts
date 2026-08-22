@@ -51,7 +51,7 @@ function loadPolygonFile(f: string): PolygonEntry[] {
         feat.geometry.type === "MultiPolygon"
           ? feat.geometry.coordinates
           : [feat.geometry.coordinates],
-      color: feat.properties?.color ?? "#10b981",
+      color: feat.properties?.color ?? "#ef4444",
       label: feat.properties?.label ?? feat.properties?.name ?? fileLabel,
     }));
 }
@@ -201,7 +201,7 @@ const html = `<!DOCTYPE html>
       </div>
       <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
         <label class="toggle-row"><input type="checkbox" id="toggle-pins" checked />Pins</label>
-        <label class="toggle-row"><input type="checkbox" id="toggle-circles" checked />Coverage circles</label>
+        <label class="toggle-row"><input type="checkbox" id="toggle-circles" />Coverage circles</label>
       </div>
       <div class="control-section-label">Polygons</div>
       <div style="display:flex;flex-direction:column;gap:6px;">
