@@ -41,9 +41,9 @@ for (const [name, polys] of Object.entries(__polygons)) {
           fillColor: poly.color,
           fillOpacity: 0.1,
         },
+        interactive: false,
       },
     )
-      .bindPopup(poly.label)
       .addTo(group);
   }
   polygonLayers[name] = group;
