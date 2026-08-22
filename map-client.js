@@ -1,6 +1,6 @@
 "use strict";
 const MILES_TO_METERS = 1609.34;
-const map = L.map("map").setView([40.7128, -74.006], 10);
+const map = L.map("map").setView([40.6928, -73.956], 13);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxZoom: 19,
@@ -21,8 +21,7 @@ for (const [name, polys] of Object.entries(__polygons)) {
                 fillOpacity: 0.1,
             },
             interactive: false,
-        })
-            .addTo(group);
+        }).addTo(group);
     }
     polygonLayers[name] = group;
 }
@@ -68,7 +67,10 @@ document.getElementById("panel-header").addEventListener("click", () => {
     panel.classList.toggle("collapsed");
 });
 // Layer toggles
-for (const [id, layer] of [["toggle-pins", pinLayer], ["toggle-circles", circleLayer]]) {
+for (const [id, layer] of [
+    ["toggle-pins", pinLayer],
+    ["toggle-circles", circleLayer],
+]) {
     document.getElementById(id).addEventListener("change", (e) => {
         if (e.target.checked)
             map.addLayer(layer);

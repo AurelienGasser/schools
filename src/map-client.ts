@@ -16,10 +16,11 @@ declare const __polygons: Record<
 
 const MILES_TO_METERS = 1609.34;
 
-const map = L.map("map").setView([40.7128, -74.006], 10);
+const map = L.map("map").setView([40.6928, -73.956], 13);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  attribution:
+    '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   maxZoom: 19,
 }).addTo(map);
 
@@ -43,8 +44,7 @@ for (const [name, polys] of Object.entries(__polygons)) {
         },
         interactive: false,
       },
-    )
-      .addTo(group);
+    ).addTo(group);
   }
   polygonLayers[name] = group;
 }
@@ -81,7 +81,9 @@ __points.forEach((p, i) => {
     opacity: 1,
     fillOpacity: 0.85,
   })
-    .bindPopup(`<b>${p.name}</b><br>${p.type}<br>${p.address}, ${p.city}${p.commute ? `<br>Commute: <b>${p.commute}</b>` : ""}`)
+    .bindPopup(
+      `<b>${p.name}</b><br>${p.type}<br>${p.address}, ${p.city}${p.commute ? `<br>Commute: <b>${p.commute}</b>` : ""}`,
+    )
     .on("click", () => {
       deselect();
       selectedZone = zones[i];
@@ -99,7 +101,10 @@ document.getElementById("panel-header")!.addEventListener("click", () => {
 });
 
 // Layer toggles
-for (const [id, layer] of [["toggle-pins", pinLayer], ["toggle-circles", circleLayer]] as Array<[string, any]>) {
+for (const [id, layer] of [
+  ["toggle-pins", pinLayer],
+  ["toggle-circles", circleLayer],
+] as Array<[string, any]>) {
   document.getElementById(id)!.addEventListener("change", (e) => {
     if ((e.target as HTMLInputElement).checked) map.addLayer(layer);
     else map.removeLayer(layer);
