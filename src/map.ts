@@ -198,6 +198,13 @@ const legend = Object.entries(COLORS)
   )
   .join("\n");
 
+const commuteLegend = zonesSorted
+  .map((z, i) => {
+    const label = i === 0 ? `< ${z.minutes} min` : `${zonesSorted[i - 1].minutes}–${z.minutes} min`;
+    return `<div class="legend-item"><span class="dot" style="background:${ZONE_COLORS[i]}"></span>${label}</div>`;
+  })
+  .join("\n");
+
 const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -292,6 +299,8 @@ const html = `<!DOCTYPE html>
   <div id="legend">
     <h4>Record Type</h4>
     ${legend}
+    <h4 style="margin-top:10px;">Commute</h4>
+    ${commuteLegend}
   </div>
   <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones, cumulative: cumulativeZones })};</script>
   <script src="./map-client.js"></script>
