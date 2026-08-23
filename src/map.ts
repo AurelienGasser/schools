@@ -6,6 +6,20 @@ import polygonClipping from "polygon-clipping";
 import type { SchoolsResponse } from "./types.js";
 import schoolsJson from "../data/schools.json" with { type: "json" };
 
+console.log(
+  schoolsJson.features.length,
+  Map.groupBy(schoolsJson.features, (s) => s.attributes.LEGAL_NAME).size,
+);
+
+for (const [key, values] of Map.groupBy(
+  schoolsJson.features,
+  (s) => `${s.attributes.LEGAL_NAME}-${s.attributes.PHYSZIPCD5}`,
+)) {
+  if (values.length > 1) {
+    console.log(values.length, key);
+  }
+}
+
 const schools = schoolsJson as unknown as SchoolsResponse;
 
 const COLORS: Record<string, string> = {
@@ -72,13 +86,17 @@ function pointInRing(x: number, y: number, ring: number[][]): boolean {
   for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
     const [xi, yi] = ring[i];
     const [xj, yj] = ring[j];
-    if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
       inside = !inside;
   }
   return inside;
 }
 
-function pointInMultiPolygon(x: number, y: number, coords: number[][][][]): boolean {
+function pointInMultiPolygon(
+  x: number,
+  y: number,
+  coords: number[][][][],
+): boolean {
   return coords.some(
     (polygon) =>
       pointInRing(x, y, polygon[0]) &&
@@ -107,7 +125,10 @@ const ringZones = zonesSorted.map((z, i) => {
   const coords =
     i === 0
       ? current
-      : (polygonClipping.difference(current, zoneCoords(zonesSorted[i - 1].name)) as number[][][][]);
+      : (polygonClipping.difference(
+          current,
+          zoneCoords(zonesSorted[i - 1].name),
+        ) as number[][][][]);
   return {
     name: z.name,
     minutes: z.minutes,
@@ -126,27 +147,49 @@ const cumulativeZones = [...zonesSorted]
   }))
   .reverse();
 
-function commuteLabel(lng: number, lat: number): string {
+function commuteRange(
+  lng: number,
+  lat: number,
+): { min?: number; max?: number } {
   for (let i = 0; i < zonesSorted.length; i++) {
     const { name, minutes } = zonesSorted[i];
-    if (polygons[name].some((e) => pointInMultiPolygon(lng, lat, e.coordinates))) {
-      return i === 0 ? `< ${minutes} min` : `${zonesSorted[i - 1].minutes}–${minutes} min`;
+    if (
+      polygons[name].some((e) => pointInMultiPolygon(lng, lat, e.coordinates))
+    ) {
+      return i === 0
+        ? { max: minutes }
+        : { min: zonesSorted[i - 1].minutes, max: minutes };
     }
   }
   const last = zonesSorted.at(-1);
-  return last ? `> ${last.minutes} min` : "";
+  return { min: last!.minutes };
 }
 
-const points = features.map((f) => ({
-  lng: f.geometry.x,
-  lat: f.geometry.y,
-  color: COLORS[f.attributes.RECORD_TYPE_DESC] ?? DEFAULT_COLOR,
-  name: f.attributes.LEGAL_NAME,
-  type: f.attributes.RECORD_TYPE_DESC,
-  city: f.attributes.PHYSCITY,
-  address: f.attributes.PHYSADDRLINE1,
-  commute: zonesSorted.length ? commuteLabel(f.geometry.x, f.geometry.y) : "",
-}));
+const getCommuteString = ({
+  min,
+  max,
+}: {
+  min?: number;
+  max?: number;
+}): string => {
+  if (min == undefined) return `< ${max} min`;
+  if (max == undefined) return `> ${min} min`;
+  return `${min}-${max} min`;
+};
+
+const points = features
+  .map((f) => ({
+    lng: f.geometry.x,
+    lat: f.geometry.y,
+    color: COLORS[f.attributes.RECORD_TYPE_DESC] ?? DEFAULT_COLOR,
+    name: f.attributes.LEGAL_NAME,
+    type: f.attributes.RECORD_TYPE_DESC,
+    city: f.attributes.PHYSCITY,
+    address: f.attributes.PHYSADDRLINE1,
+    commuteRange: commuteRange(f.geometry.x, f.geometry.y),
+  }))
+  .filter((s) => !s.commuteRange.min || s.commuteRange.min != 60)
+  .map((s) => ({ ...s, commute: getCommuteString(s.commuteRange) }));
 
 const legend = Object.entries(COLORS)
   .map(
