@@ -6,19 +6,19 @@ import polygonClipping from "polygon-clipping";
 import type { SchoolsResponse } from "./types.js";
 import schoolsJson from "../data/schools.json" with { type: "json" };
 
-console.log(
-  schoolsJson.features.length,
-  Map.groupBy(schoolsJson.features, (s) => s.attributes.LEGAL_NAME).size,
-);
+// console.log(
+//   schoolsJson.features.length,
+//   Map.groupBy(schoolsJson.features, (s) => s.attributes.LEGAL_NAME).size,
+// );
 
-for (const [key, values] of Map.groupBy(
-  schoolsJson.features,
-  (s) => `${s.attributes.LEGAL_NAME}-${s.attributes.PHYSZIPCD5}`,
-)) {
-  if (values.length > 1) {
-    console.log(values.length, key);
-  }
-}
+// for (const [key, values] of Map.groupBy(
+//   schoolsJson.features,
+//   (s) => `${s.attributes.LEGAL_NAME}-${s.attributes.PHYSZIPCD5}`,
+// )) {
+//   if (values.length > 1) {
+//     console.log(values.length, key);
+//   }
+// }
 
 const schools = schoolsJson as unknown as SchoolsResponse;
 
@@ -200,7 +200,10 @@ const legend = Object.entries(COLORS)
 
 const commuteLegend = zonesSorted
   .map((z, i) => {
-    const label = i === 0 ? `< ${z.minutes} min` : `${zonesSorted[i - 1].minutes}–${z.minutes} min`;
+    const label =
+      i === 0
+        ? `< ${z.minutes} min`
+        : `${zonesSorted[i - 1].minutes}–${z.minutes} min`;
     return `<div class="legend-item"><span class="dot" style="background:${ZONE_COLORS[i]}"></span>${label}</div>`;
   })
   .join("\n");
