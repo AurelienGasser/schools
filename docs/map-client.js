@@ -122,10 +122,9 @@ function makePinIcon(p) {
 }
 function ratingBadge(rating) {
     const colors = {
-        "Exceeding Target": "#15803d",
-        "Meeting Target": "#16a34a",
-        "Approaching Target": "#ca8a04",
-        "Fair": "#ea580c",
+        "Excellent": "#15803d",
+        "Good": "#65a30d",
+        "Fair": "#ca8a04",
         "Needs Improvement": "#dc2626",
     };
     const bg = colors[rating] ?? "#6b7280";
