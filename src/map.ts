@@ -177,6 +177,36 @@ const getCommuteString = ({
   return `${min}-${max} min`;
 };
 
+function parsePercent(s: string): number | null {
+  const m = /^([\d.]+)%$/.exec((s ?? "").trim());
+  return m ? parseFloat(m[1]) / 100 : null;
+}
+
+function avgMetric(sqr: Record<string, string>, prefix: string): number | null {
+  const vals = Object.entries(sqr)
+    .filter(([k]) => k.startsWith(prefix))
+    .map(([, v]) => parsePercent(v))
+    .filter((v): v is number => v !== null);
+  return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+}
+
+function qualityArms(sqr: Record<string, string> | undefined): [number, number, number] {
+  if (!sqr) return [0, 0, 0];
+  const ela = avgMetric(sqr, "Metric Value - Percentage of Students at Level 3 or 4, ELA") ?? 0;
+  const math = avgMetric(sqr, "Metric Value - Percentage of Students at Level 3 or 4, Math") ?? 0;
+  const attendance = parsePercent(sqr["Average Student Attendance"] ?? "") ?? 0;
+  return [ela, math, attendance];
+}
+
+function schoolTypeFromSqr(sqr: Record<string, string> | undefined, name: string): "elementary" | "middle" | "k8" {
+  const t = (sqr?.["School Type"] ?? "").trim();
+  if (t === "Middle") return "middle";
+  if (t === "K-8") return "k8";
+  const n = name.toLowerCase();
+  if (/\bm\.?s\.?\b|\bi\.?s\.?\b|\bj\.?h\.?s\.?\b/.test(n)) return "middle";
+  return "elementary";
+}
+
 const points = features
   .map((f) => ({
     lng: f.geometry.x,
@@ -187,6 +217,9 @@ const points = features
     city: f.attributes.PHYSCITY,
     address: f.attributes.PHYSADDRLINE1,
     commuteRange: commuteRange(f.geometry.x, f.geometry.y),
+    schoolType: schoolTypeFromSqr(f.attributes.sqr as Record<string, string> | undefined, f.attributes.LEGAL_NAME ?? ""),
+    qualityArms: qualityArms(f.attributes.sqr as Record<string, string> | undefined),
+    sqr: f.attributes.sqr as Record<string, string> | undefined,
   }))
   .filter((s) => !s.commuteRange.min || s.commuteRange.min != 60)
   .map((s) => ({ ...s, commute: getCommuteString(s.commuteRange) }));
@@ -225,13 +258,31 @@ const html = `<!DOCTYPE html>
       z-index: 1000;
       background: white;
       border-radius: 8px;
-      padding: 12px 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
       font-family: sans-serif;
       font-size: 13px;
+      overflow: hidden;
     }
-    #legend h4 { margin-bottom: 8px; font-size: 12px; text-transform: uppercase; color: #555; letter-spacing: .05em; }
-    .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    #legend-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #555;
+    }
+    #legend-header:hover { background: #f5f5f5; }
+    #legend-toggle { font-size: 10px; transition: transform .2s; }
+    #legend.collapsed #legend-toggle { transform: rotate(-90deg); }
+    #legend-body { padding: 4px 14px 14px; border-top: 1px solid #eee; }
+    #legend.collapsed #legend-body { display: none; }
+    #legend h4 { margin-top: 10px; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; color: #888; letter-spacing: .05em; }
+    .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
     .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
     #panel {
       position: absolute;
@@ -300,10 +351,21 @@ const html = `<!DOCTYPE html>
     </div>
   </div>
   <div id="legend">
-    <h4>Record Type</h4>
-    ${legend}
-    <h4 style="margin-top:10px;">Commute</h4>
-    ${commuteLegend}
+    <div id="legend-header">Legend <span id="legend-toggle">▼</span></div>
+    <div id="legend-body">
+      <h4>Record Type</h4>
+      ${legend}
+      <h4>School Level</h4>
+      <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#3b82f6" stroke="#fff" stroke-width="1.5"/></svg>Elementary</div>
+      <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20"><polygon points="10,2 12.1,7.1 17.6,7.5 13.4,11.1 14.7,16.5 10,13.6 5.3,16.5 6.6,11.1 2.4,7.5 7.9,7.1" fill="#3b82f6" stroke="#fff" stroke-width="1"/></svg>Middle</div>
+      <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20" overflow="visible"><path d="M 10 2 C 12.8 2 12.2 7.8 12.2 7.8 C 12.2 7.8 20.8 10 18 10 C 18 12.8 12.2 12.2 12.2 12.2 C 12.2 12.2 10 15.2 10 18 C 7.2 18 7.8 12.2 7.8 12.2 C 7.8 12.2 -0.8 10 2 10 C 2 7.2 7.8 7.8 7.8 7.8 C 7.8 7.8 10 4.8 10 2 Z" fill="#3b82f6" stroke="#fff" stroke-width="1"/></svg>K-8</div>
+      <h4>Quality Arms</h4>
+      <div class="legend-item"><span style="display:inline-block;width:14px;height:3px;background:#16a34a;border-radius:2px"></span>ELA (12 o'clock)</div>
+      <div class="legend-item"><span style="display:inline-block;width:14px;height:3px;background:#ea580c;border-radius:2px"></span>Math (4 o'clock)</div>
+      <div class="legend-item"><span style="display:inline-block;width:14px;height:3px;background:#dc2626;border-radius:2px"></span>Attendance (8 o'clock)</div>
+      <h4>Commute</h4>
+      ${commuteLegend}
+    </div>
   </div>
   <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones, cumulative: cumulativeZones })};</script>
   <script src="./map-client.js"></script>

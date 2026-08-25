@@ -13,6 +13,6 @@
     "resolveJsonModule": true,
     "types": ["node"]
   },
-  "include": ["src"],
+  "include": ["src", "data/fetch-datasets.ts"],
   "exclude": ["node_modules", "dist"]
 }
