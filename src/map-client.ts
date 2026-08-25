@@ -154,7 +154,7 @@ function makePinSvg(
   return `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">${armLines}${shapeEl}</svg>`;
 }
 
-const PIN_SIZE = window.innerWidth <= 640 ? 40 : 28;
+const PIN_SIZE = window.innerWidth <= 640 ? 34 : 28;
 
 function makePinIcon(p: typeof __points[0]): any {
   const half = PIN_SIZE / 2;
