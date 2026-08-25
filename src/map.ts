@@ -36,7 +36,7 @@ const features = schools.features.filter(
 );
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const outDir = resolve(__dirname, "../public");
+const outDir = resolve(__dirname, "../docs");
 
 type PolygonEntry = {
   coordinates: number[][][][];
