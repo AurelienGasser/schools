@@ -183,9 +183,22 @@ function ratingBadge(rating: string): string {
   return `<span style="background:${bg};color:#fff;padding:1px 5px;border-radius:3px;font-size:11px;white-space:nowrap">${rating}</span>`;
 }
 
+function pctBar(pct: number): string {
+  const hue = pct * 1.2; // 0% → red (0°), 100% → green (120°)
+  const color = `hsl(${hue},75%,38%)`;
+  return `<div style="display:flex;align-items:center;gap:5px"><div style="width:80px;background:#e5e7eb;border-radius:2px;height:5px;flex-shrink:0"><div style="width:${pct.toFixed(1)}%;background:${color};height:100%;border-radius:2px"></div></div></div>`;
+}
+
+function renderValue(value: string, isRating: boolean): string {
+  if (isRating) return value ? ratingBadge(value) : "—";
+  if (!value) return "—";
+  const m = /^([\d.]+)%$/.exec(value.trim());
+  if (m) return pctBar(Math.min(100, Math.max(0, parseFloat(m[1]))));
+  return value;
+}
+
 function fmtRow(label: string, value: string, isRating = false): string {
-  const display = isRating ? (value ? ratingBadge(value) : "—") : (value || "—");
-  return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:top">${label}</td><td>${display}</td></tr>`;
+  return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle">${renderValue(value, isRating)}</td></tr>`;
 }
 
 const POPUP_FIELDS: Array<{ label: string; key: string; isRating?: boolean }> = [
