@@ -176,10 +176,28 @@ function ratingBadge(rating: string): string {
   return `<span style="background:${bg};color:#fff;padding:1px 5px;border-radius:3px;font-size:11px;white-space:nowrap">${rating}</span>`;
 }
 
-function fmtRow(label: string, value: string, rating?: string): string {
-  if (!value && !rating) return "";
-  return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap">${label}</td><td>${value}${rating ? " " + ratingBadge(rating) : ""}</td></tr>`;
+function fmtRow(label: string, value: string, isRating = false): string {
+  const display = isRating ? (value ? ratingBadge(value) : "—") : (value || "—");
+  return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:top">${label}</td><td>${display}</td></tr>`;
 }
+
+const POPUP_FIELDS: Array<{ label: string; key: string; isRating?: boolean }> = [
+  { label: "School Type",       key: "School Type" },
+  { label: "Enrollment",        key: "Enrollment" },
+  { label: "Attendance",        key: "Average Student Attendance" },
+  { label: ">90% Attendance",   key: "Percentage of Students with >90% Attendance" },
+  { label: ">90% Rating",       key: "Metric Rating - Percentage of Students with >90% Attendance", isRating: true },
+  { label: "I&P Score",         key: "Instruction and Performance - Score" },
+  { label: "I&P Rating",        key: "Instruction and Performance - Rating", isRating: true },
+  { label: "Safety Rating",     key: "Safety and School Climate - Rating", isRating: true },
+  { label: "Safety %",          key: "Safety - School Percent Positive" },
+  { label: "Communication %",   key: "Communication - School Percent Positive" },
+  { label: "Teaching Env %",    key: "Teaching Environment - School Percent Positive" },
+  { label: "Learning Env %",    key: "Instruction/Learning Environment - School Percent Positive" },
+  { label: "Family Inv. %",     key: "Family Involvement - School Percent Positive" },
+  { label: "Teacher Exp.",      key: "Percent of teachers with 3 or more years of experience" },
+  { label: "Principal Yrs.",    key: "Years of principal experience at this school" },
+];
 
 const ETHNICITY_GROUPS = [
   { label: "Hispanic", key: "Student Percent - Hispanic", color: "#c2703e" },
@@ -215,21 +233,12 @@ function buildPopup(p: typeof __points[0]): string {
   const commute = p.commute ? `<div style="margin-top:4px;font-size:12px">Commute: <b>${p.commute}</b></div>` : "";
   if (!s) return `<div style="max-width:280px">${header}${commute}</div>`;
 
-  const rows = [
-    fmtRow("Enrollment", s["Enrollment"]),
-    fmtRow("Attendance", s["Average Student Attendance"]),
-    fmtRow(">90% Att.", s["Percentage of Students with >90% Attendance"], s["Metric Rating - Percentage of Students with >90% Attendance"]),
-    fmtRow("ELA", s["Metric Value - Percentage of Students at Level 3 or 4, ELA, Grade 8"] || s["Metric Value - Percentage of Students at Level 3 or 4, ELA, Grade 5"] || s["Metric Value - Percentage of Students at Level 3 or 4, ELA, Grade 3"], s["Metric Rating - Percentage of Students at Level 3 or 4, ELA"]),
-    fmtRow("Math", s["Metric Value - Percentage of Students at Level 3 or 4, Math, Grade 8"] || s["Metric Value - Percentage of Students at Level 3 or 4, Math, Grade 5"] || s["Metric Value - Percentage of Students at Level 3 or 4, Math, Grade 3"], s["Metric Rating - Percentage of Students at Level 3 or 4, Math"]),
-    fmtRow("I&P Rating", s["Instruction and Performance - Score"], s["Instruction and Performance - Rating"]),
-    fmtRow("Impact Score", s["Impact Score"]),
-    fmtRow("Econ Need", s["Economic Need Index"]),
-    fmtRow("Temp Housing", s["Percent in Temp Housing"]),
-  ].filter(Boolean).join("");
+  const rows = POPUP_FIELDS.map(({ label, key, isRating }) =>
+    fmtRow(label, s[key] ?? "", isRating),
+  ).join("");
 
-  const table = rows ? `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>` : "";
-  const ethBar = ethnicityBar(s);
-  return `<div style="max-width:300px">${header}${commute}${table}${ethBar}</div>`;
+  const table = `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>`;
+  return `<div style="max-width:300px">${header}${commute}${table}${ethnicityBar(s)}</div>`;
 }
 
 // Pins using SVG divIcon
