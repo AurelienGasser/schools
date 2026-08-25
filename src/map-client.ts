@@ -1,4 +1,5 @@
 declare const L: any;
+declare const OverlappingMarkerSpiderfier: any;
 declare const __points: Array<{
   lat: number;
   lng: number;
@@ -244,16 +245,28 @@ function buildPopup(p: typeof __points[0]): string {
   return `<div style="max-width:300px">${header}${commute}${table}${ethnicityBar(s)}</div>`;
 }
 
+// Spiderifier for overlapping pins
+const oms = new OverlappingMarkerSpiderfier(map, {
+  nearbyDistance: 20,
+  keepSpiderfied: true,
+  legWeight: 2,
+  legColors: { usual: "#94a3b8", highlighted: "#3b82f6" },
+});
+
+oms.addListener("click", (marker: any) => {
+  deselect();
+  selectedZone = marker._zone ?? null;
+  if (selectedZone) selectedZone.setStyle({ opacity: 0.85 });
+  marker.openPopup();
+});
+
 // Pins using SVG divIcon
 __points.forEach((p, i) => {
-  L.marker([p.lat, p.lng], { icon: makePinIcon(p) })
-    .bindPopup(buildPopup(p), { maxWidth: 320 })
-    .on("click", () => {
-      deselect();
-      selectedZone = zones[i];
-      selectedZone.setStyle({ opacity: 0.85 });
-    })
-    .addTo(pinLayer);
+  const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) })
+    .bindPopup(buildPopup(p), { maxWidth: 320 });
+  marker._zone = zones[i];
+  oms.addMarker(marker);
+  marker.addTo(pinLayer);
 });
 
 map.on("click", deselect);
