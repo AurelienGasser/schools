@@ -179,15 +179,25 @@ function ethnicityBar(s) {
         .join("");
     return `<div style="margin-top:6px"><div style="font-size:11px;color:#555;margin-bottom:3px">Ethnicity</div><div style="display:flex;border-radius:3px;overflow:hidden;height:10px;border:1px solid #e5e5e5">${segments}</div><div style="display:flex;flex-wrap:wrap;gap:4px 8px;margin-top:4px">${labels}</div></div>`;
 }
+const LINK_STYLE = `color:#2563eb;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:6px;margin-right:12px`;
 function buildPopup(p) {
     const s = p.sqr;
     const header = `<b style="font-size:14px">${p.name}</b><br><span style="color:#555;font-size:12px">${p.type}</span><br><span style="color:#777;font-size:11px">${p.address}, ${p.city}</span>`;
     const commute = p.commute ? `<div style="margin-top:4px;font-size:12px">Commute: <b>${p.commute}</b></div>` : "";
+    const googleLink = p.schoolType === "unknown"
+        ? `<a href="https://www.google.com/search?q=${encodeURIComponent(p.name + " NYC school")}" target="_blank" rel="noopener" style="${LINK_STYLE}">&#x1F50D; Search on Google</a>`
+        : "";
+    const dashboardLink = s && p.dbn
+        ? `<a href="https://tools.nycenet.edu/dashboard/#dbn=${encodeURIComponent(p.dbn)}&report_type=EMS&view=City" target="_blank" rel="noopener" style="${LINK_STYLE}">&#x1F4CA; NYC Dashboard</a>`
+        : "";
+    const links = (googleLink || dashboardLink)
+        ? `<div style="margin-top:4px">${googleLink}${dashboardLink}</div>`
+        : "";
     if (!s)
-        return `<div style="max-width:280px">${header}${commute}</div>`;
+        return `<div style="max-width:280px">${header}${commute}${links}</div>`;
     const rows = POPUP_FIELDS.map(({ label, key, isRating }) => fmtRow(label, s[key] ?? "", isRating)).join("");
     const table = `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>`;
-    return `<div style="max-width:300px">${header}${commute}${table}${ethnicityBar(s)}</div>`;
+    return `<div style="max-width:300px">${header}${commute}${links}${table}${ethnicityBar(s)}</div>`;
 }
 // Spiderifier for overlapping pins
 const oms = new OverlappingMarkerSpiderfier(map, {

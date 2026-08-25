@@ -222,6 +222,7 @@ const points = features
     schoolType: schoolTypeFromSqr(f.attributes.sqr as Record<string, string> | undefined, f.attributes.LEGAL_NAME ?? ""),
     qualityArms: qualityArms(f.attributes.sqr as Record<string, string> | undefined),
     sqr: f.attributes.sqr as Record<string, string> | undefined,
+    dbn: f.attributes.DBN as string | undefined,
   }))
   .filter((s) => !s.commuteRange.min || s.commuteRange.min != 60)
   .map((s) => ({ ...s, commute: getCommuteString(s.commuteRange) }));
