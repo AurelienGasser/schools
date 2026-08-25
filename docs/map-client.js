@@ -107,13 +107,15 @@ function makePinSvg(schoolType, color, arms) {
         .join("");
     return `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">${armLines}${shapeEl}</svg>`;
 }
+const PIN_SIZE = window.innerWidth <= 640 ? 40 : 28;
 function makePinIcon(p) {
+    const half = PIN_SIZE / 2;
     return L.divIcon({
         html: makePinSvg(p.schoolType, p.color, p.qualityArms),
         className: "",
-        iconSize: [28, 28],
-        iconAnchor: [14, 14],
-        popupAnchor: [0, -16],
+        iconSize: [PIN_SIZE, PIN_SIZE],
+        iconAnchor: [half, half],
+        popupAnchor: [0, -half - 2],
     });
 }
 function ratingBadge(rating) {
@@ -197,13 +199,18 @@ __points.forEach((p, i) => {
         .addTo(pinLayer);
 });
 map.on("click", deselect);
+const isMobile = window.innerWidth <= 640;
 // Collapsible panel
 const panel = document.getElementById("panel");
+if (isMobile)
+    panel.classList.add("collapsed");
 document.getElementById("panel-header").addEventListener("click", () => {
     panel.classList.toggle("collapsed");
 });
 // Collapsible legend
 const legendEl = document.getElementById("legend");
+if (isMobile)
+    legendEl.classList.add("collapsed");
 document.getElementById("legend-header").addEventListener("click", () => {
     legendEl.classList.toggle("collapsed");
 });

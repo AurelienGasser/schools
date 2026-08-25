@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NY Schools Map</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -19,6 +20,7 @@
       font-family: sans-serif;
       font-size: 13px;
       overflow: hidden;
+      max-width: calc(100vw - 24px);
     }
     #legend-header {
       display: flex;
@@ -52,6 +54,7 @@
       font-family: sans-serif;
       font-size: 13px;
       min-width: 200px;
+      max-width: calc(100vw - 24px);
       overflow: hidden;
     }
     #panel-header {
@@ -80,6 +83,21 @@
     .radio-row { display: flex; align-items: center; gap: 8px; color: #444; cursor: pointer; }
     .radio-row input[type=radio] { accent-color: #3b82f6; width: 14px; height: 14px; cursor: pointer; }
     .control-section-label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #888; margin-top: 10px; margin-bottom: 4px; }
+    @media (max-width: 640px) {
+      #panel, #legend { font-size: 16px; }
+      #panel { min-width: 220px; }
+      #panel-header, #legend-header { padding: 14px 16px; font-size: 14px; }
+      #panel-body { padding: 14px 16px 18px; }
+      #legend-body { padding: 6px 16px 18px; }
+      #legend h4 { font-size: 13px; margin-top: 14px; margin-bottom: 8px; }
+      .legend-item { gap: 10px; margin-bottom: 8px; }
+      .dot { width: 16px; height: 16px; }
+      .toggle-row, .radio-row { padding: 5px 0; gap: 12px; }
+      .toggle-row input[type=checkbox], .radio-row input[type=radio] { width: 20px; height: 20px; }
+      .control-section-label { font-size: 13px; margin-top: 14px; }
+      .leaflet-popup-content-wrapper { font-size: 15px !important; }
+      .leaflet-popup-content { font-size: 15px !important; }
+    }
   </style>
 </head>
 <body>
