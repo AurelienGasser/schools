@@ -9,7 +9,7 @@ declare const __points: Array<{
   city: string;
   address: string;
   commute: string;
-  schoolType: "elementary" | "middle" | "k8";
+  schoolType: "elementary" | "middle" | "k8" | "unknown";
   qualityArms: [number, number, number];
   sqr?: Record<string, string>;
 }>;
@@ -139,7 +139,7 @@ function armLine(cx: number, cy: number, angle: number, score: number, color: st
 }
 
 function makePinSvg(
-  schoolType: "elementary" | "middle" | "k8",
+  schoolType: "elementary" | "middle" | "k8" | "unknown",
   color: string,
   arms: [number, number, number],
 ): string {
@@ -148,7 +148,9 @@ function makePinSvg(
       ? `<circle cx="${CX}" cy="${CY}" r="${R}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`
       : schoolType === "middle"
         ? `<polygon points="${starPoints(CX, CY, R, 5)}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`
-        : `<path d="${roundedStarPath(CX, CY, R)}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`;
+        : schoolType === "k8"
+          ? `<path d="${roundedStarPath(CX, CY, R)}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`
+          : `<polygon points="${CX},${CY - R} ${CX + R},${CY} ${CX},${CY + R} ${CX - R},${CY}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`;
   const armLines = arms
     .map((score, i) => armLine(CX, CY, ARM_ANGLES[i], score, ARM_COLORS[i]))
     .join("");

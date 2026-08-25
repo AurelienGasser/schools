@@ -23,13 +23,13 @@ import schoolsJson from "../data/schools.json" with { type: "json" };
 const schools = schoolsJson as unknown as SchoolsResponse;
 
 const COLORS: Record<string, string> = {
-  "PUBLIC SCHOOL (IMF)": "#3b82f6",
-  "NON PUBLIC SCHOOL (IMF)": "#f97316",
-  "CHARTER SCHOOLS (IMF)": "#a855f7",
-  "OTHER- NON IMF": "#6b7280",
+  "PUBLIC SCHOOL (IMF)": "#2563eb",
+  "CHARTER SCHOOLS (IMF)": "#7c3aed",
+  "NON PUBLIC SCHOOL (IMF)": "#94a3b8",
+  "OTHER- NON IMF": "#94a3b8",
 };
 
-const DEFAULT_COLOR = "#ef4444";
+const DEFAULT_COLOR = "#94a3b8";
 
 const features = schools.features.filter(
   (f) => f.geometry?.x != null && f.geometry?.y != null,
@@ -198,13 +198,15 @@ function qualityArms(sqr: Record<string, string> | undefined): [number, number, 
   return [ela, math, attendance];
 }
 
-function schoolTypeFromSqr(sqr: Record<string, string> | undefined, name: string): "elementary" | "middle" | "k8" {
+function schoolTypeFromSqr(sqr: Record<string, string> | undefined, name: string): "elementary" | "middle" | "k8" | "unknown" {
   const t = (sqr?.["School Type"] ?? "").trim();
+  if (t === "Elementary") return "elementary";
   if (t === "Middle") return "middle";
   if (t === "K-8") return "k8";
   const n = name.toLowerCase();
   if (/\bm\.?s\.?\b|\bi\.?s\.?\b|\bj\.?h\.?s\.?\b/.test(n)) return "middle";
-  return "elementary";
+  if (/\belementary\b/.test(n)) return "elementary";
+  return "unknown";
 }
 
 const points = features
@@ -375,9 +377,10 @@ const html = `<!DOCTYPE html>
       <h4>Record Type</h4>
       ${legend}
       <h4>School Level</h4>
-      <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#3b82f6" stroke="#fff" stroke-width="1.5"/></svg>Elementary</div>
-      <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20"><polygon points="10,2 12.1,7.1 17.6,7.5 13.4,11.1 14.7,16.5 10,13.6 5.3,16.5 6.6,11.1 2.4,7.5 7.9,7.1" fill="#3b82f6" stroke="#fff" stroke-width="1"/></svg>Middle</div>
-      <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20" overflow="visible"><path d="M 10 2 C 12.8 2 12.2 7.8 12.2 7.8 C 12.2 7.8 20.8 10 18 10 C 18 12.8 12.2 12.2 12.2 12.2 C 12.2 12.2 10 15.2 10 18 C 7.2 18 7.8 12.2 7.8 12.2 C 7.8 12.2 -0.8 10 2 10 C 2 7.2 7.8 7.8 7.8 7.8 C 7.8 7.8 10 4.8 10 2 Z" fill="#3b82f6" stroke="#fff" stroke-width="1"/></svg>K-8</div>
+      <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#2563eb" stroke="#fff" stroke-width="1.5"/></svg>Elementary</div>
+      <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20"><polygon points="10,2 12.1,7.1 17.6,7.5 13.4,11.1 14.7,16.5 10,13.6 5.3,16.5 6.6,11.1 2.4,7.5 7.9,7.1" fill="#2563eb" stroke="#fff" stroke-width="1"/></svg>Middle</div>
+      <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20" overflow="visible"><path d="M 10 2 C 12.8 2 12.2 7.8 12.2 7.8 C 12.2 7.8 20.8 10 18 10 C 18 12.8 12.2 12.2 12.2 12.2 C 12.2 12.2 10 15.2 10 18 C 7.2 18 7.8 12.2 7.8 12.2 C 7.8 12.2 -0.8 10 2 10 C 2 7.2 7.8 7.8 7.8 7.8 C 7.8 7.8 10 4.8 10 2 Z" fill="#2563eb" stroke="#fff" stroke-width="1"/></svg>K-8</div>
+      <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20"><polygon points="10,2 18,10 10,18 2,10" fill="#94a3b8" stroke="#fff" stroke-width="1.5"/></svg>Unknown</div>
       <h4>Quality Arms</h4>
       <div class="legend-item"><span style="display:inline-block;width:14px;height:3px;background:#16a34a;border-radius:2px"></span>ELA (12 o'clock)</div>
       <div class="legend-item"><span style="display:inline-block;width:14px;height:3px;background:#ea580c;border-radius:2px"></span>Math (4 o'clock)</div>
