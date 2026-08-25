@@ -183,17 +183,19 @@ function ratingBadge(rating: string): string {
   return `<span style="background:${bg};color:#fff;padding:1px 5px;border-radius:3px;font-size:11px;white-space:nowrap">${rating}</span>`;
 }
 
-function pctBar(pct: number): string {
-  const hue = pct * 1.2; // 0% → red (0°), 100% → green (120°)
-  const color = `hsl(${hue},75%,38%)`;
-  return `<div style="display:flex;align-items:center;gap:5px"><div style="width:80px;background:#e5e7eb;border-radius:2px;height:5px;flex-shrink:0"><div style="width:${pct.toFixed(1)}%;background:${color};height:100%;border-radius:2px"></div></div></div>`;
+function pctBar(pct: number, raw: string): string {
+  const hue = Math.pow(pct / 100, 3) * 120; // cubic curve: green only above ~85%
+  const color = `hsl(${hue.toFixed(1)},75%,38%)`;
+  const p = pct.toFixed(1);
+  const bg = `linear-gradient(to right,${color} ${p}%,#e5e7eb ${p}%)`;
+  return `<div style="display:flex;align-items:center;gap:6px"><div style="width:80px;height:5px;background:${bg};border-radius:2px;flex-shrink:0"></div><span style="color:#555;font-size:11px">${raw}</span></div>`;
 }
 
 function renderValue(value: string, isRating: boolean): string {
   if (isRating) return value ? ratingBadge(value) : "—";
   if (!value) return "—";
   const m = /^([\d.]+)%$/.exec(value.trim());
-  if (m) return pctBar(Math.min(100, Math.max(0, parseFloat(m[1]))));
+  if (m) return pctBar(Math.min(100, Math.max(0, parseFloat(m[1]))), value.trim());
   return value;
 }
 
@@ -210,11 +212,11 @@ const POPUP_FIELDS: Array<{ label: string; key: string; isRating?: boolean }> = 
   { label: "I&P Score",         key: "Instruction and Performance - Score" },
   { label: "I&P Rating",        key: "Instruction and Performance - Rating", isRating: true },
   { label: "Safety Rating",     key: "Safety and School Climate - Rating", isRating: true },
-  { label: "Safety %",          key: "Safety - School Percent Positive" },
-  { label: "Communication %",   key: "Communication - School Percent Positive" },
-  { label: "Teaching Env %",    key: "Teaching Environment - School Percent Positive" },
-  { label: "Learning Env %",    key: "Instruction/Learning Environment - School Percent Positive" },
-  { label: "Family Inv. %",     key: "Family Involvement - School Percent Positive" },
+  { label: "Safety",            key: "Safety - School Percent Positive" },
+  { label: "Communication",     key: "Communication - School Percent Positive" },
+  { label: "Teaching Env",      key: "Teaching Environment - School Percent Positive" },
+  { label: "Learning Env",      key: "Instruction/Learning Environment - School Percent Positive" },
+  { label: "Family Inv.",       key: "Family Involvement - School Percent Positive" },
   { label: "Teacher Exp.",      key: "Percent of teachers with 3 or more years of experience" },
   { label: "Principal Yrs.",    key: "Years of principal experience at this school" },
 ];

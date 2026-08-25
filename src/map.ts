@@ -391,7 +391,7 @@ const html = `<!DOCTYPE html>
     </div>
   </div>
   <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones, cumulative: cumulativeZones })};</script>
-  <script src="./map-client.js"></script>
+  <script src="./map-client.js?v=${Date.now()}"></script>
 </body>
 </html>`;
 
