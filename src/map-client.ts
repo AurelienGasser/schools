@@ -42,7 +42,13 @@ function buildLayer(zones: ZoneSet): any {
       L.geoJSON(
         { type: "MultiPolygon", coordinates: entry.coordinates },
         {
-          style: { color: zone.color, weight: 1.5, opacity: 0.6, fillColor: zone.color, fillOpacity: 0.25 },
+          style: {
+            color: zone.color,
+            weight: 1.5,
+            opacity: 0.6,
+            fillColor: zone.color,
+            fillOpacity: 0.25,
+          },
           interactive: false,
         },
       ).addTo(layer);
@@ -85,12 +91,20 @@ const R = 10; // shape radius
 const CX = 20;
 const CY = 20;
 
-function starPoints(cx: number, cy: number, r: number, points: number, innerRatio = 0.45): string {
+function starPoints(
+  cx: number,
+  cy: number,
+  r: number,
+  points: number,
+  innerRatio = 0.45,
+): string {
   const pts: string[] = [];
   for (let i = 0; i < points * 2; i++) {
     const angle = (Math.PI / points) * i - Math.PI / 2;
     const radius = i % 2 === 0 ? r : r * innerRatio;
-    pts.push(`${cx + radius * Math.cos(angle)},${cy + radius * Math.sin(angle)}`);
+    pts.push(
+      `${cx + radius * Math.cos(angle)},${cy + radius * Math.sin(angle)}`,
+    );
   }
   return pts.join(" ");
 }
@@ -131,7 +145,13 @@ const ARM_COLORS = ["#16a34a", "#ea580c", "#dc2626"];
 const ARM_MAX = R + 6; // max arm length extends beyond shape edge
 const ARM_MIN = 3;
 
-function armLine(cx: number, cy: number, angle: number, score: number, color: string): string {
+function armLine(
+  cx: number,
+  cy: number,
+  angle: number,
+  score: number,
+  color: string,
+): string {
   const rad = (angle * Math.PI) / 180;
   const len = ARM_MIN + score * (ARM_MAX - ARM_MIN);
   const x2 = cx + len * Math.cos(rad);
@@ -160,7 +180,7 @@ function makePinSvg(
 
 const PIN_SIZE = window.innerWidth <= 640 ? 34 : 28;
 
-function makePinIcon(p: typeof __points[0]): any {
+function makePinIcon(p: (typeof __points)[0]): any {
   const half = PIN_SIZE / 2;
   return L.divIcon({
     html: makePinSvg(p.schoolType, p.color, p.qualityArms),
@@ -173,9 +193,9 @@ function makePinIcon(p: typeof __points[0]): any {
 
 function ratingBadge(rating: string): string {
   const colors: Record<string, string> = {
-    "Excellent":         "#15803d",
-    "Good":              "#65a30d",
-    "Fair":              "#ca8a04",
+    Excellent: "#15803d",
+    Good: "#65a30d",
+    Fair: "#ca8a04",
     "Needs Improvement": "#dc2626",
   };
   const bg = colors[rating] ?? "#6b7280";
@@ -194,7 +214,8 @@ function renderValue(value: string, isRating: boolean): string {
   if (isRating) return value ? ratingBadge(value) : "—";
   if (!value) return "—";
   const m = /^([\d.]+)%$/.exec(value.trim());
-  if (m) return pctBar(Math.min(100, Math.max(0, parseFloat(m[1]))), value.trim());
+  if (m)
+    return pctBar(Math.min(100, Math.max(0, parseFloat(m[1]))), value.trim());
   return value;
 }
 
@@ -202,72 +223,120 @@ function fmtRow(label: string, value: string, isRating = false): string {
   return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle">${renderValue(value, isRating)}</td></tr>`;
 }
 
-const POPUP_FIELDS: Array<{ label: string; key: string; isRating?: boolean }> = [
-  { label: "School Type",       key: "School Type" },
-  { label: "Enrollment",        key: "Enrollment" },
-  { label: "Attendance",        key: "Average Student Attendance" },
-  { label: ">90% Attendance",   key: "Percentage of Students with >90% Attendance" },
-  { label: ">90% Rating",       key: "Metric Rating - Percentage of Students with >90% Attendance", isRating: true },
-  { label: "I&P Score",         key: "Instruction and Performance - Score" },
-  { label: "I&P Rating",        key: "Instruction and Performance - Rating", isRating: true },
-  { label: "Safety Rating",     key: "Safety and School Climate - Rating", isRating: true },
-  { label: "Safety",            key: "Safety - School Percent Positive" },
-  { label: "Communication",     key: "Communication - School Percent Positive" },
-  { label: "Teaching Env",      key: "Teaching Environment - School Percent Positive" },
-  { label: "Learning Env",      key: "Instruction/Learning Environment - School Percent Positive" },
-  { label: "Family Inv.",       key: "Family Involvement - School Percent Positive" },
-  { label: "Teacher Exp.",      key: "Percent of teachers with 3 or more years of experience" },
-  { label: "Principal Yrs.",    key: "Years of principal experience at this school" },
-];
+const POPUP_FIELDS: Array<{ label: string; key: string; isRating?: boolean }> =
+  [
+    { label: "School Type", key: "School Type" },
+    { label: "Enrollment", key: "Enrollment" },
+    { label: "Attendance", key: "Average Student Attendance" },
+    {
+      label: ">90% Attendance",
+      key: "Percentage of Students with >90% Attendance",
+    },
+    {
+      label: ">90% Rating",
+      key: "Metric Rating - Percentage of Students with >90% Attendance",
+      isRating: true,
+    },
+    { label: "I&P Score", key: "Instruction and Performance - Score" },
+    {
+      label: "I&P Rating",
+      key: "Instruction and Performance - Rating",
+      isRating: true,
+    },
+    {
+      label: "Safety Rating",
+      key: "Safety and School Climate - Rating",
+      isRating: true,
+    },
+    { label: "Safety", key: "Safety - School Percent Positive" },
+    { label: "Communication", key: "Communication - School Percent Positive" },
+    {
+      label: "Teaching Env",
+      key: "Teaching Environment - School Percent Positive",
+    },
+    {
+      label: "Learning Env",
+      key: "Instruction/Learning Environment - School Percent Positive",
+    },
+    {
+      label: "Family Inv.",
+      key: "Family Involvement - School Percent Positive",
+    },
+    {
+      label: "Teacher Exp.",
+      key: "Percent of teachers with 3 or more years of experience",
+    },
+    {
+      label: "Principal Yrs.",
+      key: "Years of principal experience at this school",
+    },
+  ];
 
 const ETHNICITY_GROUPS = [
   { label: "Hispanic", key: "Student Percent - Hispanic", color: "#c2703e" },
   { label: "Black", key: "Student Percent - Black", color: "#5c3317" },
   { label: "Asian", key: "Student Percent - Asian", color: "#e8b84b" },
   { label: "White", key: "Student Percent - White", color: "#e8e0d0" },
-  { label: "Native Am.", key: "Student Percent - Native American", color: "#9a3412" },
-  { label: "Pacific Isl.", key: "Student Percent - Native Hawaiian or Pacific Islander", color: "#0e7490" },
+  {
+    label: "Native Am.",
+    key: "Student Percent - Native American",
+    color: "#9a3412",
+  },
+  {
+    label: "Pacific Isl.",
+    key: "Student Percent - Native Hawaiian or Pacific Islander",
+    color: "#0e7490",
+  },
 ];
 
 function ethnicityBar(s: Record<string, string>): string {
-  const vals = ETHNICITY_GROUPS
-    .map((g) => ({ ...g, pct: parseFloat(s[g.key]?.replace("%", "") ?? "") || 0 }))
-    .filter((g) => g.pct > 0);
+  const vals = ETHNICITY_GROUPS.map((g) => ({
+    ...g,
+    pct: parseFloat(s[g.key]?.replace("%", "") ?? "") || 0,
+  })).filter((g) => g.pct > 0);
   if (!vals.length) return "";
   const total = vals.reduce((sum, g) => sum + g.pct, 0);
   const segments = vals
     .map((g) => {
       const w = ((g.pct / total) * 100).toFixed(1);
-      const border = g.color === "#e8e0d0" ? "box-shadow:inset 0 0 0 1px #bbb;" : "";
+      const border =
+        g.color === "#e8e0d0" ? "box-shadow:inset 0 0 0 1px #bbb;" : "";
       return `<div style="width:${w}%;background:${g.color};${border}" title="${g.label}: ${g.pct.toFixed(1)}%"></div>`;
     })
     .join("");
   const labels = vals
-    .map((g) => `<span style="display:flex;align-items:center;gap:2px;font-size:10px;white-space:nowrap"><span style="display:inline-block;width:8px;height:8px;background:${g.color};border-radius:1px;flex-shrink:0;${g.color === "#e8e0d0" ? "box-shadow:inset 0 0 0 1px #bbb;" : ""}"></span>${g.label} ${g.pct.toFixed(0)}%</span>`)
+    .map(
+      (g) =>
+        `<span style="display:flex;align-items:center;gap:2px;font-size:10px;white-space:nowrap"><span style="display:inline-block;width:8px;height:8px;background:${g.color};border-radius:1px;flex-shrink:0;${g.color === "#e8e0d0" ? "box-shadow:inset 0 0 0 1px #bbb;" : ""}"></span>${g.label} ${g.pct.toFixed(0)}%</span>`,
+    )
     .join("");
   return `<div style="margin-top:6px"><div style="font-size:11px;color:#555;margin-bottom:3px">Ethnicity</div><div style="display:flex;border-radius:3px;overflow:hidden;height:10px;border:1px solid #e5e5e5">${segments}</div><div style="display:flex;flex-wrap:wrap;gap:4px 8px;margin-top:4px">${labels}</div></div>`;
 }
 
 const LINK_STYLE = `color:#2563eb;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:6px;margin-right:12px`;
 
-function buildPopup(p: typeof __points[0]): string {
+function buildPopup(p: (typeof __points)[0]): string {
   const s = p.sqr;
   const header = `<b style="font-size:14px">${p.name}</b><br><span style="color:#555;font-size:12px">${p.type}</span><br><span style="color:#777;font-size:11px">${p.address}, ${p.city}</span>`;
-  const commute = p.commute ? `<div style="margin-top:4px;font-size:12px">Commute: <b>${p.commute}</b></div>` : "";
-
-  const googleLink = p.schoolType === "unknown"
-    ? `<a href="https://www.google.com/search?q=${encodeURIComponent(p.name + " NYC school")}" target="_blank" rel="noopener" style="${LINK_STYLE}">&#x1F50D; Search on Google</a>`
+  const commute = p.commute
+    ? `<div style="margin-top:4px;font-size:12px">Commute: <b>${p.commute}</b></div>`
     : "";
 
-  const dashboardLink = s && p.dbn
+  const dashboardLink = p.dbn
     ? `<a href="https://tools.nycenet.edu/dashboard/#dbn=${encodeURIComponent(p.dbn)}&report_type=EMS&view=City" target="_blank" rel="noopener" style="${LINK_STYLE}">&#x1F4CA; NYC Dashboard</a>`
     : "";
 
-  const links = (googleLink || dashboardLink)
-    ? `<div style="margin-top:4px">${googleLink}${dashboardLink}</div>`
+  const googleLink = !p.dbn
+    ? `<a href="https://www.google.com/search?q=${encodeURIComponent(p.name + " NYC school")}" target="_blank" rel="noopener" style="${LINK_STYLE}">&#x1F50D; Search on Google</a>`
     : "";
 
-  if (!s) return `<div style="max-width:280px">${header}${commute}${links}</div>`;
+  const links =
+    googleLink || dashboardLink
+      ? `<div style="margin-top:4px">${googleLink}${dashboardLink}</div>`
+      : "";
+
+  if (!s)
+    return `<div style="max-width:280px">${header}${commute}${links}</div>`;
 
   const rows = POPUP_FIELDS.map(({ label, key, isRating }) =>
     fmtRow(label, s[key] ?? "", isRating),
@@ -294,8 +363,10 @@ oms.addListener("click", (marker: any) => {
 
 // Pins using SVG divIcon
 __points.forEach((p, i) => {
-  const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) })
-    .bindPopup(buildPopup(p), { maxWidth: 320 });
+  const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(
+    buildPopup(p),
+    { maxWidth: 320 },
+  );
   marker._zone = zones[i];
   oms.addMarker(marker);
   marker.addTo(pinLayer);
@@ -333,7 +404,10 @@ for (const [id, layer] of [
 // Zone mode radio buttons
 document.querySelectorAll('input[name="zone-mode"]').forEach((el) => {
   el.addEventListener("change", (e) => {
-    const value = (e.target as HTMLInputElement).value as "none" | "rings" | "cumulative";
+    const value = (e.target as HTMLInputElement).value as
+      | "none"
+      | "rings"
+      | "cumulative";
     if (activePolygonLayer) map.removeLayer(activePolygonLayer);
     activePolygonLayer = value === "none" ? null : polygonLayers[value];
     if (activePolygonLayer) map.addLayer(activePolygonLayer);

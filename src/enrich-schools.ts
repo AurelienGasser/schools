@@ -94,7 +94,7 @@ for (const row of allRows) {
   const name = row["School Name"]?.trim();
   if (!name) continue;
   const filtered: Record<string, string> = {};
-  for (const col of selectedColumns) {
+  for (const col of [...selectedColumns, "DBN"]) {
     if (col in row) filtered[col] = row[col];
   }
   const key = `${row["DBN"][2]}-${normalize(name)}`;
@@ -115,31 +115,39 @@ for (const feature of schoolsJson.features) {
 let jsonMatched = 0;
 const jsonUnmatchedByType = new Map<string, number>();
 const jsonUnmatchedPublic: string[] = [];
-const csvMatchedNames = new Set<string>();
+const csvMatchedDbns = new Set<string>();
 let matchedByDbn = 0;
 
 for (const feature of schoolsJson.features) {
   const name: string = feature.attributes?.LEGAL_NAME ?? "";
   const type: string = feature.attributes?.RECORD_TYPE_DESC ?? "UNKNOWN";
   const normalizedName = normalize(name);
-  const rowByDbn = csvByDbn.get(feature.attributes?.DBN ?? "UNKNOWN");
-  if (rowByDbn) {
+  const dbn = feature.attributes?.DBN ?? "UNKNOWN";
+  const csvRowByDbn = csvByDbn.get(dbn);
+  if (csvRowByDbn) {
     matchedByDbn++;
-    feature.attributes.sqr = rowByDbn;
-    csvMatchedNames.add(normalizedName);
+    feature.attributes.sqr = csvRowByDbn;
+    if (csvMatchedDbns.has(dbn)) {
+      console.warn(`Warning: duplicate match by DBN for ${name} (${dbn})`);
+    }
+    csvMatchedDbns.add(dbn);
     jsonMatched++;
   } else {
-    const rowByBoroughAndName = csvByBoroughAndName.get(
+    const csvRow = csvByBoroughAndName.get(
       `${getBoroughCodeFromAttrs(feature.attributes)}-${normalizedName}`,
     );
-    if (rowByBoroughAndName) {
-      feature.attributes.sqr = rowByBoroughAndName;
-      csvMatchedNames.add(normalizedName);
+    if (csvRow) {
+      feature.attributes.sqr = csvRow;
+      const csvDbn = csvRow["DBN"];
+      if (csvMatchedDbns.has(csvDbn)) {
+        console.warn(
+          `Warning: duplicate match by borough and name for ${name} (${csvDbn})`,
+        );
+      }
+      csvMatchedDbns.add(csvDbn);
       jsonMatched++;
     } else {
       jsonUnmatchedByType.set(type, (jsonUnmatchedByType.get(type) ?? 0) + 1);
-      if (type === "PUBLIC SCHOOL (IMF)" && !probablyHighSchool(name))
-        jsonUnmatchedPublic.push(name);
     }
   }
 }
@@ -160,10 +168,10 @@ function getBoroughCodeFromAttrs(attributes: any) {
 }
 
 const csvUnmatchedNames = [...csvByBoroughAndName.keys()]
-  .filter((k) => !csvMatchedNames.has(k))
+  .filter((k) => !csvMatchedDbns.has(k))
   .map((k) => csvOriginalName.get(k)!);
 
-const csvMatched = csvMatchedNames.size;
+const csvMatched = csvMatchedDbns.size;
 const csvUnmatched = csvUnmatchedNames.length;
 const jsonUnmatched = schoolsJson.features.length - jsonMatched;
 
@@ -181,14 +189,6 @@ if (jsonUnmatchedByType.size) {
   )) {
     console.log(`  ${count.toString().padStart(4)} ${type}`);
   }
-}
-
-function probablyHighSchool(name: string) {
-  return (
-    name.toLowerCase().includes("high school") &&
-    !name.toLowerCase().includes("junior") &&
-    !name.toLowerCase().includes("middle")
-  );
 }
 
 // 5. Write enriched schools.json

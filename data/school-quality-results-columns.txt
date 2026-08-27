@@ -1,103 +1,60 @@
 School Name
 School Type
-Advising and Planning - School Percent Positive
-Average Student Attendance
-Communication - School Percent Positive
-Economic Need Index
 Enrollment
-Family Involvement - School Percent Positive
-Family-School Trust - School Percent Positive
-Impact Score
+Percent in Temp Housing
+Percent of teachers with 3 or more years of experience
+Years of principal experience at this school
 Instruction and Performance - Rating
 Instruction and Performance - Score
-Instruction/Learning Environment - School Percent Positive
-Metric Rating - 9th Grade Adjusted Credit Accumulation of Former 8th Graders
 Metric Rating - Average Student Proficiency, ELA
 Metric Rating - Average Student Proficiency, Math
 Metric Rating - ELA Core Course Pass Rate
 Metric Rating - Math Core Course Pass Rate
+Metric Rating - Percentage of Students with >90% Attendance
+Metric Rating - Science Core Course Pass Rate
+Metric Rating - Social Studies Core Course Pass Rate
 Metric Rating - MS Adjusted Core Course Pass Rate of Former Students
 Metric Rating - Percent of 8th Graders Earning HS Credit
 Metric Rating - Percentage of Students at Level 3 or 4, ELA
 Metric Rating - Percentage of Students at Level 3 or 4, Math
-Metric Rating - Percentage of Students with >90% Attendance
-Metric Rating - Science Core Course Pass Rate
-Metric Rating - Social Studies Core Course Pass Rate
-Metric Value - % of 8th Graders earning High School Credit in Math
-Metric Value - % of 8th Graders earning High School Credit in Science
-Metric Value - Average Student Attendance
-Metric Value - Average Student Proficiency, ELA, Grade 3
-Metric Value - Average Student Proficiency, ELA, Grade 4
-Metric Value - Average Student Proficiency, ELA, Grade 5
-Metric Value - Average Student Proficiency, ELA, Grade 6
-Metric Value - Average Student Proficiency, ELA, Grade 7
-Metric Value - Average Student Proficiency, ELA, Grade 8
-Metric Value - Average Student Proficiency, Math, Grade 3
-Metric Value - Average Student Proficiency, Math, Grade 4
-Metric Value - Average Student Proficiency, Math, Grade 5
-Metric Value - Average Student Proficiency, Math, Grade 6
-Metric Value - Average Student Proficiency, Math, Grade 7
-Metric Value - Average Student Proficiency, Math, Grade 8
-Metric Value - Average Student Proficiency, Science, Grade 8
-Metric Value - Percentage of Students at Level 3 or 4, ELA, Grade 3
-Metric Value - Percentage of Students at Level 3 or 4, ELA, Grade 4
-Metric Value - Percentage of Students at Level 3 or 4, ELA, Grade 5
-Metric Value - Percentage of Students at Level 3 or 4, ELA, Grade 6
-Metric Value - Percentage of Students at Level 3 or 4, ELA, Grade 7
-Metric Value - Percentage of Students at Level 3 or 4, ELA, Grade 8
-Metric Value - Percentage of Students at Level 3 or 4, Math, Grade 3
-Metric Value - Percentage of Students at Level 3 or 4, Math, Grade 4
-Metric Value - Percentage of Students at Level 3 or 4, Math, Grade 5
-Metric Value - Percentage of Students at Level 3 or 4, Math, Grade 6
-Metric Value - Percentage of Students at Level 3 or 4, Math, Grade 7
-Metric Value - Percentage of Students at Level 3 or 4, Math, Grade 8
-Metric Value - Percentage of Students at Level 3 or 4, Science, Grade 8
-N Count - % of 8th Graders earning High School Credit in Math
-N Count - % of 8th Graders earning High School Credit in Science
-N Count - Average Student Attendance
-N Count - Average Student Proficiency, ELA, Grade 3
-N Count - Average Student Proficiency, ELA, Grade 4
-N Count - Average Student Proficiency, ELA, Grade 5
-N Count - Average Student Proficiency, ELA, Grade 6
-N Count - Average Student Proficiency, ELA, Grade 7
-N Count - Average Student Proficiency, ELA, Grade 8
-N Count - Average Student Proficiency, Math, Grade 3
-N Count - Average Student Proficiency, Math, Grade 4
-N Count - Average Student Proficiency, Math, Grade 5
-N Count - Average Student Proficiency, Math, Grade 6
-N Count - Average Student Proficiency, Math, Grade 7
-N Count - Average Student Proficiency, Math, Grade 8
-N Count - Average Student Proficiency, Science, Grade 8
-N Count - Percentage of Students at Level 3 or 4, ELA, Grade 3
-N Count - Percentage of Students at Level 3 or 4, ELA, Grade 4
-N Count - Percentage of Students at Level 3 or 4, ELA, Grade 5
-N Count - Percentage of Students at Level 3 or 4, ELA, Grade 6
-N Count - Percentage of Students at Level 3 or 4, ELA, Grade 7
-N Count - Percentage of Students at Level 3 or 4, ELA, Grade 8
-N Count - Percentage of Students at Level 3 or 4, Math, Grade 3
-N Count - Percentage of Students at Level 3 or 4, Math, Grade 4
-N Count - Percentage of Students at Level 3 or 4, Math, Grade 5
-N Count - Percentage of Students at Level 3 or 4, Math, Grade 6
-N Count - Percentage of Students at Level 3 or 4, Math, Grade 7
-N Count - Percentage of Students at Level 3 or 4, Math, Grade 8
-N Count - Percentage of Students at Level 3 or 4, Science, Grade 8
+N Score - Average Student Proficiency, ELA
+N Score - Average Student Proficiency, Math
+N Score - ELA Core Course Pass Rate
+N Score - Math Core Course Pass Rate
+N Score - Percentage of Students with >90% Attendance
+N Score - Science Core Course Pass Rate
+N Score - Social Studies Core Course Pass Rate
+N Score - MS Adjusted Core Course Pass Rate of Former Students
+N Score - Percent of 8th Graders Earning HS Credit
+N Score - Percentage of Students at Level 3 or 4, ELA
+N Score - Percentage of Students at Level 3 or 4, Math
+N Count - Average Student Proficiency, ELA
+N Count - Average Student Proficiency, Math
+N Count - ELA Core Course Pass Rate
+N Count - Math Core Course Pass Rate
+N Count - Percentage of Students with >90% Attendance
+N Count - Science Core Course Pass Rate
+N Count - Social Studies Core Course Pass Rate
+N Count - MS Adjusted Core Course Pass Rate of Former Students
+N Count - Percent of 8th Graders Earning HS Credit
+N Count - Percentage of Students at Level 3 or 4, ELA
+N Count - Percentage of Students at Level 3 or 4, Math
 Parent Survey Response Rate
-Percent in Temp Housing
-Percent of teachers with 3 or more years of experience
-Percentage of Students with >90% Attendance
-Performance Score
+Teacher Survey Response Rate
 Relationships with Families - Rating
-Safety - School Percent Positive
 Safety and School Climate - Rating
+Safety - School Percent Positive
 School Leadership - School Percent Positive
+Student Support - School Percent Positive
+Teaching Environment - School Percent Positive
+Advising and Planning - School Percent Positive
+Family Involvement - School Percent Positive
+Family-School Trust - School Percent Positive
+Communication - School Percent Positive
+Instruction/Learning Environment - School Percent Positive
 Student Percent - Asian
 Student Percent - Black
 Student Percent - Hispanic
 Student Percent - Native American
 Student Percent - Native Hawaiian or Pacific Islander
 Student Percent - White
-Student Support - School Percent Positive
-Students with IEPs: IEP Service Satisfaction - School Percent Positive
-Teacher Survey Response Rate
-Teaching Environment - School Percent Positive
-Years of principal experience at this school
