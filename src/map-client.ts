@@ -21,7 +21,7 @@ type ZoneSet = Array<{
   color: string;
   entries: Array<{ coordinates: number[][][][] }>;
 }>;
-declare const __polygonSets: { rings: ZoneSet; cumulative: ZoneSet };
+declare const __polygonSets: { rings: ZoneSet };
 
 const MILES_TO_METERS = 1609.34;
 
@@ -58,12 +58,8 @@ function buildLayer(zones: ZoneSet): any {
   return layer;
 }
 
-const polygonLayers = {
-  rings: buildLayer(__polygonSets.rings),
-  cumulative: buildLayer(__polygonSets.cumulative),
-};
-let activePolygonLayer: any = polygonLayers.rings;
-map.addLayer(activePolygonLayer);
+const ringsLayer = buildLayer(__polygonSets.rings);
+map.addLayer(ringsLayer);
 
 // Geo-referenced coverage zones
 const zones = __points.map((p) =>
@@ -611,17 +607,10 @@ document.querySelectorAll('input[name="commute-filter"]').forEach((el) => {
   el.addEventListener("change", applyFilters);
 });
 
-// Zone mode radio buttons
-document.querySelectorAll('input[name="zone-mode"]').forEach((el) => {
-  el.addEventListener("change", (e) => {
-    const value = (e.target as HTMLInputElement).value as
-      | "none"
-      | "rings"
-      | "cumulative";
-    if (activePolygonLayer) map.removeLayer(activePolygonLayer);
-    activePolygonLayer = value === "none" ? null : polygonLayers[value];
-    if (activePolygonLayer) map.addLayer(activePolygonLayer);
-  });
+// Commute zone toggle
+document.getElementById("toggle-zones")!.addEventListener("change", (e) => {
+  if ((e.target as HTMLInputElement).checked) map.addLayer(ringsLayer);
+  else map.removeLayer(ringsLayer);
 });
 
 // Radius slider

@@ -137,15 +137,6 @@ const ringZones = zonesSorted.map((z, i) => {
   };
 });
 
-// Cumulative mode: raw polygons largest-first so each smaller zone paints on top
-const cumulativeZones = [...zonesSorted]
-  .map((z, i) => ({
-    name: z.name,
-    minutes: z.minutes,
-    color: ZONE_COLORS[i] ?? "#6b7280",
-    entries: polygons[z.name].map((e) => ({ coordinates: e.coordinates })),
-  }))
-  .reverse();
 
 function commuteRange(
   lng: number,
@@ -397,12 +388,7 @@ const html = `<!DOCTYPE html>
       <label class="radio-row"><input type="radio" name="commute-filter" value="45" checked />≤ 45 min</label>
       <label class="radio-row"><input type="radio" name="commute-filter" value="any" />Any</label>
       </div>
-      <div class="control-section-label">Commute zones</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <label class="radio-row"><input type="radio" name="zone-mode" value="none" />None</label>
-        <label class="radio-row"><input type="radio" name="zone-mode" value="rings" checked />Rings</label>
-        <label class="radio-row"><input type="radio" name="zone-mode" value="cumulative" />Overlapping</label>
-      </div>
+      <label class="toggle-row" style="margin-top:6px"><input type="checkbox" id="toggle-zones" checked />Commute zones</label>
     </div>
   </div>
   <div id="legend">
@@ -423,7 +409,7 @@ const html = `<!DOCTYPE html>
       ${commuteLegend}
     </div>
   </div>
-  <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones, cumulative: cumulativeZones })};</script>
+  <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones })};</script>
   <script src="./map-client.js?v=${Date.now()}"></script>
 </body>
 </html>`;

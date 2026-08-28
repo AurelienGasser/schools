@@ -25,12 +25,8 @@ function buildLayer(zones) {
     }
     return layer;
 }
-const polygonLayers = {
-    rings: buildLayer(__polygonSets.rings),
-    cumulative: buildLayer(__polygonSets.cumulative),
-};
-let activePolygonLayer = polygonLayers.rings;
-map.addLayer(activePolygonLayer);
+const ringsLayer = buildLayer(__polygonSets.rings);
+map.addLayer(ringsLayer);
 // Geo-referenced coverage zones
 const zones = __points.map((p) => L.circle([p.lat, p.lng], {
     radius: 0.5 * MILES_TO_METERS,
@@ -474,16 +470,12 @@ document.getElementById("hide-no-academic-data").addEventListener("change", appl
 document.querySelectorAll('input[name="commute-filter"]').forEach((el) => {
     el.addEventListener("change", applyFilters);
 });
-// Zone mode radio buttons
-document.querySelectorAll('input[name="zone-mode"]').forEach((el) => {
-    el.addEventListener("change", (e) => {
-        const value = e.target.value;
-        if (activePolygonLayer)
-            map.removeLayer(activePolygonLayer);
-        activePolygonLayer = value === "none" ? null : polygonLayers[value];
-        if (activePolygonLayer)
-            map.addLayer(activePolygonLayer);
-    });
+// Commute zone toggle
+document.getElementById("toggle-zones").addEventListener("change", (e) => {
+    if (e.target.checked)
+        map.addLayer(ringsLayer);
+    else
+        map.removeLayer(ringsLayer);
 });
 // Radius slider
 const slider = document.getElementById("radius-slider");
