@@ -402,27 +402,33 @@ __points.forEach((p, i) => {
     marker.addTo(pinLayer);
     allMarkers.push({ marker, p });
 });
-function applyAcademicFilter(minRating, hideNoData) {
-    const minRank = minRating === "any" ? -1 : (RATING_RANK[minRating] ?? -1);
+function applyFilters() {
+    const academicValue = document.querySelector('input[name="academic-filter"]:checked')?.value ?? "any";
+    const minRank = academicValue === "any" ? -1 : (RATING_RANK[academicValue] ?? -1);
+    const hideNoData = document.getElementById("hide-no-academic-data")?.checked ?? false;
+    const commuteValue = document.querySelector('input[name="commute-filter"]:checked')?.value ?? "any";
+    const maxCommute = commuteValue === "any" ? Infinity : parseInt(commuteValue);
     for (const { marker, p } of allMarkers) {
+        // Commute filter
+        const commuteMax = p.commuteRange.max ?? Infinity;
+        const passesCommute = commuteMax <= maxCommute;
+        // Academic filter
         const sqr = p.sqr;
         const elaRating = sqr?.["Metric Rating - Average Student Proficiency, ELA"] ?? "";
         const mathRating = sqr?.["Metric Rating - Average Student Proficiency, Math"] ?? "";
         const hasData = Boolean(elaRating || mathRating);
-        let visible;
+        let passesAcademic;
         if (!hasData) {
-            visible = !hideNoData;
+            passesAcademic = !hideNoData;
         }
         else if (minRank < 0) {
-            visible = true;
+            passesAcademic = true;
         }
         else {
-            const ranks = [elaRating, mathRating]
-                .filter(Boolean)
-                .map((r) => RATING_RANK[r] ?? -1);
-            const worstRank = Math.min(...ranks);
-            visible = worstRank >= minRank;
+            const ranks = [elaRating, mathRating].filter(Boolean).map((r) => RATING_RANK[r] ?? -1);
+            passesAcademic = Math.min(...ranks) >= minRank;
         }
+        const visible = passesCommute && passesAcademic;
         if (visible && !pinLayer.hasLayer(marker)) {
             pinLayer.addLayer(marker);
         }
@@ -459,15 +465,14 @@ for (const [id, layer] of [
             map.removeLayer(layer);
     });
 }
-// Academic filter
-const getAcademicFilter = () => document.querySelector('input[name="academic-filter"]:checked')?.value ?? "any";
-const getHideNoData = () => document.getElementById("hide-no-academic-data")?.checked ?? false;
-applyAcademicFilter(getAcademicFilter(), getHideNoData());
+// Filters
+applyFilters();
 document.querySelectorAll('input[name="academic-filter"]').forEach((el) => {
-    el.addEventListener("change", () => applyAcademicFilter(getAcademicFilter(), getHideNoData()));
+    el.addEventListener("change", applyFilters);
 });
-document.getElementById("hide-no-academic-data").addEventListener("change", () => {
-    applyAcademicFilter(getAcademicFilter(), getHideNoData());
+document.getElementById("hide-no-academic-data").addEventListener("change", applyFilters);
+document.querySelectorAll('input[name="commute-filter"]').forEach((el) => {
+    el.addEventListener("change", applyFilters);
 });
 // Zone mode radio buttons
 document.querySelectorAll('input[name="zone-mode"]').forEach((el) => {

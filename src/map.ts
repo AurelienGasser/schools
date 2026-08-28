@@ -190,15 +190,28 @@ function avgMetric(sqr: Record<string, string>, prefix: string): number | null {
   return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
 }
 
-function qualityArms(sqr: Record<string, string> | undefined): [number, number, number] {
+function qualityArms(
+  sqr: Record<string, string> | undefined,
+): [number, number, number] {
   if (!sqr) return [0, 0, 0];
-  const ela = avgMetric(sqr, "Metric Value - Percentage of Students at Level 3 or 4, ELA") ?? 0;
-  const math = avgMetric(sqr, "Metric Value - Percentage of Students at Level 3 or 4, Math") ?? 0;
+  const ela =
+    avgMetric(
+      sqr,
+      "Metric Value - Percentage of Students at Level 3 or 4, ELA",
+    ) ?? 0;
+  const math =
+    avgMetric(
+      sqr,
+      "Metric Value - Percentage of Students at Level 3 or 4, Math",
+    ) ?? 0;
   const attendance = parsePercent(sqr["Average Student Attendance"] ?? "") ?? 0;
   return [ela, math, attendance];
 }
 
-function schoolTypeFromSqr(sqr: Record<string, string> | undefined, name: string): "elementary" | "middle" | "k8" | "unknown" {
+function schoolTypeFromSqr(
+  sqr: Record<string, string> | undefined,
+  name: string,
+): "elementary" | "middle" | "k8" | "unknown" {
   const t = (sqr?.["School Type"] ?? "").trim();
   if (t === "Elementary") return "elementary";
   if (t === "Middle") return "middle";
@@ -219,8 +232,13 @@ const points = features
     city: f.attributes.PHYSCITY,
     address: f.attributes.PHYSADDRLINE1,
     commuteRange: commuteRange(f.geometry.x, f.geometry.y),
-    schoolType: schoolTypeFromSqr(f.attributes.sqr as Record<string, string> | undefined, f.attributes.LEGAL_NAME ?? ""),
-    qualityArms: qualityArms(f.attributes.sqr as Record<string, string> | undefined),
+    schoolType: schoolTypeFromSqr(
+      f.attributes.sqr as Record<string, string> | undefined,
+      f.attributes.LEGAL_NAME ?? "",
+    ),
+    qualityArms: qualityArms(
+      f.attributes.sqr as Record<string, string> | undefined,
+    ),
     sqr: f.attributes.sqr as Record<string, string> | undefined,
     dbn: f.attributes.DBN as string | undefined,
   }))
@@ -372,6 +390,13 @@ const html = `<!DOCTYPE html>
         <label class="radio-row"><input type="radio" name="academic-filter" value="Excellent" />Excellent only</label>
       </div>
       <label class="toggle-row" style="margin-top:6px"><input type="checkbox" id="hide-no-academic-data" />Hide if no data</label>
+      <div class="control-section-label">Commute</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+      <label class="radio-row"><input type="radio" name="commute-filter" value="30" />≤ 30 min</label>
+      <label class="radio-row"><input type="radio" name="commute-filter" value="40" />≤ 40 min</label>
+      <label class="radio-row"><input type="radio" name="commute-filter" value="45" checked />≤ 45 min</label>
+      <label class="radio-row"><input type="radio" name="commute-filter" value="any" />Any</label>
+      </div>
       <div class="control-section-label">Commute zones</div>
       <div style="display:flex;flex-direction:column;gap:6px;">
         <label class="radio-row"><input type="radio" name="zone-mode" value="none" />None</label>

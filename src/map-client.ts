@@ -9,6 +9,7 @@ declare const __points: Array<{
   city: string;
   address: string;
   commute: string;
+  commuteRange: { min?: number; max?: number };
   schoolType: "elementary" | "middle" | "k8" | "unknown";
   qualityArms: [number, number, number];
   sqr?: Record<string, string>;
@@ -533,27 +534,35 @@ __points.forEach((p, i) => {
   allMarkers.push({ marker, p });
 });
 
-function applyAcademicFilter(minRating: string, hideNoData: boolean): void {
-  const minRank = minRating === "any" ? -1 : (RATING_RANK[minRating] ?? -1);
+function applyFilters(): void {
+  const academicValue = (document.querySelector('input[name="academic-filter"]:checked') as HTMLInputElement)?.value ?? "any";
+  const minRank = academicValue === "any" ? -1 : (RATING_RANK[academicValue] ?? -1);
+  const hideNoData = (document.getElementById("hide-no-academic-data") as HTMLInputElement)?.checked ?? false;
+
+  const commuteValue = (document.querySelector('input[name="commute-filter"]:checked') as HTMLInputElement)?.value ?? "any";
+  const maxCommute = commuteValue === "any" ? Infinity : parseInt(commuteValue);
+
   for (const { marker, p } of allMarkers) {
+    // Commute filter
+    const commuteMax = p.commuteRange.max ?? Infinity;
+    const passesCommute = commuteMax <= maxCommute;
+
+    // Academic filter
     const sqr = p.sqr;
     const elaRating = sqr?.["Metric Rating - Average Student Proficiency, ELA"] ?? "";
     const mathRating = sqr?.["Metric Rating - Average Student Proficiency, Math"] ?? "";
     const hasData = Boolean(elaRating || mathRating);
-
-    let visible: boolean;
+    let passesAcademic: boolean;
     if (!hasData) {
-      visible = !hideNoData;
+      passesAcademic = !hideNoData;
     } else if (minRank < 0) {
-      visible = true;
+      passesAcademic = true;
     } else {
-      const ranks = [elaRating, mathRating]
-        .filter(Boolean)
-        .map((r) => RATING_RANK[r] ?? -1);
-      const worstRank = Math.min(...ranks);
-      visible = worstRank >= minRank;
+      const ranks = [elaRating, mathRating].filter(Boolean).map((r) => RATING_RANK[r] ?? -1);
+      passesAcademic = Math.min(...ranks) >= minRank;
     }
 
+    const visible = passesCommute && passesAcademic;
     if (visible && !pinLayer.hasLayer(marker)) {
       pinLayer.addLayer(marker);
     } else if (!visible && pinLayer.hasLayer(marker)) {
@@ -591,19 +600,15 @@ for (const [id, layer] of [
   });
 }
 
-// Academic filter
-const getAcademicFilter = (): string =>
-  (document.querySelector('input[name="academic-filter"]:checked') as HTMLInputElement)?.value ?? "any";
-const getHideNoData = (): boolean =>
-  (document.getElementById("hide-no-academic-data") as HTMLInputElement)?.checked ?? false;
-
-applyAcademicFilter(getAcademicFilter(), getHideNoData());
+// Filters
+applyFilters();
 
 document.querySelectorAll('input[name="academic-filter"]').forEach((el) => {
-  el.addEventListener("change", () => applyAcademicFilter(getAcademicFilter(), getHideNoData()));
+  el.addEventListener("change", applyFilters);
 });
-document.getElementById("hide-no-academic-data")!.addEventListener("change", () => {
-  applyAcademicFilter(getAcademicFilter(), getHideNoData());
+document.getElementById("hide-no-academic-data")!.addEventListener("change", applyFilters);
+document.querySelectorAll('input[name="commute-filter"]').forEach((el) => {
+  el.addEventListener("change", applyFilters);
 });
 
 // Zone mode radio buttons
