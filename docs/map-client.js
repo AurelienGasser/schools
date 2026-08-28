@@ -12,7 +12,13 @@ function buildLayer(zones) {
     for (const zone of zones) {
         for (const entry of zone.entries) {
             L.geoJSON({ type: "MultiPolygon", coordinates: entry.coordinates }, {
-                style: { color: zone.color, weight: 1.5, opacity: 0.6, fillColor: zone.color, fillOpacity: 0.25 },
+                style: {
+                    color: zone.color,
+                    weight: 1.5,
+                    opacity: 0.6,
+                    fillColor: zone.color,
+                    fillOpacity: 0.25,
+                },
                 interactive: false,
             }).addTo(layer);
         }
@@ -122,9 +128,9 @@ function makePinIcon(p) {
 }
 function ratingBadge(rating) {
     const colors = {
-        "Excellent": "#15803d",
-        "Good": "#65a30d",
-        "Fair": "#ca8a04",
+        Excellent: "#15803d",
+        Good: "#65a30d",
+        Fair: "#ca8a04",
         "Needs Improvement": "#dc2626",
     };
     const bg = colors[rating] ?? "#6b7280";
@@ -154,31 +160,98 @@ const POPUP_FIELDS = [
     { label: "School Type", key: "School Type" },
     { label: "Enrollment", key: "Enrollment" },
     { label: "Attendance", key: "Average Student Attendance" },
-    { label: ">90% Attendance", key: "Percentage of Students with >90% Attendance" },
-    { label: ">90% Rating", key: "Metric Rating - Percentage of Students with >90% Attendance", isRating: true },
+    {
+        label: ">90% Attendance",
+        key: "Percentage of Students with >90% Attendance",
+    },
+    {
+        label: ">90% Rating",
+        key: "Metric Rating - Percentage of Students with >90% Attendance",
+        isRating: true,
+    },
     { label: "I&P Score", key: "Instruction and Performance - Score" },
-    { label: "I&P Rating", key: "Instruction and Performance - Rating", isRating: true },
-    { label: "Safety Rating", key: "Safety and School Climate - Rating", isRating: true },
+    {
+        label: "I&P Rating",
+        key: "Instruction and Performance - Rating",
+        isRating: true,
+    },
+    {
+        label: "Safety Rating",
+        key: "Safety and School Climate - Rating",
+        isRating: true,
+    },
     { label: "Safety", key: "Safety - School Percent Positive" },
     { label: "Communication", key: "Communication - School Percent Positive" },
-    { label: "Teaching Env", key: "Teaching Environment - School Percent Positive" },
-    { label: "Learning Env", key: "Instruction/Learning Environment - School Percent Positive" },
-    { label: "Family Inv.", key: "Family Involvement - School Percent Positive" },
-    { label: "Teacher Exp.", key: "Percent of teachers with 3 or more years of experience" },
-    { label: "Principal Yrs.", key: "Years of principal experience at this school" },
+    {
+        label: "Teaching Env",
+        key: "Teaching Environment - School Percent Positive",
+    },
+    {
+        label: "Learning Env",
+        key: "Instruction/Learning Environment - School Percent Positive",
+    },
+    {
+        label: "Family Inv.",
+        key: "Family Involvement - School Percent Positive",
+    },
+    {
+        label: "Teacher Exp.",
+        key: "Percent of teachers with 3 or more years of experience",
+    },
+    {
+        label: "Principal Yrs.",
+        key: "Years of principal experience at this school",
+    },
 ];
+const RATING_TO_PCT = {
+    "Excellent": 100,
+    "Good": 66,
+    "Fair": 33,
+    "Needs Improvement": 0,
+};
+function academicSection(s) {
+    const subjects = [
+        { label: "ELA", key: "Metric Rating - Average Student Proficiency, ELA" },
+        { label: "Math", key: "Metric Rating - Average Student Proficiency, Math" },
+    ];
+    const rows = subjects
+        .map(({ label, key }) => {
+        const rating = s[key] ?? "";
+        if (!rating)
+            return "";
+        const pct = RATING_TO_PCT[rating] ?? 50;
+        const hue = Math.pow(pct / 100, 3) * 120;
+        const color = `hsl(${hue.toFixed(1)},75%,38%)`;
+        const bg = `linear-gradient(to right,${color} ${pct}%,#e5e7eb ${pct}%)`;
+        const bar = `<div style="width:80px;height:5px;background:${bg};border-radius:2px;flex-shrink:0"></div>`;
+        return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle"><div style="display:flex;align-items:center;gap:6px">${bar}${ratingBadge(rating)}</div></td></tr>`;
+    })
+        .join("");
+    if (!rows)
+        return "";
+    return `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#888;margin-bottom:4px">Academics</div><table style="font-size:12px;border-collapse:collapse">${rows}</table></div>`;
+}
 const ETHNICITY_GROUPS = [
     { label: "Hispanic", key: "Student Percent - Hispanic", color: "#c2703e" },
     { label: "Black", key: "Student Percent - Black", color: "#5c3317" },
     { label: "Asian", key: "Student Percent - Asian", color: "#e8b84b" },
     { label: "White", key: "Student Percent - White", color: "#e8e0d0" },
-    { label: "Native Am.", key: "Student Percent - Native American", color: "#9a3412" },
-    { label: "Pacific Isl.", key: "Student Percent - Native Hawaiian or Pacific Islander", color: "#0e7490" },
+    {
+        label: "Native Am.",
+        key: "Student Percent - Native American",
+        color: "#9a3412",
+    },
+    {
+        label: "Pacific Isl.",
+        key: "Student Percent - Native Hawaiian or Pacific Islander",
+        color: "#0e7490",
+    },
 ];
 function ethnicityBar(s) {
-    const vals = ETHNICITY_GROUPS
-        .map((g) => ({ ...g, pct: parseFloat(s[g.key]?.replace("%", "") ?? "") || 0 }))
-        .filter((g) => g.pct > 0);
+    const vals = ETHNICITY_GROUPS.map((g) => ({
+        ...g,
+        pct: parseFloat(s[g.key]?.replace("%", "") ?? "") || 0,
+    })).filter((g) => g.pct > 0);
     if (!vals.length)
         return "";
     const total = vals.reduce((sum, g) => sum + g.pct, 0);
@@ -198,21 +271,23 @@ const LINK_STYLE = `color:#2563eb;font-size:12px;text-decoration:none;display:in
 function buildPopup(p) {
     const s = p.sqr;
     const header = `<b style="font-size:14px">${p.name}</b><br><span style="color:#555;font-size:12px">${p.type}</span><br><span style="color:#777;font-size:11px">${p.address}, ${p.city}</span>`;
-    const commute = p.commute ? `<div style="margin-top:4px;font-size:12px">Commute: <b>${p.commute}</b></div>` : "";
-    const googleLink = p.schoolType === "unknown"
-        ? `<a href="https://www.google.com/search?q=${encodeURIComponent(p.name + " NYC school")}" target="_blank" rel="noopener" style="${LINK_STYLE}">&#x1F50D; Search on Google</a>`
+    const commute = p.commute
+        ? `<div style="margin-top:4px;font-size:12px">Commute: <b>${p.commute}</b></div>`
         : "";
-    const dashboardLink = s && p.dbn
+    const dashboardLink = p.dbn
         ? `<a href="https://tools.nycenet.edu/dashboard/#dbn=${encodeURIComponent(p.dbn)}&report_type=EMS&view=City" target="_blank" rel="noopener" style="${LINK_STYLE}">&#x1F4CA; NYC Dashboard</a>`
         : "";
-    const links = (googleLink || dashboardLink)
+    const googleLink = !p.dbn
+        ? `<a href="https://www.google.com/search?q=${encodeURIComponent(p.name + " NYC school")}" target="_blank" rel="noopener" style="${LINK_STYLE}">&#x1F50D; Search on Google</a>`
+        : "";
+    const links = googleLink || dashboardLink
         ? `<div style="margin-top:4px">${googleLink}${dashboardLink}</div>`
         : "";
     if (!s)
         return `<div style="max-width:280px">${header}${commute}${links}</div>`;
     const rows = POPUP_FIELDS.map(({ label, key, isRating }) => fmtRow(label, s[key] ?? "", isRating)).join("");
     const table = `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>`;
-    return `<div style="max-width:300px">${header}${commute}${links}${table}${ethnicityBar(s)}</div>`;
+    return `<div style="max-width:300px">${header}${commute}${links}${table}${academicSection(s)}${ethnicityBar(s)}</div>`;
 }
 // Spiderifier for overlapping pins
 const oms = new OverlappingMarkerSpiderfier(map, {
@@ -230,8 +305,7 @@ oms.addListener("click", (marker) => {
 });
 // Pins using SVG divIcon
 __points.forEach((p, i) => {
-    const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) })
-        .bindPopup(buildPopup(p), { maxWidth: 320 });
+    const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(buildPopup(p), { maxWidth: 320 });
     marker._zone = zones[i];
     oms.addMarker(marker);
     marker.addTo(pinLayer);

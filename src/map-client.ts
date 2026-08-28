@@ -272,6 +272,34 @@ const POPUP_FIELDS: Array<{ label: string; key: string; isRating?: boolean }> =
     },
   ];
 
+const RATING_TO_PCT: Record<string, number> = {
+  "Excellent": 100,
+  "Good": 66,
+  "Fair": 33,
+  "Needs Improvement": 0,
+};
+
+function academicSection(s: Record<string, string>): string {
+  const subjects: Array<{ label: string; key: string }> = [
+    { label: "ELA",  key: "Metric Rating - Average Student Proficiency, ELA" },
+    { label: "Math", key: "Metric Rating - Average Student Proficiency, Math" },
+  ];
+  const rows = subjects
+    .map(({ label, key }) => {
+      const rating = s[key] ?? "";
+      if (!rating) return "";
+      const pct = RATING_TO_PCT[rating] ?? 50;
+      const hue = Math.pow(pct / 100, 3) * 120;
+      const color = `hsl(${hue.toFixed(1)},75%,38%)`;
+      const bg = `linear-gradient(to right,${color} ${pct}%,#e5e7eb ${pct}%)`;
+      const bar = `<div style="width:80px;height:5px;background:${bg};border-radius:2px;flex-shrink:0"></div>`;
+      return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle"><div style="display:flex;align-items:center;gap:6px">${bar}${ratingBadge(rating)}</div></td></tr>`;
+    })
+    .join("");
+  if (!rows) return "";
+  return `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#888;margin-bottom:4px">Academics</div><table style="font-size:12px;border-collapse:collapse">${rows}</table></div>`;
+}
+
 const ETHNICITY_GROUPS = [
   { label: "Hispanic", key: "Student Percent - Hispanic", color: "#c2703e" },
   { label: "Black", key: "Student Percent - Black", color: "#5c3317" },
@@ -343,7 +371,7 @@ function buildPopup(p: (typeof __points)[0]): string {
   ).join("");
 
   const table = `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>`;
-  return `<div style="max-width:300px">${header}${commute}${links}${table}${ethnicityBar(s)}</div>`;
+  return `<div style="max-width:300px">${header}${commute}${links}${table}${academicSection(s)}${ethnicityBar(s)}</div>`;
 }
 
 // Spiderifier for overlapping pins
