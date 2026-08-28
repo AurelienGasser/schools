@@ -274,20 +274,6 @@ const POPUP_FIELDS: Array<{
     key: "Safety and School Climate - Rating",
     isRating: true,
   },
-  { label: "Safety", key: "Safety - School Percent Positive" },
-  { label: "Communication", key: "Communication - School Percent Positive" },
-  {
-    label: "Teaching Env",
-    key: "Teaching Environment - School Percent Positive",
-  },
-  {
-    label: "Learning Env",
-    key: "Instruction/Learning Environment - School Percent Positive",
-  },
-  {
-    label: "Family Inv.",
-    key: "Family Involvement - School Percent Positive",
-  },
   {
     label: "Teachers w/ 3+ Yrs",
     key: "Percent of teachers with 3 or more years of experience",
@@ -389,6 +375,49 @@ const ETHNICITY_GROUPS = [
   },
 ];
 
+const SURVEY_FIELDS: Array<{ label: string; key: string; isRating?: boolean }> = [
+  { label: "Safety", key: "Safety - School Percent Positive" },
+  { label: "Families", key: "Relationships with Families - Rating", isRating: true },
+  { label: "Leadership", key: "School Leadership - School Percent Positive" },
+  {
+    label: "Student Support",
+    key: "Student Support - School Percent Positive",
+  },
+  {
+    label: "Teaching Env",
+    key: "Teaching Environment - School Percent Positive",
+  },
+  { label: "Advising", key: "Advising and Planning - School Percent Positive" },
+  { label: "Family Inv.", key: "Family Involvement - School Percent Positive" },
+  {
+    label: "Family Trust",
+    key: "Family-School Trust - School Percent Positive",
+  },
+  { label: "Communication", key: "Communication - School Percent Positive" },
+  {
+    label: "Learning Env",
+    key: "Instruction/Learning Environment - School Percent Positive",
+  },
+];
+
+function surveySection(s: Record<string, string>): string {
+  const parentRate = s["Parent Survey Response Rate"] ?? "";
+  const teacherRate = s["Teacher Survey Response Rate"] ?? "";
+  const hasRates = parentRate || teacherRate;
+  const rows = SURVEY_FIELDS.map(({ label, key }) => {
+    const val = s[key] ?? "";
+    if (!val) return "";
+    return fmtRow(label, val);
+  })
+    .filter(Boolean)
+    .join("");
+  if (!rows && !hasRates) return "";
+  const rateBar = hasRates
+    ? `<div style="font-size:11px;color:#555;margin-bottom:4px">Resp. rate. Teachers: <b>${teacherRate || "—"}</b>&ensp;Parents: <b>${parentRate || "—"}</b></div>`
+    : "";
+  return `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#888;margin-bottom:4px">Survey</div>${rateBar}<table style="font-size:12px;border-collapse:collapse">${rows}</table></div>`;
+}
+
 function ethnicityBar(s: Record<string, string>): string {
   const vals = ETHNICITY_GROUPS.map((g) => ({
     ...g,
@@ -450,7 +479,7 @@ function buildPopup(p: (typeof __points)[0]): string {
   ).join("");
 
   const table = `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>`;
-  return `<div>${header}${commute}${links}${table}${academicSection(s)}${ethnicityBar(s)}</div>`;
+  return `<div>${header}${commute}${links}${table}${academicSection(s)}${surveySection(s)}${ethnicityBar(s)}</div>`;
 }
 
 // Spiderifier for overlapping pins
