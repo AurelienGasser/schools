@@ -302,9 +302,16 @@ const RATING_TO_PCT: Record<string, number> = {
 };
 
 function academicSection(s: Record<string, string>): string {
-  type Subject = { label: string; ratingKey: string; scoreKey: string; nKey: string };
+  type Subject = {
+    label: string;
+    fullName: string;
+    ratingKey: string;
+    scoreKey: string;
+    nKey: string;
+  };
   const mk = (label: string, metric: string): Subject => ({
     label,
+    fullName: metric,
     ratingKey: `Metric Rating - ${metric}`,
     scoreKey: `Metric Score - ${metric}`,
     nKey: `N count - ${metric}`,
@@ -318,16 +325,21 @@ function academicSection(s: Record<string, string>): string {
   const detailSubjects: Subject[] = [
     mk("ELA Core Pass", "ELA Core Course Pass Rate"),
     mk("Math Core Pass", "Math Core Course Pass Rate"),
-    mk(">90% Att.", "Percentage of Students with >90% Attendance"),
     mk("Science Pass", "Science Core Course Pass Rate"),
-    mk("Soc. Studies Pass", "Social Studies Core Course Pass Rate"),
+    mk("Soc. Stud. Pass", "Social Studies Core Course Pass Rate"),
     mk("MS Adj. Pass", "MS Adjusted Core Course Pass Rate of Former Students"),
-    mk("8th → HS Credit", "Percent of 8th Graders Earning HS Credit"),
+    mk("8th → HS Cred.", "Percent of 8th Graders Earning HS Credit"),
     mk("Lvl 3-4 ELA", "Percentage of Students at Level 3 or 4, ELA"),
     mk("Lvl 3-4 Math", "Percentage of Students at Level 3 or 4, Math"),
   ];
 
-  const renderRow = ({ label, ratingKey, scoreKey, nKey }: Subject): string => {
+  const renderRow = ({
+    label,
+    fullName,
+    ratingKey,
+    scoreKey,
+    nKey,
+  }: Subject): string => {
     const rating = s[ratingKey] ?? "";
     const scoreRaw = s[scoreKey];
     const nRaw = s[nKey];
@@ -346,7 +358,7 @@ function academicSection(s: Record<string, string>): string {
     const bg = `linear-gradient(to right,${color} ${pct.toFixed(1)}%,#e5e7eb ${pct.toFixed(1)}%)`;
     const bar = `<div style="width:80px;height:5px;background:${bg};border-radius:2px;flex-shrink:0"></div>`;
     const badge = rating ? ratingBadge(rating) : "";
-    return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle"><div style="display:flex;align-items:center;gap:6px">${bar}${scoreText}${badge}</div></td></tr>`;
+    return `<tr title="${fullName}"><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle"><div style="display:flex;align-items:center;gap:6px">${bar}${scoreText}${badge}</div></td></tr>`;
   };
 
   const mainRows = mainSubjects.map(renderRow).join("");
@@ -438,7 +450,7 @@ function buildPopup(p: (typeof __points)[0]): string {
   ).join("");
 
   const table = `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>`;
-  return `<div style="max-width:300px">${header}${commute}${links}${table}${academicSection(s)}${ethnicityBar(s)}</div>`;
+  return `<div>${header}${commute}${links}${table}${academicSection(s)}${ethnicityBar(s)}</div>`;
 }
 
 // Spiderifier for overlapping pins
@@ -460,7 +472,7 @@ oms.addListener("click", (marker: any) => {
 __points.forEach((p, i) => {
   const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(
     buildPopup(p),
-    { maxWidth: 320 },
+    { minWidth: 370 },
   );
   marker._zone = zones[i];
   oms.addMarker(marker);

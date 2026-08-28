@@ -224,6 +224,7 @@ const RATING_TO_PCT = {
 function academicSection(s) {
     const mk = (label, metric) => ({
         label,
+        fullName: metric,
         ratingKey: `Metric Rating - ${metric}`,
         scoreKey: `Metric Score - ${metric}`,
         nKey: `N count - ${metric}`,
@@ -235,15 +236,14 @@ function academicSection(s) {
     const detailSubjects = [
         mk("ELA Core Pass", "ELA Core Course Pass Rate"),
         mk("Math Core Pass", "Math Core Course Pass Rate"),
-        mk(">90% Att.", "Percentage of Students with >90% Attendance"),
         mk("Science Pass", "Science Core Course Pass Rate"),
-        mk("Soc. Studies Pass", "Social Studies Core Course Pass Rate"),
+        mk("Soc. Stud. Pass", "Social Studies Core Course Pass Rate"),
         mk("MS Adj. Pass", "MS Adjusted Core Course Pass Rate of Former Students"),
-        mk("8th → HS Credit", "Percent of 8th Graders Earning HS Credit"),
+        mk("8th → HS Cred.", "Percent of 8th Graders Earning HS Credit"),
         mk("Lvl 3-4 ELA", "Percentage of Students at Level 3 or 4, ELA"),
         mk("Lvl 3-4 Math", "Percentage of Students at Level 3 or 4, Math"),
     ];
-    const renderRow = ({ label, ratingKey, scoreKey, nKey }) => {
+    const renderRow = ({ label, fullName, ratingKey, scoreKey, nKey, }) => {
         const rating = s[ratingKey] ?? "";
         const scoreRaw = s[scoreKey];
         const nRaw = s[nKey];
@@ -264,7 +264,7 @@ function academicSection(s) {
         const bg = `linear-gradient(to right,${color} ${pct.toFixed(1)}%,#e5e7eb ${pct.toFixed(1)}%)`;
         const bar = `<div style="width:80px;height:5px;background:${bg};border-radius:2px;flex-shrink:0"></div>`;
         const badge = rating ? ratingBadge(rating) : "";
-        return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle"><div style="display:flex;align-items:center;gap:6px">${bar}${scoreText}${badge}</div></td></tr>`;
+        return `<tr title="${fullName}"><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle"><div style="display:flex;align-items:center;gap:6px">${bar}${scoreText}${badge}</div></td></tr>`;
     };
     const mainRows = mainSubjects.map(renderRow).join("");
     if (!mainRows)
@@ -331,7 +331,7 @@ function buildPopup(p) {
         return `<div style="max-width:280px">${header}${commute}${links}</div>`;
     const rows = POPUP_FIELDS.map(({ label, key, isRating, ratingKey, scoreRange }) => fmtRow(label, s[key] ?? "", isRating, ratingKey !== undefined ? (s[ratingKey] ?? "") : undefined, scoreRange)).join("");
     const table = `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>`;
-    return `<div style="max-width:300px">${header}${commute}${links}${table}${academicSection(s)}${ethnicityBar(s)}</div>`;
+    return `<div>${header}${commute}${links}${table}${academicSection(s)}${ethnicityBar(s)}</div>`;
 }
 // Spiderifier for overlapping pins
 const oms = new OverlappingMarkerSpiderfier(map, {
@@ -349,7 +349,7 @@ oms.addListener("click", (marker) => {
 });
 // Pins using SVG divIcon
 __points.forEach((p, i) => {
-    const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(buildPopup(p), { maxWidth: 320 });
+    const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(buildPopup(p), { minWidth: 370 });
     marker._zone = zones[i];
     oms.addMarker(marker);
     marker.addTo(pinLayer);
