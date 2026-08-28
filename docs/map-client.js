@@ -159,6 +159,10 @@ function fmtRow(label, value, isRating = false) {
 const POPUP_FIELDS = [
     { label: "School Type", key: "School Type" },
     { label: "Enrollment", key: "Enrollment" },
+    {
+        label: "Principal Yrs.",
+        key: "Years of principal experience at this school",
+    },
     { label: "Attendance", key: "Average Student Attendance" },
     {
         label: ">90% Attendance",
@@ -195,36 +199,55 @@ const POPUP_FIELDS = [
         key: "Family Involvement - School Percent Positive",
     },
     {
-        label: "Teacher Exp.",
+        label: "Teachers w/ 3+ Yrs.",
         key: "Percent of teachers with 3 or more years of experience",
-    },
-    {
-        label: "Principal Yrs.",
-        key: "Years of principal experience at this school",
     },
 ];
 const RATING_TO_PCT = {
-    "Excellent": 100,
-    "Good": 66,
-    "Fair": 33,
+    Excellent: 100,
+    Good: 66,
+    Fair: 33,
     "Needs Improvement": 0,
 };
 function academicSection(s) {
     const subjects = [
-        { label: "ELA", key: "Metric Rating - Average Student Proficiency, ELA" },
-        { label: "Math", key: "Metric Rating - Average Student Proficiency, Math" },
+        {
+            label: "ELA",
+            ratingKey: "Metric Rating - Average Student Proficiency, ELA",
+            scoreKey: "Metric Score - Average Student Proficiency, ELA",
+            nKey: "N count - Average Student Proficiency, ELA",
+        },
+        {
+            label: "Math",
+            ratingKey: "Metric Rating - Average Student Proficiency, Math",
+            scoreKey: "Metric Score - Average Student Proficiency, Math",
+            nKey: "N count - Average Student Proficiency, Math",
+        },
     ];
     const rows = subjects
-        .map(({ label, key }) => {
-        const rating = s[key] ?? "";
-        if (!rating)
+        .map(({ label, ratingKey, scoreKey, nKey }) => {
+        const rating = s[ratingKey] ?? "";
+        const scoreRaw = s[scoreKey];
+        const nRaw = s[nKey];
+        if (!rating && !scoreRaw)
             return "";
-        const pct = RATING_TO_PCT[rating] ?? 50;
+        let pct;
+        let scoreText = "";
+        if (scoreRaw) {
+            const score = parseFloat(scoreRaw);
+            pct = ((score - 1) / 4) * 100;
+            const nText = nRaw ? ` (n=${nRaw})` : "";
+            scoreText = `<span style="color:#555;font-size:11px">${score.toFixed(2)}${nText}</span>`;
+        }
+        else {
+            pct = RATING_TO_PCT[rating] ?? 50;
+        }
         const hue = Math.pow(pct / 100, 3) * 120;
         const color = `hsl(${hue.toFixed(1)},75%,38%)`;
         const bg = `linear-gradient(to right,${color} ${pct}%,#e5e7eb ${pct}%)`;
         const bar = `<div style="width:80px;height:5px;background:${bg};border-radius:2px;flex-shrink:0"></div>`;
-        return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle"><div style="display:flex;align-items:center;gap:6px">${bar}${ratingBadge(rating)}</div></td></tr>`;
+        const badge = rating ? ratingBadge(rating) : "";
+        return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle"><div style="display:flex;align-items:center;gap:6px">${bar}${scoreText}${badge}</div></td></tr>`;
     })
         .join("");
     if (!rows)
