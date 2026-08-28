@@ -153,8 +153,29 @@ function renderValue(value, isRating) {
         return pctBar(Math.min(100, Math.max(0, parseFloat(m[1]))), value.trim());
     return value;
 }
-function fmtRow(label, value, isRating = false) {
-    return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle">${renderValue(value, isRating)}</td></tr>`;
+function fmtRow(label, value, isRating = false, ratingValue, scoreRange) {
+    let cell;
+    if (ratingValue !== undefined && scoreRange) {
+        const score = parseFloat(value);
+        const [min, max] = scoreRange;
+        const pct = isNaN(score) ? 0 : ((score - min) / (max - min)) * 100;
+        const color = RATING_COLORS[ratingValue] ?? "#6b7280";
+        const bg = `linear-gradient(to right,${color} ${pct.toFixed(1)}%,#e5e7eb ${pct.toFixed(1)}%)`;
+        const bar = `<div style="width:80px;height:5px;background:${bg};border-radius:2px;flex-shrink:0"></div>`;
+        const scoreText = value
+            ? `<span style="color:#555;font-size:11px">${score.toFixed(2)}</span>`
+            : "";
+        const badge = ratingValue ? ratingBadge(ratingValue) : "";
+        cell = `<div style="display:flex;align-items:center;gap:6px">${bar}${scoreText}${badge}</div>`;
+    }
+    else if (ratingValue !== undefined) {
+        const badge = ratingValue ? ratingBadge(ratingValue) : "";
+        cell = `<div style="display:flex;align-items:center;gap:6px">${renderValue(value, false)}${badge}</div>`;
+    }
+    else {
+        cell = renderValue(value, isRating);
+    }
+    return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle">${cell}</td></tr>`;
 }
 const POPUP_FIELDS = [
     { label: "School Type", key: "School Type" },
@@ -165,22 +186,13 @@ const POPUP_FIELDS = [
     },
     { label: "Attendance", key: "Average Student Attendance" },
     {
-        label: ">90% Attendance",
-        key: "Percentage of Students with >90% Attendance",
+        label: "Instr. and Perf.",
+        key: "Instruction and Performance - Score",
+        ratingKey: "Instruction and Performance - Rating",
+        scoreRange: [1, 5],
     },
     {
-        label: ">90% Rating",
-        key: "Metric Rating - Percentage of Students with >90% Attendance",
-        isRating: true,
-    },
-    { label: "I&P Score", key: "Instruction and Performance - Score" },
-    {
-        label: "I&P Rating",
-        key: "Instruction and Performance - Rating",
-        isRating: true,
-    },
-    {
-        label: "Safety Rating",
+        label: "Safety",
         key: "Safety and School Climate - Rating",
         isRating: true,
     },
@@ -199,7 +211,7 @@ const POPUP_FIELDS = [
         key: "Family Involvement - School Percent Positive",
     },
     {
-        label: "Teachers w/ 3+ Yrs.",
+        label: "Teachers w/ 3+ Yrs",
         key: "Percent of teachers with 3 or more years of experience",
     },
 ];
@@ -210,22 +222,28 @@ const RATING_TO_PCT = {
     "Needs Improvement": 0,
 };
 function academicSection(s) {
-    const subjects = [
-        {
-            label: "ELA",
-            ratingKey: "Metric Rating - Average Student Proficiency, ELA",
-            scoreKey: "Metric Score - Average Student Proficiency, ELA",
-            nKey: "N count - Average Student Proficiency, ELA",
-        },
-        {
-            label: "Math",
-            ratingKey: "Metric Rating - Average Student Proficiency, Math",
-            scoreKey: "Metric Score - Average Student Proficiency, Math",
-            nKey: "N count - Average Student Proficiency, Math",
-        },
+    const mk = (label, metric) => ({
+        label,
+        ratingKey: `Metric Rating - ${metric}`,
+        scoreKey: `Metric Score - ${metric}`,
+        nKey: `N count - ${metric}`,
+    });
+    const mainSubjects = [
+        mk("ELA", "Average Student Proficiency, ELA"),
+        mk("Math", "Average Student Proficiency, Math"),
     ];
-    const rows = subjects
-        .map(({ label, ratingKey, scoreKey, nKey }) => {
+    const detailSubjects = [
+        mk("ELA Core Pass", "ELA Core Course Pass Rate"),
+        mk("Math Core Pass", "Math Core Course Pass Rate"),
+        mk(">90% Att.", "Percentage of Students with >90% Attendance"),
+        mk("Science Pass", "Science Core Course Pass Rate"),
+        mk("Soc. Studies Pass", "Social Studies Core Course Pass Rate"),
+        mk("MS Adj. Pass", "MS Adjusted Core Course Pass Rate of Former Students"),
+        mk("8th → HS Credit", "Percent of 8th Graders Earning HS Credit"),
+        mk("Lvl 3-4 ELA", "Percentage of Students at Level 3 or 4, ELA"),
+        mk("Lvl 3-4 Math", "Percentage of Students at Level 3 or 4, Math"),
+    ];
+    const renderRow = ({ label, ratingKey, scoreKey, nKey }) => {
         const rating = s[ratingKey] ?? "";
         const scoreRaw = s[scoreKey];
         const nRaw = s[nKey];
@@ -243,15 +261,19 @@ function academicSection(s) {
             pct = RATING_TO_PCT[rating] ?? 50;
         }
         const color = RATING_COLORS[rating] ?? "#6b7280";
-        const bg = `linear-gradient(to right,${color} ${pct}%,#e5e7eb ${pct}%)`;
+        const bg = `linear-gradient(to right,${color} ${pct.toFixed(1)}%,#e5e7eb ${pct.toFixed(1)}%)`;
         const bar = `<div style="width:80px;height:5px;background:${bg};border-radius:2px;flex-shrink:0"></div>`;
         const badge = rating ? ratingBadge(rating) : "";
         return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle"><div style="display:flex;align-items:center;gap:6px">${bar}${scoreText}${badge}</div></td></tr>`;
-    })
-        .join("");
-    if (!rows)
+    };
+    const mainRows = mainSubjects.map(renderRow).join("");
+    if (!mainRows)
         return "";
-    return `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#888;margin-bottom:4px">Academics</div><table style="font-size:12px;border-collapse:collapse">${rows}</table></div>`;
+    const detailRows = detailSubjects.map(renderRow).filter(Boolean).join("");
+    const detailSection = detailRows
+        ? `<details style="margin-top:4px"><summary style="font-size:11px;color:#888;cursor:pointer;list-style:none;padding:2px 0">&#9654; More metrics</summary><table style="font-size:12px;border-collapse:collapse;margin-top:4px">${detailRows}</table></details>`
+        : "";
+    return `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#888;margin-bottom:4px">Academics</div><table style="font-size:12px;border-collapse:collapse">${mainRows}</table>${detailSection}</div>`;
 }
 const ETHNICITY_GROUPS = [
     { label: "Hispanic", key: "Student Percent - Hispanic", color: "#c2703e" },
@@ -296,10 +318,10 @@ function buildPopup(p) {
     const commute = p.commute
         ? `<div style="margin-top:4px;font-size:12px">Commute: <b>${p.commute}</b></div>`
         : "";
-    const dashboardLink = p.dbn
-        ? `<a href="https://tools.nycenet.edu/dashboard/#dbn=${encodeURIComponent(p.dbn)}&report_type=EMS&view=City" target="_blank" rel="noopener" style="${LINK_STYLE}">&#x1F4CA; NYC Dashboard</a>`
+    const dashboardLink = p.sqr
+        ? `<a href="https://tools.nycenet.edu/dashboard/#dbn=${encodeURIComponent(p.dbn ?? "")}&report_type=EMS&view=City" target="_blank" rel="noopener" style="${LINK_STYLE}">&#x1F4CA; NYC Dashboard</a>`
         : "";
-    const googleLink = !p.dbn
+    const googleLink = !p.sqr
         ? `<a href="https://www.google.com/search?q=${encodeURIComponent(p.name + " NYC school")}" target="_blank" rel="noopener" style="${LINK_STYLE}">&#x1F50D; Search on Google</a>`
         : "";
     const links = googleLink || dashboardLink
@@ -307,7 +329,7 @@ function buildPopup(p) {
         : "";
     if (!s)
         return `<div style="max-width:280px">${header}${commute}${links}</div>`;
-    const rows = POPUP_FIELDS.map(({ label, key, isRating }) => fmtRow(label, s[key] ?? "", isRating)).join("");
+    const rows = POPUP_FIELDS.map(({ label, key, isRating, ratingKey, scoreRange }) => fmtRow(label, s[key] ?? "", isRating, ratingKey !== undefined ? (s[ratingKey] ?? "") : undefined, scoreRange)).join("");
     const table = `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>`;
     return `<div style="max-width:300px">${header}${commute}${links}${table}${academicSection(s)}${ethnicityBar(s)}</div>`;
 }
