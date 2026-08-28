@@ -126,14 +126,14 @@ function makePinIcon(p) {
         popupAnchor: [0, -half - 2],
     });
 }
+const RATING_COLORS = {
+    Excellent: "#15803d",
+    Good: "#65a30d",
+    Fair: "#ca8a04",
+    "Needs Improvement": "#dc2626",
+};
 function ratingBadge(rating) {
-    const colors = {
-        Excellent: "#15803d",
-        Good: "#65a30d",
-        Fair: "#ca8a04",
-        "Needs Improvement": "#dc2626",
-    };
-    const bg = colors[rating] ?? "#6b7280";
+    const bg = RATING_COLORS[rating] ?? "#6b7280";
     return `<span style="background:${bg};color:#fff;padding:1px 5px;border-radius:3px;font-size:11px;white-space:nowrap">${rating}</span>`;
 }
 function pctBar(pct, raw) {
@@ -236,14 +236,13 @@ function academicSection(s) {
         if (scoreRaw) {
             const score = parseFloat(scoreRaw);
             pct = ((score - 1) / 4) * 100;
-            const nText = nRaw ? ` (n=${nRaw})` : "";
+            const nText = nRaw ? ` (N=${nRaw})` : "";
             scoreText = `<span style="color:#555;font-size:11px">${score.toFixed(2)}${nText}</span>`;
         }
         else {
             pct = RATING_TO_PCT[rating] ?? 50;
         }
-        const hue = Math.pow(pct / 100, 3) * 120;
-        const color = `hsl(${hue.toFixed(1)},75%,38%)`;
+        const color = RATING_COLORS[rating] ?? "#6b7280";
         const bg = `linear-gradient(to right,${color} ${pct}%,#e5e7eb ${pct}%)`;
         const bar = `<div style="width:80px;height:5px;background:${bg};border-radius:2px;flex-shrink:0"></div>`;
         const badge = rating ? ratingBadge(rating) : "";
