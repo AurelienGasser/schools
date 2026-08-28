@@ -136,24 +136,24 @@ function ratingBadge(rating) {
     const bg = RATING_COLORS[rating] ?? "#6b7280";
     return `<span style="background:${bg};color:#fff;padding:1px 5px;border-radius:3px;font-size:11px;white-space:nowrap">${rating}</span>`;
 }
-function pctBar(pct, raw) {
-    const hue = Math.pow(pct / 100, 3) * 120; // cubic curve: green only above ~85%
+function pctBar(pct, raw, invert = false) {
+    const hue = Math.pow((invert ? 100 - pct : pct) / 100, 3) * 120;
     const color = `hsl(${hue.toFixed(1)},75%,38%)`;
     const p = pct.toFixed(1);
     const bg = `linear-gradient(to right,${color} ${p}%,#e5e7eb ${p}%)`;
     return `<div style="display:flex;align-items:center;gap:6px"><div style="width:80px;height:5px;background:${bg};border-radius:2px;flex-shrink:0"></div><span style="color:#555;font-size:11px">${raw}</span></div>`;
 }
-function renderValue(value, isRating) {
+function renderValue(value, isRating, invert = false) {
     if (isRating)
         return value ? ratingBadge(value) : "—";
     if (!value)
         return "—";
     const m = /^([\d.]+)%$/.exec(value.trim());
     if (m)
-        return pctBar(Math.min(100, Math.max(0, parseFloat(m[1]))), value.trim());
+        return pctBar(Math.min(100, Math.max(0, parseFloat(m[1]))), value.trim(), invert);
     return value;
 }
-function fmtRow(label, value, isRating = false, ratingValue, scoreRange) {
+function fmtRow(label, value, isRating = false, ratingValue, scoreRange, invert = false) {
     let cell;
     if (ratingValue !== undefined && scoreRange) {
         const score = parseFloat(value);
@@ -170,21 +170,26 @@ function fmtRow(label, value, isRating = false, ratingValue, scoreRange) {
     }
     else if (ratingValue !== undefined) {
         const badge = ratingValue ? ratingBadge(ratingValue) : "";
-        cell = `<div style="display:flex;align-items:center;gap:6px">${renderValue(value, false)}${badge}</div>`;
+        cell = `<div style="display:flex;align-items:center;gap:6px">${renderValue(value, false, invert)}${badge}</div>`;
     }
     else {
-        cell = renderValue(value, isRating);
+        cell = renderValue(value, isRating, invert);
     }
     return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle">${cell}</td></tr>`;
 }
 const POPUP_FIELDS = [
     { label: "School Type", key: "School Type" },
     { label: "Enrollment", key: "Enrollment" },
+    { label: "Temp Housing", key: "Percent in Temp Housing", invert: true },
     {
         label: "Principal Yrs.",
         key: "Years of principal experience at this school",
     },
     { label: "Attendance", key: "Average Student Attendance" },
+    {
+        label: "Teachers w/ 3+ Yrs",
+        key: "Percent of teachers with 3 or more years of experience",
+    },
     {
         label: "Instr. and Perf.",
         key: "Instruction and Performance - Score",
@@ -197,8 +202,9 @@ const POPUP_FIELDS = [
         isRating: true,
     },
     {
-        label: "Teachers w/ 3+ Yrs",
-        key: "Percent of teachers with 3 or more years of experience",
+        label: "Relationships w/ Families",
+        key: "Relationships with Families - Rating",
+        isRating: true,
     },
 ];
 const RATING_TO_PCT = {
@@ -288,8 +294,14 @@ const SURVEY_FIELDS = [
         label: "Teaching Env",
         key: "Teaching Environment - School Percent Positive",
     },
-    { label: "Advising", key: "Advising and Planning - School Percent Positive" },
-    { label: "Family Inv.", key: "Family Involvement - School Percent Positive" },
+    {
+        label: "Advising",
+        key: "Advising and Planning - School Percent Positive",
+    },
+    {
+        label: "Family Inv.",
+        key: "Family Involvement - School Percent Positive",
+    },
     {
         label: "Family Trust",
         key: "Family-School Trust - School Percent Positive",
@@ -304,11 +316,11 @@ function surveySection(s) {
     const parentRate = s["Parent Survey Response Rate"] ?? "";
     const teacherRate = s["Teacher Survey Response Rate"] ?? "";
     const hasRates = parentRate || teacherRate;
-    const rows = SURVEY_FIELDS.map(({ label, key }) => {
+    const rows = SURVEY_FIELDS.map(({ label, key, isRating }) => {
         const val = s[key] ?? "";
         if (!val)
             return "";
-        return fmtRow(label, val);
+        return fmtRow(label, val, isRating);
     })
         .filter(Boolean)
         .join("");
@@ -357,7 +369,7 @@ function buildPopup(p) {
         : "";
     if (!s)
         return `<div style="max-width:280px">${header}${commute}${links}</div>`;
-    const rows = POPUP_FIELDS.map(({ label, key, isRating, ratingKey, scoreRange }) => fmtRow(label, s[key] ?? "", isRating, ratingKey !== undefined ? (s[ratingKey] ?? "") : undefined, scoreRange)).join("");
+    const rows = POPUP_FIELDS.map(({ label, key, isRating, ratingKey, scoreRange, invert }) => fmtRow(label, s[key] ?? "", isRating, ratingKey !== undefined ? (s[ratingKey] ?? "") : undefined, scoreRange, invert)).join("");
     const table = `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>`;
     return `<div>${header}${commute}${links}${table}${academicSection(s)}${surveySection(s)}${ethnicityBar(s)}</div>`;
 }

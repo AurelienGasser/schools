@@ -203,20 +203,20 @@ function ratingBadge(rating: string): string {
   return `<span style="background:${bg};color:#fff;padding:1px 5px;border-radius:3px;font-size:11px;white-space:nowrap">${rating}</span>`;
 }
 
-function pctBar(pct: number, raw: string): string {
-  const hue = Math.pow(pct / 100, 3) * 120; // cubic curve: green only above ~85%
+function pctBar(pct: number, raw: string, invert = false): string {
+  const hue = Math.pow((invert ? 100 - pct : pct) / 100, 3) * 120;
   const color = `hsl(${hue.toFixed(1)},75%,38%)`;
   const p = pct.toFixed(1);
   const bg = `linear-gradient(to right,${color} ${p}%,#e5e7eb ${p}%)`;
   return `<div style="display:flex;align-items:center;gap:6px"><div style="width:80px;height:5px;background:${bg};border-radius:2px;flex-shrink:0"></div><span style="color:#555;font-size:11px">${raw}</span></div>`;
 }
 
-function renderValue(value: string, isRating: boolean): string {
+function renderValue(value: string, isRating: boolean, invert = false): string {
   if (isRating) return value ? ratingBadge(value) : "—";
   if (!value) return "—";
   const m = /^([\d.]+)%$/.exec(value.trim());
   if (m)
-    return pctBar(Math.min(100, Math.max(0, parseFloat(m[1]))), value.trim());
+    return pctBar(Math.min(100, Math.max(0, parseFloat(m[1]))), value.trim(), invert);
   return value;
 }
 
@@ -226,6 +226,7 @@ function fmtRow(
   isRating = false,
   ratingValue?: string,
   scoreRange?: [number, number],
+  invert = false,
 ): string {
   let cell: string;
   if (ratingValue !== undefined && scoreRange) {
@@ -242,9 +243,9 @@ function fmtRow(
     cell = `<div style="display:flex;align-items:center;gap:6px">${bar}${scoreText}${badge}</div>`;
   } else if (ratingValue !== undefined) {
     const badge = ratingValue ? ratingBadge(ratingValue) : "";
-    cell = `<div style="display:flex;align-items:center;gap:6px">${renderValue(value, false)}${badge}</div>`;
+    cell = `<div style="display:flex;align-items:center;gap:6px">${renderValue(value, false, invert)}${badge}</div>`;
   } else {
-    cell = renderValue(value, isRating);
+    cell = renderValue(value, isRating, invert);
   }
   return `<tr><td style="color:#555;padding-right:8px;white-space:nowrap;vertical-align:middle">${label}</td><td style="vertical-align:middle">${cell}</td></tr>`;
 }
@@ -255,14 +256,20 @@ const POPUP_FIELDS: Array<{
   isRating?: boolean;
   ratingKey?: string;
   scoreRange?: [number, number];
+  invert?: boolean;
 }> = [
   { label: "School Type", key: "School Type" },
   { label: "Enrollment", key: "Enrollment" },
+  { label: "Temp Housing", key: "Percent in Temp Housing", invert: true },
   {
     label: "Principal Yrs.",
     key: "Years of principal experience at this school",
   },
   { label: "Attendance", key: "Average Student Attendance" },
+  {
+    label: "Teachers w/ 3+ Yrs",
+    key: "Percent of teachers with 3 or more years of experience",
+  },
   {
     label: "Instr. and Perf.",
     key: "Instruction and Performance - Score",
@@ -275,8 +282,9 @@ const POPUP_FIELDS: Array<{
     isRating: true,
   },
   {
-    label: "Teachers w/ 3+ Yrs",
-    key: "Percent of teachers with 3 or more years of experience",
+    label: "Relationships w/ Families",
+    key: "Relationships with Families - Rating",
+    isRating: true,
   },
 ];
 
@@ -375,39 +383,45 @@ const ETHNICITY_GROUPS = [
   },
 ];
 
-const SURVEY_FIELDS: Array<{ label: string; key: string; isRating?: boolean }> = [
-  { label: "Safety", key: "Safety - School Percent Positive" },
-  { label: "Families", key: "Relationships with Families - Rating", isRating: true },
-  { label: "Leadership", key: "School Leadership - School Percent Positive" },
-  {
-    label: "Student Support",
-    key: "Student Support - School Percent Positive",
-  },
-  {
-    label: "Teaching Env",
-    key: "Teaching Environment - School Percent Positive",
-  },
-  { label: "Advising", key: "Advising and Planning - School Percent Positive" },
-  { label: "Family Inv.", key: "Family Involvement - School Percent Positive" },
-  {
-    label: "Family Trust",
-    key: "Family-School Trust - School Percent Positive",
-  },
-  { label: "Communication", key: "Communication - School Percent Positive" },
-  {
-    label: "Learning Env",
-    key: "Instruction/Learning Environment - School Percent Positive",
-  },
-];
+const SURVEY_FIELDS: Array<{ label: string; key: string; isRating?: boolean }> =
+  [
+    { label: "Safety", key: "Safety - School Percent Positive" },
+    { label: "Leadership", key: "School Leadership - School Percent Positive" },
+    {
+      label: "Student Support",
+      key: "Student Support - School Percent Positive",
+    },
+    {
+      label: "Teaching Env",
+      key: "Teaching Environment - School Percent Positive",
+    },
+    {
+      label: "Advising",
+      key: "Advising and Planning - School Percent Positive",
+    },
+    {
+      label: "Family Inv.",
+      key: "Family Involvement - School Percent Positive",
+    },
+    {
+      label: "Family Trust",
+      key: "Family-School Trust - School Percent Positive",
+    },
+    { label: "Communication", key: "Communication - School Percent Positive" },
+    {
+      label: "Learning Env",
+      key: "Instruction/Learning Environment - School Percent Positive",
+    },
+  ];
 
 function surveySection(s: Record<string, string>): string {
   const parentRate = s["Parent Survey Response Rate"] ?? "";
   const teacherRate = s["Teacher Survey Response Rate"] ?? "";
   const hasRates = parentRate || teacherRate;
-  const rows = SURVEY_FIELDS.map(({ label, key }) => {
+  const rows = SURVEY_FIELDS.map(({ label, key, isRating }) => {
     const val = s[key] ?? "";
     if (!val) return "";
-    return fmtRow(label, val);
+    return fmtRow(label, val, isRating);
   })
     .filter(Boolean)
     .join("");
@@ -468,13 +482,14 @@ function buildPopup(p: (typeof __points)[0]): string {
     return `<div style="max-width:280px">${header}${commute}${links}</div>`;
 
   const rows = POPUP_FIELDS.map(
-    ({ label, key, isRating, ratingKey, scoreRange }) =>
+    ({ label, key, isRating, ratingKey, scoreRange, invert }) =>
       fmtRow(
         label,
         s[key] ?? "",
         isRating,
         ratingKey !== undefined ? (s[ratingKey] ?? "") : undefined,
         scoreRange,
+        invert,
       ),
   ).join("");
 
