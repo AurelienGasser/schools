@@ -569,6 +569,13 @@ function applyFilters(): void {
 
 map.on("click", deselect);
 
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    map.closePopup();
+    deselect();
+  }
+});
+
 const isMobile = window.innerWidth <= 640;
 
 // Collapsible panel
