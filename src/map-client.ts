@@ -242,14 +242,17 @@ const POPUP_FIELDS: Array<{ label: string; key: string; isRating?: boolean }> =
       key: "Metric Rating - Percentage of Students with >90% Attendance",
       isRating: true,
     },
-    { label: "I&P Score", key: "Instruction and Performance - Score" },
     {
-      label: "I&P Rating",
+      label: "Impact and Performance",
+      key: "Instruction and Performance - Score",
+    },
+    {
+      label: "Impact and Performance",
       key: "Instruction and Performance - Rating",
       isRating: true,
     },
     {
-      label: "Safety Rating",
+      label: "Safety",
       key: "Safety and School Climate - Rating",
       isRating: true,
     },
