@@ -512,6 +512,15 @@ oms.addListener("click", (marker: any) => {
   marker.openPopup();
 });
 
+const RATING_RANK: Record<string, number> = {
+  "Needs Improvement": 0,
+  Fair: 1,
+  Good: 2,
+  Excellent: 3,
+};
+
+const allMarkers: Array<{ marker: any; p: (typeof __points)[0] }> = [];
+
 // Pins using SVG divIcon
 __points.forEach((p, i) => {
   const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(
@@ -521,7 +530,37 @@ __points.forEach((p, i) => {
   marker._zone = zones[i];
   oms.addMarker(marker);
   marker.addTo(pinLayer);
+  allMarkers.push({ marker, p });
 });
+
+function applyAcademicFilter(minRating: string, hideNoData: boolean): void {
+  const minRank = minRating === "any" ? -1 : (RATING_RANK[minRating] ?? -1);
+  for (const { marker, p } of allMarkers) {
+    const sqr = p.sqr;
+    const elaRating = sqr?.["Metric Rating - Average Student Proficiency, ELA"] ?? "";
+    const mathRating = sqr?.["Metric Rating - Average Student Proficiency, Math"] ?? "";
+    const hasData = Boolean(elaRating || mathRating);
+
+    let visible: boolean;
+    if (!hasData) {
+      visible = !hideNoData;
+    } else if (minRank < 0) {
+      visible = true;
+    } else {
+      const ranks = [elaRating, mathRating]
+        .filter(Boolean)
+        .map((r) => RATING_RANK[r] ?? -1);
+      const worstRank = Math.min(...ranks);
+      visible = worstRank >= minRank;
+    }
+
+    if (visible && !pinLayer.hasLayer(marker)) {
+      pinLayer.addLayer(marker);
+    } else if (!visible && pinLayer.hasLayer(marker)) {
+      pinLayer.removeLayer(marker);
+    }
+  }
+}
 
 map.on("click", deselect);
 
@@ -551,6 +590,21 @@ for (const [id, layer] of [
     else map.removeLayer(layer);
   });
 }
+
+// Academic filter
+const getAcademicFilter = (): string =>
+  (document.querySelector('input[name="academic-filter"]:checked') as HTMLInputElement)?.value ?? "any";
+const getHideNoData = (): boolean =>
+  (document.getElementById("hide-no-academic-data") as HTMLInputElement)?.checked ?? false;
+
+applyAcademicFilter(getAcademicFilter(), getHideNoData());
+
+document.querySelectorAll('input[name="academic-filter"]').forEach((el) => {
+  el.addEventListener("change", () => applyAcademicFilter(getAcademicFilter(), getHideNoData()));
+});
+document.getElementById("hide-no-academic-data")!.addEventListener("change", () => {
+  applyAcademicFilter(getAcademicFilter(), getHideNoData());
+});
 
 // Zone mode radio buttons
 document.querySelectorAll('input[name="zone-mode"]').forEach((el) => {

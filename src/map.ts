@@ -364,6 +364,14 @@ const html = `<!DOCTYPE html>
         <label class="toggle-row"><input type="checkbox" id="toggle-pins" checked />Pins</label>
         <label class="toggle-row"><input type="checkbox" id="toggle-circles" />Coverage circles</label>
       </div>
+      <div class="control-section-label">Academics (ELA &amp; Math)</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label class="radio-row"><input type="radio" name="academic-filter" value="any" />Any</label>
+        <label class="radio-row"><input type="radio" name="academic-filter" value="Fair" />Fair+</label>
+        <label class="radio-row"><input type="radio" name="academic-filter" value="Good" checked />Good+</label>
+        <label class="radio-row"><input type="radio" name="academic-filter" value="Excellent" />Excellent only</label>
+      </div>
+      <label class="toggle-row" style="margin-top:6px"><input type="checkbox" id="hide-no-academic-data" />Hide if no data</label>
       <div class="control-section-label">Commute zones</div>
       <div style="display:flex;flex-direction:column;gap:6px;">
         <label class="radio-row"><input type="radio" name="zone-mode" value="none" />None</label>
