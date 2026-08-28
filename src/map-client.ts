@@ -593,15 +593,10 @@ document.getElementById("legend-header")!.addEventListener("click", () => {
 });
 
 // Layer toggles
-for (const [id, layer] of [
-  ["toggle-pins", pinLayer],
-  ["toggle-circles", circleLayer],
-] as Array<[string, any]>) {
-  document.getElementById(id)!.addEventListener("change", (e) => {
-    if ((e.target as HTMLInputElement).checked) map.addLayer(layer);
-    else map.removeLayer(layer);
-  });
-}
+document.getElementById("toggle-circles")!.addEventListener("change", (e) => {
+  if ((e.target as HTMLInputElement).checked) map.addLayer(circleLayer);
+  else map.removeLayer(circleLayer);
+});
 
 // Filters
 applyFilters();

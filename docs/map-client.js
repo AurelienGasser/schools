@@ -456,17 +456,12 @@ document.getElementById("legend-header").addEventListener("click", () => {
     legendEl.classList.toggle("collapsed");
 });
 // Layer toggles
-for (const [id, layer] of [
-    ["toggle-pins", pinLayer],
-    ["toggle-circles", circleLayer],
-]) {
-    document.getElementById(id).addEventListener("change", (e) => {
-        if (e.target.checked)
-            map.addLayer(layer);
-        else
-            map.removeLayer(layer);
-    });
-}
+document.getElementById("toggle-circles").addEventListener("change", (e) => {
+    if (e.target.checked)
+        map.addLayer(circleLayer);
+    else
+        map.removeLayer(circleLayer);
+});
 // Filters
 applyFilters();
 document.querySelectorAll('input[name="academic-filter"]').forEach((el) => {

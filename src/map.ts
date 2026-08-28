@@ -370,7 +370,6 @@ const html = `<!DOCTYPE html>
         <input type="range" id="radius-slider" min="0.1" max="1.5" value="0.3" step="0.05" />
       </div>
       <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
-        <label class="toggle-row"><input type="checkbox" id="toggle-pins" checked />Pins</label>
         <label class="toggle-row"><input type="checkbox" id="toggle-circles" />Coverage circles</label>
       </div>
       <div class="control-section-label">Academics (ELA &amp; Math)</div>
