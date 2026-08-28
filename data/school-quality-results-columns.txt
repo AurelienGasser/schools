@@ -17,28 +17,28 @@ Metric Rating - MS Adjusted Core Course Pass Rate of Former Students
 Metric Rating - Percent of 8th Graders Earning HS Credit
 Metric Rating - Percentage of Students at Level 3 or 4, ELA
 Metric Rating - Percentage of Students at Level 3 or 4, Math
-N Score - Average Student Proficiency, ELA
-N Score - Average Student Proficiency, Math
-N Score - ELA Core Course Pass Rate
-N Score - Math Core Course Pass Rate
-N Score - Percentage of Students with >90% Attendance
-N Score - Science Core Course Pass Rate
-N Score - Social Studies Core Course Pass Rate
-N Score - MS Adjusted Core Course Pass Rate of Former Students
-N Score - Percent of 8th Graders Earning HS Credit
-N Score - Percentage of Students at Level 3 or 4, ELA
-N Score - Percentage of Students at Level 3 or 4, Math
-N Count - Average Student Proficiency, ELA
-N Count - Average Student Proficiency, Math
-N Count - ELA Core Course Pass Rate
-N Count - Math Core Course Pass Rate
-N Count - Percentage of Students with >90% Attendance
-N Count - Science Core Course Pass Rate
-N Count - Social Studies Core Course Pass Rate
-N Count - MS Adjusted Core Course Pass Rate of Former Students
-N Count - Percent of 8th Graders Earning HS Credit
-N Count - Percentage of Students at Level 3 or 4, ELA
-N Count - Percentage of Students at Level 3 or 4, Math
+Metric Score - Average Student Proficiency, ELA
+Metric Score - Average Student Proficiency, Math
+Metric Score - ELA Core Course Pass Rate
+Metric Score - Math Core Course Pass Rate
+Metric Score - Percentage of Students with >90% Attendance
+Metric Score - Science Core Course Pass Rate
+Metric Score - Social Studies Core Course Pass Rate
+Metric Score - MS Adjusted Core Course Pass Rate of Former Students
+Metric Score - Percent of 8th Graders Earning HS Credit
+Metric Score - Percentage of Students at Level 3 or 4, ELA
+Metric Score - Percentage of Students at Level 3 or 4, Math
+N count - Average Student Proficiency, ELA
+N count - Average Student Proficiency, Math
+N count - ELA Core Course Pass Rate
+N count - Math Core Course Pass Rate
+N count - Percentage of Students with >90% Attendance
+N count - Science Core Course Pass Rate
+N count - Social Studies Core Course Pass Rate
+N count - MS Adjusted Core Course Pass Rate of Former Students
+N count - Percent of 8th Graders Earning HS Credit
+N count - Percentage of Students at Level 3 or 4, ELA
+N count - Percentage of Students at Level 3 or 4, Math
 Parent Survey Response Rate
 Teacher Survey Response Rate
 Relationships with Families - Rating
