@@ -22,7 +22,14 @@ type ZoneSet = Array<{
   entries: Array<{ coordinates: number[][][][] }>;
 }>;
 declare const __polygonSets: { rings: ZoneSet };
-declare const __zipCodes: { type: string; features: Array<{ type: string; geometry: any; properties: { modzcta: string; label: string; borough: string; avgPrice: number | null } }> };
+declare const __zipCodes: {
+  type: string;
+  features: Array<{
+    type: string;
+    geometry: any;
+    properties: { modzcta: string; label: string; avgPrice: number | null };
+  }>;
+};
 
 const MILES_TO_METERS = 1609.34;
 
@@ -68,7 +75,10 @@ const zipPrices = __zipCodes.features
 const zipMinPrice = Math.min(...zipPrices);
 const zipMaxPrice = Math.max(...zipPrices);
 
-function zipPriceColor(price: number | null): { fillColor: string; fillOpacity: number } {
+function zipPriceColor(price: number | null): {
+  fillColor: string;
+  fillOpacity: number;
+} {
   if (price === null) return { fillColor: "#000", fillOpacity: 0 };
   const t = Math.log(price / zipMinPrice) / Math.log(zipMaxPrice / zipMinPrice);
   const hue = Math.round(60 - t * 60);
@@ -78,13 +88,26 @@ function zipPriceColor(price: number | null): { fillColor: string; fillOpacity: 
 
 const zipLayer = L.geoJSON(__zipCodes, {
   style(feature: any) {
-    const { fillColor, fillOpacity } = zipPriceColor(feature.properties.avgPrice);
-    return { color: "#64748b", weight: 1, opacity: 0.5, fillColor, fillOpacity };
+    const { fillColor, fillOpacity } = zipPriceColor(
+      feature.properties.avgPrice,
+    );
+    return {
+      color: "#64748b",
+      weight: 1,
+      opacity: 0.5,
+      fillColor,
+      fillOpacity,
+    };
   },
   onEachFeature(feature: any, layer: any) {
     const price = feature.properties.avgPrice as number | null;
-    const priceStr = price !== null ? ` — $${Math.round(price).toLocaleString()}/sqft` : "";
-    layer.bindTooltip(feature.properties.label + priceStr, { permanent: false, sticky: true, className: "zip-tooltip" });
+    const priceStr =
+      price !== null ? ` — $${Math.round(price).toLocaleString()}/sqft` : "";
+    layer.bindTooltip(feature.properties.label + priceStr, {
+      permanent: false,
+      sticky: true,
+      className: "zip-tooltip",
+    });
   },
 }).addTo(map);
 
@@ -240,7 +263,11 @@ function renderValue(value: string, isRating: boolean, invert = false): string {
   if (!value) return "—";
   const m = /^([\d.]+)%$/.exec(value.trim());
   if (m)
-    return pctBar(Math.min(100, Math.max(0, parseFloat(m[1]))), value.trim(), invert);
+    return pctBar(
+      Math.min(100, Math.max(0, parseFloat(m[1]))),
+      value.trim(),
+      invert,
+    );
   return value;
 }
 
@@ -558,11 +585,24 @@ __points.forEach((p, i) => {
 });
 
 function applyFilters(): void {
-  const academicValue = (document.querySelector('input[name="academic-filter"]:checked') as HTMLInputElement)?.value ?? "any";
-  const minRank = academicValue === "any" ? -1 : (RATING_RANK[academicValue] ?? -1);
-  const hideNoData = (document.getElementById("hide-no-academic-data") as HTMLInputElement)?.checked ?? false;
+  const academicValue =
+    (
+      document.querySelector(
+        'input[name="academic-filter"]:checked',
+      ) as HTMLInputElement
+    )?.value ?? "any";
+  const minRank =
+    academicValue === "any" ? -1 : (RATING_RANK[academicValue] ?? -1);
+  const hideNoData =
+    (document.getElementById("hide-no-academic-data") as HTMLInputElement)
+      ?.checked ?? false;
 
-  const commuteValue = (document.querySelector('input[name="commute-filter"]:checked') as HTMLInputElement)?.value ?? "any";
+  const commuteValue =
+    (
+      document.querySelector(
+        'input[name="commute-filter"]:checked',
+      ) as HTMLInputElement
+    )?.value ?? "any";
   const maxCommute = commuteValue === "any" ? Infinity : parseInt(commuteValue);
 
   for (const { marker, p } of allMarkers) {
@@ -572,8 +612,10 @@ function applyFilters(): void {
 
     // Academic filter
     const sqr = p.sqr;
-    const elaRating = sqr?.["Metric Rating - Average Student Proficiency, ELA"] ?? "";
-    const mathRating = sqr?.["Metric Rating - Average Student Proficiency, Math"] ?? "";
+    const elaRating =
+      sqr?.["Metric Rating - Average Student Proficiency, ELA"] ?? "";
+    const mathRating =
+      sqr?.["Metric Rating - Average Student Proficiency, Math"] ?? "";
     const hasData = Boolean(elaRating || mathRating);
     let passesAcademic: boolean;
     if (!hasData) {
@@ -581,7 +623,9 @@ function applyFilters(): void {
     } else if (minRank < 0) {
       passesAcademic = true;
     } else {
-      const ranks = [elaRating, mathRating].filter(Boolean).map((r) => RATING_RANK[r] ?? -1);
+      const ranks = [elaRating, mathRating]
+        .filter(Boolean)
+        .map((r) => RATING_RANK[r] ?? -1);
       passesAcademic = Math.min(...ranks) >= minRank;
     }
 
@@ -635,7 +679,9 @@ applyFilters();
 document.querySelectorAll('input[name="academic-filter"]').forEach((el) => {
   el.addEventListener("change", applyFilters);
 });
-document.getElementById("hide-no-academic-data")!.addEventListener("change", applyFilters);
+document
+  .getElementById("hide-no-academic-data")!
+  .addEventListener("change", applyFilters);
 document.querySelectorAll('input[name="commute-filter"]').forEach((el) => {
   el.addEventListener("change", applyFilters);
 });

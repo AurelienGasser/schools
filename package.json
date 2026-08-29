@@ -24,13 +24,11 @@
   },
   "type": "module",
   "devDependencies": {
-    "@types/lodash": "^4.17.25",
     "@types/node": "^26.2.0",
     "tsx": "^4.23.12",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "lodash": "^4.18.1",
     "polygon-clipping": "^0.15.7"
   }
 }

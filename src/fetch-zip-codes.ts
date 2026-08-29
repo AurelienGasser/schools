@@ -1,7 +1,6 @@
 import { writeFileSync, readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
-import { sumBy } from "lodash";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -71,7 +70,7 @@ const features = rawGeoJson.features.flatMap((f: any) => {
     .filter((e) => e.count > 0);
   const avgPrice =
     priceEntries.length > 0
-      ? sumBy(priceEntries, (e) => e.sum) / sumBy(priceEntries, (e) => e.count)
+      ? priceEntries.reduce((acc, e) => acc + e.sum, 0) / priceEntries.reduce((acc, e) => acc + e.count, 0)
       : null;
   return [
     {

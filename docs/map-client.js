@@ -43,12 +43,22 @@ function zipPriceColor(price) {
 const zipLayer = L.geoJSON(__zipCodes, {
     style(feature) {
         const { fillColor, fillOpacity } = zipPriceColor(feature.properties.avgPrice);
-        return { color: "#64748b", weight: 1, opacity: 0.5, fillColor, fillOpacity };
+        return {
+            color: "#64748b",
+            weight: 1,
+            opacity: 0.5,
+            fillColor,
+            fillOpacity,
+        };
     },
     onEachFeature(feature, layer) {
         const price = feature.properties.avgPrice;
         const priceStr = price !== null ? ` — $${Math.round(price).toLocaleString()}/sqft` : "";
-        layer.bindTooltip(feature.properties.label + priceStr, { permanent: false, sticky: true, className: "zip-tooltip" });
+        layer.bindTooltip(feature.properties.label + priceStr, {
+            permanent: false,
+            sticky: true,
+            className: "zip-tooltip",
+        });
     },
 }).addTo(map);
 // Geo-referenced coverage zones
@@ -425,7 +435,8 @@ __points.forEach((p, i) => {
 function applyFilters() {
     const academicValue = document.querySelector('input[name="academic-filter"]:checked')?.value ?? "any";
     const minRank = academicValue === "any" ? -1 : (RATING_RANK[academicValue] ?? -1);
-    const hideNoData = document.getElementById("hide-no-academic-data")?.checked ?? false;
+    const hideNoData = document.getElementById("hide-no-academic-data")
+        ?.checked ?? false;
     const commuteValue = document.querySelector('input[name="commute-filter"]:checked')?.value ?? "any";
     const maxCommute = commuteValue === "any" ? Infinity : parseInt(commuteValue);
     for (const { marker, p } of allMarkers) {
@@ -445,7 +456,9 @@ function applyFilters() {
             passesAcademic = true;
         }
         else {
-            const ranks = [elaRating, mathRating].filter(Boolean).map((r) => RATING_RANK[r] ?? -1);
+            const ranks = [elaRating, mathRating]
+                .filter(Boolean)
+                .map((r) => RATING_RANK[r] ?? -1);
             passesAcademic = Math.min(...ranks) >= minRank;
         }
         const visible = passesCommute && passesAcademic;
@@ -497,7 +510,9 @@ applyFilters();
 document.querySelectorAll('input[name="academic-filter"]').forEach((el) => {
     el.addEventListener("change", applyFilters);
 });
-document.getElementById("hide-no-academic-data").addEventListener("change", applyFilters);
+document
+    .getElementById("hide-no-academic-data")
+    .addEventListener("change", applyFilters);
 document.querySelectorAll('input[name="commute-filter"]').forEach((el) => {
     el.addEventListener("change", applyFilters);
 });
