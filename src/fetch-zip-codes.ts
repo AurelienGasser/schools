@@ -1,6 +1,7 @@
 import { writeFileSync, readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
+import { sumBy } from "lodash";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -18,14 +19,6 @@ function parseRow(line: string): string[] {
   }
   fields.push(cur);
   return fields;
-}
-
-function borough(modzcta: string): string | null {
-  const z = parseInt(modzcta);
-  if (z >= 10001 && z <= 10282) return "Manhattan";
-  if (z >= 11201 && z <= 11239) return "Brooklyn";
-  if ((z >= 11004 && z <= 11109) || (z >= 11354 && z <= 11697)) return "Queens";
-  return null;
 }
 
 // --- Average sale prices per zip code ---
@@ -57,10 +50,6 @@ for (let i = 1; i < csvLines.length; i++) {
   pricesByZip.set(zip, entry);
 }
 
-const avgByZip = new Map<string, number>(
-  [...pricesByZip.entries()].map(([zip, { sum, count }]) => [zip, sum / count]),
-);
-
 // --- Load and filter zip GeoJSON ---
 const rawGeoJson = JSON.parse(
   readFileSync(
@@ -73,18 +62,16 @@ const rawGeoJson = JSON.parse(
 ) as any;
 
 const features = rawGeoJson.features.flatMap((f: any) => {
-  const b = borough(f.properties.modzcta);
-  if (!b) return [];
   // Average across all ZCTAs in this MODZCTA group
   const zips = (f.properties.zcta as string)
     .split(",")
     .map((z: string) => z.trim());
   const priceEntries = zips
-    .map((z) => avgByZip.get(z))
-    .filter((p): p is number => p !== undefined);
+    .map((z) => pricesByZip.get(z) ?? { sum: 0, count: 0 })
+    .filter((e) => e.count > 0);
   const avgPrice =
     priceEntries.length > 0
-      ? priceEntries.reduce((a, b) => a + b, 0) / priceEntries.length
+      ? sumBy(priceEntries, (e) => e.sum) / sumBy(priceEntries, (e) => e.count)
       : null;
   return [
     {
@@ -92,7 +79,6 @@ const features = rawGeoJson.features.flatMap((f: any) => {
       properties: {
         modzcta: f.properties.modzcta,
         label: f.properties.label,
-        borough: b,
         avgPrice,
       },
     },
@@ -109,11 +95,6 @@ const withPrice = features.filter((f: any) => f.properties.avgPrice !== null);
 console.log(
   `Wrote ${features.length} zip codes (${withPrice.length} have price data)`,
 );
-const boroughCounts = features.reduce((acc: Record<string, number>, f: any) => {
-  acc[f.properties.borough] = (acc[f.properties.borough] ?? 0) + 1;
-  return acc;
-}, {});
-for (const [b, n] of Object.entries(boroughCounts)) console.log(`  ${b}: ${n}`);
 
 const prices = features
   .map((f: any) => f.properties.avgPrice)
