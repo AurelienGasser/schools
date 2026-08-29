@@ -138,7 +138,6 @@ const ringZones = zonesSorted.map((z, i) => {
   };
 });
 
-
 function commuteRange(
   lng: number,
   lat: number,
@@ -373,6 +372,7 @@ const html = `<!DOCTYPE html>
       <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
         <label class="toggle-row"><input type="checkbox" id="toggle-circles" />Coverage circles</label>
         <label class="toggle-row"><input type="checkbox" id="toggle-zipcodes" checked />Zip codes</label>
+        <label class="toggle-row"><input type="checkbox" id="toggle-zones" />Commute zones</label>
       </div>
       <div class="control-section-label">Academics (ELA &amp; Math)</div>
       <div style="display:flex;flex-direction:column;gap:6px;">
@@ -381,15 +381,14 @@ const html = `<!DOCTYPE html>
         <label class="radio-row"><input type="radio" name="academic-filter" value="Good" checked />Good+</label>
         <label class="radio-row"><input type="radio" name="academic-filter" value="Excellent" />Excellent only</label>
       </div>
-      <label class="toggle-row" style="margin-top:6px"><input type="checkbox" id="hide-no-academic-data" />Hide if no data</label>
+      <label class="toggle-row" style="margin-top:6px"><input type="checkbox" id="hide-no-academic-data" checked />Hide if no data</label>
       <div class="control-section-label">Commute</div>
       <div style="display:flex;flex-direction:column;gap:6px;">
       <label class="radio-row"><input type="radio" name="commute-filter" value="30" />≤ 30 min</label>
-      <label class="radio-row"><input type="radio" name="commute-filter" value="40" />≤ 40 min</label>
-      <label class="radio-row"><input type="radio" name="commute-filter" value="45" checked />≤ 45 min</label>
+      <label class="radio-row"><input type="radio" name="commute-filter" value="40" checked />≤ 40 min</label>
+      <label class="radio-row"><input type="radio" name="commute-filter" value="45"/>≤ 45 min</label>
       <label class="radio-row"><input type="radio" name="commute-filter" value="any" />Any</label>
       </div>
-      <label class="toggle-row" style="margin-top:6px"><input type="checkbox" id="toggle-zones" checked />Commute zones</label>
     </div>
   </div>
   <div id="legend">

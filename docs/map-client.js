@@ -26,7 +26,6 @@ function buildLayer(zones) {
     return layer;
 }
 const ringsLayer = buildLayer(__polygonSets.rings);
-map.addLayer(ringsLayer);
 const zipPrices = __zipCodes.features
     .map((f) => f.properties.avgPrice)
     .filter((p) => p !== null);

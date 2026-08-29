@@ -67,7 +67,6 @@ function buildLayer(zones: ZoneSet): any {
 }
 
 const ringsLayer = buildLayer(__polygonSets.rings);
-map.addLayer(ringsLayer);
 
 const zipPrices = __zipCodes.features
   .map((f) => f.properties.avgPrice)
