@@ -5,6 +5,7 @@ import { execSync } from "node:child_process";
 import polygonClipping from "polygon-clipping";
 import type { SchoolsResponse } from "./types.js";
 import schoolsJson from "../data/schools.json" with { type: "json" };
+import zipCodesJson from "../data/zip-codes.json" with { type: "json" };
 
 // console.log(
 //   schoolsJson.features.length,
@@ -371,6 +372,7 @@ const html = `<!DOCTYPE html>
       </div>
       <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
         <label class="toggle-row"><input type="checkbox" id="toggle-circles" />Coverage circles</label>
+        <label class="toggle-row"><input type="checkbox" id="toggle-zipcodes" checked />Zip codes</label>
       </div>
       <div class="control-section-label">Academics (ELA &amp; Math)</div>
       <div style="display:flex;flex-direction:column;gap:6px;">
@@ -408,7 +410,7 @@ const html = `<!DOCTYPE html>
       ${commuteLegend}
     </div>
   </div>
-  <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones })};</script>
+  <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones })};const __zipCodes = ${JSON.stringify(zipCodesJson)};</script>
   <script src="./map-client.js?v=${Date.now()}"></script>
 </body>
 </html>`;

@@ -22,6 +22,7 @@ type ZoneSet = Array<{
   entries: Array<{ coordinates: number[][][][] }>;
 }>;
 declare const __polygonSets: { rings: ZoneSet };
+declare const __zipCodes: { type: string; features: Array<{ type: string; geometry: any; properties: { modzcta: string; label: string; borough: string; avgPrice: number | null } }> };
 
 const MILES_TO_METERS = 1609.34;
 
@@ -60,6 +61,32 @@ function buildLayer(zones: ZoneSet): any {
 
 const ringsLayer = buildLayer(__polygonSets.rings);
 map.addLayer(ringsLayer);
+
+const zipPrices = __zipCodes.features
+  .map((f) => f.properties.avgPrice)
+  .filter((p): p is number => p !== null);
+const zipMinPrice = Math.min(...zipPrices);
+const zipMaxPrice = Math.max(...zipPrices);
+
+function zipPriceColor(price: number | null): { fillColor: string; fillOpacity: number } {
+  if (price === null) return { fillColor: "#000", fillOpacity: 0 };
+  const t = Math.log(price / zipMinPrice) / Math.log(zipMaxPrice / zipMinPrice);
+  const hue = Math.round(60 - t * 60);
+  const lightness = Math.round(70 - t * 30);
+  return { fillColor: `hsl(${hue}, 100%, ${lightness}%)`, fillOpacity: 0.55 };
+}
+
+const zipLayer = L.geoJSON(__zipCodes, {
+  style(feature: any) {
+    const { fillColor, fillOpacity } = zipPriceColor(feature.properties.avgPrice);
+    return { color: "#64748b", weight: 1, opacity: 0.5, fillColor, fillOpacity };
+  },
+  onEachFeature(feature: any, layer: any) {
+    const price = feature.properties.avgPrice as number | null;
+    const priceStr = price !== null ? ` — $${Math.round(price).toLocaleString()}/sqft` : "";
+    layer.bindTooltip(feature.properties.label + priceStr, { permanent: false, sticky: true, className: "zip-tooltip" });
+  },
+}).addTo(map);
 
 // Geo-referenced coverage zones
 const zones = __points.map((p) =>
@@ -596,6 +623,10 @@ document.getElementById("legend-header")!.addEventListener("click", () => {
 document.getElementById("toggle-circles")!.addEventListener("change", (e) => {
   if ((e.target as HTMLInputElement).checked) map.addLayer(circleLayer);
   else map.removeLayer(circleLayer);
+});
+document.getElementById("toggle-zipcodes")!.addEventListener("change", (e) => {
+  if ((e.target as HTMLInputElement).checked) map.addLayer(zipLayer);
+  else map.removeLayer(zipLayer);
 });
 
 // Filters

@@ -27,6 +27,30 @@ function buildLayer(zones) {
 }
 const ringsLayer = buildLayer(__polygonSets.rings);
 map.addLayer(ringsLayer);
+const zipPrices = __zipCodes.features
+    .map((f) => f.properties.avgPrice)
+    .filter((p) => p !== null);
+const zipMinPrice = Math.min(...zipPrices);
+const zipMaxPrice = Math.max(...zipPrices);
+function zipPriceColor(price) {
+    if (price === null)
+        return { fillColor: "#000", fillOpacity: 0 };
+    const t = Math.log(price / zipMinPrice) / Math.log(zipMaxPrice / zipMinPrice);
+    const hue = Math.round(60 - t * 60);
+    const lightness = Math.round(70 - t * 30);
+    return { fillColor: `hsl(${hue}, 100%, ${lightness}%)`, fillOpacity: 0.55 };
+}
+const zipLayer = L.geoJSON(__zipCodes, {
+    style(feature) {
+        const { fillColor, fillOpacity } = zipPriceColor(feature.properties.avgPrice);
+        return { color: "#64748b", weight: 1, opacity: 0.5, fillColor, fillOpacity };
+    },
+    onEachFeature(feature, layer) {
+        const price = feature.properties.avgPrice;
+        const priceStr = price !== null ? ` — $${Math.round(price).toLocaleString()}/sqft` : "";
+        layer.bindTooltip(feature.properties.label + priceStr, { permanent: false, sticky: true, className: "zip-tooltip" });
+    },
+}).addTo(map);
 // Geo-referenced coverage zones
 const zones = __points.map((p) => L.circle([p.lat, p.lng], {
     radius: 0.5 * MILES_TO_METERS,
@@ -461,6 +485,12 @@ document.getElementById("toggle-circles").addEventListener("change", (e) => {
         map.addLayer(circleLayer);
     else
         map.removeLayer(circleLayer);
+});
+document.getElementById("toggle-zipcodes").addEventListener("change", (e) => {
+    if (e.target.checked)
+        map.addLayer(zipLayer);
+    else
+        map.removeLayer(zipLayer);
 });
 // Filters
 applyFilters();
