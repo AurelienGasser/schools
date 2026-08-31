@@ -384,7 +384,7 @@ function surveySection(s) {
     const rateBar = hasRates
         ? `<div style="font-size:11px;color:#555;margin-bottom:4px">Resp. rate. Teachers: <b>${teacherRate || "—"}</b>&ensp;Parents: <b>${parentRate || "—"}</b></div>`
         : "";
-    return `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#888;margin-bottom:4px">Survey</div>${rateBar}<table style="font-size:12px;border-collapse:collapse">${rows}</table></div>`;
+    return `<details style="margin-top:8px"><summary style="cursor:pointer;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#888;user-select:none">Survey</summary>${rateBar}<table style="font-size:12px;border-collapse:collapse;margin-top:4px">${rows}</table></details>`;
 }
 function ethnicityBar(s) {
     const vals = ETHNICITY_GROUPS.map((g) => ({
@@ -496,7 +496,8 @@ const RATING_RANK = {
 const allMarkers = [];
 // Pins using SVG divIcon
 __points.forEach((p) => {
-    const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(buildPopup(p), { minWidth: 370 });
+    const isMobile = window.innerWidth <= 640;
+    const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(buildPopup(p), isMobile ? { maxWidth: window.innerWidth - 24 } : { minWidth: 370, maxWidth: 420 });
     marker._p = p;
     oms.addMarker(marker);
     marker.addTo(pinLayer);
