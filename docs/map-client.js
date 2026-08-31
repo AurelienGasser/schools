@@ -144,15 +144,13 @@ function makePinSvg(schoolType, color, arms) {
         .join("");
     return `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">${armLines}${shapeEl}</svg>`;
 }
-const PIN_SIZE = window.innerWidth <= 640 ? 34 : 28;
 function makePinIcon(p) {
-    const half = PIN_SIZE / 2;
     return L.divIcon({
         html: makePinSvg(p.schoolType, p.color, p.qualityArms),
         className: "",
-        iconSize: [PIN_SIZE, PIN_SIZE],
-        iconAnchor: [half, half],
-        popupAnchor: [0, -half - 2],
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+        popupAnchor: [0, -22],
     });
 }
 const RATING_COLORS = {
