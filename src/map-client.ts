@@ -630,8 +630,8 @@ oms.addListener("click", (marker: any) => {
       );
       for (const mainSchool of mainSchools) {
         selectedMainSchoolCircles.push(
-          L.circle([mainSchool.lat, mainSchool.lng], {
-            radius: 80,
+          L.circleMarker([mainSchool.lat, mainSchool.lng], {
+            radius: 22,
             color: zone.color,
             weight: 3,
             fillOpacity: 0,

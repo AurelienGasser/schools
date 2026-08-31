@@ -474,8 +474,8 @@ oms.addListener("click", (marker) => {
                 .filter(Boolean);
             const mainSchools = __points.filter((pt) => pt.dbn && dbns.includes(pt.dbn));
             for (const mainSchool of mainSchools) {
-                selectedMainSchoolCircles.push(L.circle([mainSchool.lat, mainSchool.lng], {
-                    radius: 80,
+                selectedMainSchoolCircles.push(L.circleMarker([mainSchool.lat, mainSchool.lng], {
+                    radius: 22,
                     color: zone.color,
                     weight: 3,
                     fillOpacity: 0,
