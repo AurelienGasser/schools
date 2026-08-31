@@ -36,6 +36,8 @@ export interface SchoolAttributes {
   SDL_DESC: string;
   INSTIT_ID: number;
   SED_CODE: string;
+  sqr?: Record<string, string>;
+  DBN?: string;
 }
 
 export interface SchoolFeature {

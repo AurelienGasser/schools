@@ -7,20 +7,6 @@ import type { SchoolsResponse } from "./types.js";
 import schoolsJson from "../data/schools.json" with { type: "json" };
 import zipCodesJson from "../data/zip-codes.json" with { type: "json" };
 
-// console.log(
-//   schoolsJson.features.length,
-//   Map.groupBy(schoolsJson.features, (s) => s.attributes.LEGAL_NAME).size,
-// );
-
-// for (const [key, values] of Map.groupBy(
-//   schoolsJson.features,
-//   (s) => `${s.attributes.LEGAL_NAME}-${s.attributes.PHYSZIPCD5}`,
-// )) {
-//   if (values.length > 1) {
-//     console.log(values.length, key);
-//   }
-// }
-
 const schools = schoolsJson as unknown as SchoolsResponse;
 
 const COLORS: Record<string, string> = {
@@ -212,11 +198,11 @@ const points = features
     address: f.attributes.PHYSADDRLINE1,
     commuteRange: commuteRange(f.geometry.x, f.geometry.y),
     schoolType: schoolTypeFromSqr(
-      f.attributes.sqr as Record<string, string> | undefined,
+      f.attributes.sqr,
       f.attributes.LEGAL_NAME ?? "",
     ),
-    sqr: f.attributes.sqr as Record<string, string> | undefined,
-    dbn: f.attributes.DBN as string | undefined,
+    sqr: f.attributes.sqr,
+    dbn: f.attributes.DBN ?? f.attributes.sqr?.DBN,
   }))
   .filter((s) => !s.commuteRange.min || s.commuteRange.min != 60)
   .map((s) => ({ ...s, commute: getCommuteString(s.commuteRange) }));
