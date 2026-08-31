@@ -164,18 +164,7 @@ function roundedStarPath(cx, cy, r) {
     d += " Z";
     return d;
 }
-const ARM_ANGLES = [-90, 30, 150]; // 12, 4, 8 o'clock in degrees
-const ARM_COLORS = ["#16a34a", "#ea580c", "#dc2626"];
-const ARM_MAX = R + 6; // max arm length extends beyond shape edge
-const ARM_MIN = 3;
-function armLine(cx, cy, angle, score, color) {
-    const rad = (angle * Math.PI) / 180;
-    const len = ARM_MIN + score * (ARM_MAX - ARM_MIN);
-    const x2 = cx + len * Math.cos(rad);
-    const y2 = cy + len * Math.sin(rad);
-    return `<line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${color}" stroke-width="2" stroke-linecap="round"/>`;
-}
-function makePinSvg(schoolType, color, arms) {
+function makePinSvg(schoolType, color) {
     const shapeEl = schoolType === "elementary"
         ? `<circle cx="${CX}" cy="${CY}" r="${R}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`
         : schoolType === "middle"
@@ -183,14 +172,11 @@ function makePinSvg(schoolType, color, arms) {
             : schoolType === "k8"
                 ? `<path d="${roundedStarPath(CX, CY, R)}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`
                 : `<polygon points="${CX},${CY - R} ${CX + R},${CY} ${CX},${CY + R} ${CX - R},${CY}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`;
-    const armLines = arms
-        .map((score, i) => armLine(CX, CY, ARM_ANGLES[i], score, ARM_COLORS[i]))
-        .join("");
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">${armLines}${shapeEl}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">${shapeEl}</svg>`;
 }
 function makePinIcon(p) {
     return L.divIcon({
-        html: makePinSvg(p.schoolType, p.color, p.qualityArms),
+        html: makePinSvg(p.schoolType, p.color),
         className: "",
         iconSize: [40, 40],
         iconAnchor: [20, 20],

@@ -11,7 +11,7 @@ declare const __points: Array<{
   commute: string;
   commuteRange: { min?: number; max?: number };
   schoolType: "elementary" | "middle" | "k8" | "unknown";
-  qualityArms: [number, number, number];
+
   sqr?: Record<string, string>;
   dbn?: string;
 }>;
@@ -236,29 +236,9 @@ function roundedStarPath(cx: number, cy: number, r: number): string {
   return d;
 }
 
-const ARM_ANGLES = [-90, 30, 150]; // 12, 4, 8 o'clock in degrees
-const ARM_COLORS = ["#16a34a", "#ea580c", "#dc2626"];
-const ARM_MAX = R + 6; // max arm length extends beyond shape edge
-const ARM_MIN = 3;
-
-function armLine(
-  cx: number,
-  cy: number,
-  angle: number,
-  score: number,
-  color: string,
-): string {
-  const rad = (angle * Math.PI) / 180;
-  const len = ARM_MIN + score * (ARM_MAX - ARM_MIN);
-  const x2 = cx + len * Math.cos(rad);
-  const y2 = cy + len * Math.sin(rad);
-  return `<line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${color}" stroke-width="2" stroke-linecap="round"/>`;
-}
-
 function makePinSvg(
   schoolType: "elementary" | "middle" | "k8" | "unknown",
   color: string,
-  arms: [number, number, number],
 ): string {
   const shapeEl =
     schoolType === "elementary"
@@ -268,15 +248,12 @@ function makePinSvg(
         : schoolType === "k8"
           ? `<path d="${roundedStarPath(CX, CY, R)}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`
           : `<polygon points="${CX},${CY - R} ${CX + R},${CY} ${CX},${CY + R} ${CX - R},${CY}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`;
-  const armLines = arms
-    .map((score, i) => armLine(CX, CY, ARM_ANGLES[i], score, ARM_COLORS[i]))
-    .join("");
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">${armLines}${shapeEl}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">${shapeEl}</svg>`;
 }
 
 function makePinIcon(p: (typeof __points)[0]): any {
   return L.divIcon({
-    html: makePinSvg(p.schoolType, p.color, p.qualityArms),
+    html: makePinSvg(p.schoolType, p.color),
     className: "",
     iconSize: [40, 40],
     iconAnchor: [20, 20],

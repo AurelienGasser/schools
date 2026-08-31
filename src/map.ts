@@ -171,36 +171,8 @@ const getCommuteString = ({
   return `${min}-${max} min`;
 };
 
-function parsePercent(s: string): number | null {
-  const m = /^([\d.]+)%$/.exec((s ?? "").trim());
-  return m ? parseFloat(m[1]) / 100 : null;
-}
 
-function avgMetric(sqr: Record<string, string>, prefix: string): number | null {
-  const vals = Object.entries(sqr)
-    .filter(([k]) => k.startsWith(prefix))
-    .map(([, v]) => parsePercent(v))
-    .filter((v): v is number => v !== null);
-  return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
-}
 
-function qualityArms(
-  sqr: Record<string, string> | undefined,
-): [number, number, number] {
-  if (!sqr) return [0, 0, 0];
-  const ela =
-    avgMetric(
-      sqr,
-      "Metric Value - Percentage of Students at Level 3 or 4, ELA",
-    ) ?? 0;
-  const math =
-    avgMetric(
-      sqr,
-      "Metric Value - Percentage of Students at Level 3 or 4, Math",
-    ) ?? 0;
-  const attendance = parsePercent(sqr["Average Student Attendance"] ?? "") ?? 0;
-  return [ela, math, attendance];
-}
 
 function schoolTypeFromSqr(
   sqr: Record<string, string> | undefined,
@@ -229,9 +201,6 @@ const points = features
     schoolType: schoolTypeFromSqr(
       f.attributes.sqr as Record<string, string> | undefined,
       f.attributes.LEGAL_NAME ?? "",
-    ),
-    qualityArms: qualityArms(
-      f.attributes.sqr as Record<string, string> | undefined,
     ),
     sqr: f.attributes.sqr as Record<string, string> | undefined,
     dbn: f.attributes.DBN as string | undefined,
@@ -398,11 +367,7 @@ const html = `<!DOCTYPE html>
       <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20"><polygon points="10,2 12.1,7.1 17.6,7.5 13.4,11.1 14.7,16.5 10,13.6 5.3,16.5 6.6,11.1 2.4,7.5 7.9,7.1" fill="#2563eb" stroke="#fff" stroke-width="1"/></svg>Middle</div>
       <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20" overflow="visible"><path d="M 10 2 C 12.8 2 12.2 7.8 12.2 7.8 C 12.2 7.8 20.8 10 18 10 C 18 12.8 12.2 12.2 12.2 12.2 C 12.2 12.2 10 15.2 10 18 C 7.2 18 7.8 12.2 7.8 12.2 C 7.8 12.2 -0.8 10 2 10 C 2 7.2 7.8 7.8 7.8 7.8 C 7.8 7.8 10 4.8 10 2 Z" fill="#2563eb" stroke="#fff" stroke-width="1"/></svg>K-8</div>
       <div class="legend-item"><svg width="18" height="18" viewBox="0 0 20 20"><polygon points="10,2 18,10 10,18 2,10" fill="#94a3b8" stroke="#fff" stroke-width="1.5"/></svg>Unknown</div>
-      <h4>Quality Arms</h4>
-      <div class="legend-item"><span style="display:inline-block;width:14px;height:3px;background:#16a34a;border-radius:2px"></span>ELA (12 o'clock)</div>
-      <div class="legend-item"><span style="display:inline-block;width:14px;height:3px;background:#ea580c;border-radius:2px"></span>Math (4 o'clock)</div>
-      <div class="legend-item"><span style="display:inline-block;width:14px;height:3px;background:#dc2626;border-radius:2px"></span>Attendance (8 o'clock)</div>
-      <h4>Commute</h4>
+<h4>Commute</h4>
       ${commuteLegend}
     </div>
   </div>
