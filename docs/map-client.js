@@ -58,16 +58,14 @@ const zipLayer = L.geoJSON(__zipCodes, {
         });
     },
 }).addTo(map);
-const schoolZoneStyle = (color) => ({
-    color,
-    weight: 1,
-    opacity: 0.6,
-    fillColor: color,
-    fillOpacity: 0.08,
+const schoolZoneStyle = (_color) => ({
+    opacity: 0,
+    fill: false,
+    interactive: false,
 });
 const schoolZoneHighlight = (color) => ({
     color,
-    weight: 2.5,
+    weight: 3.5,
     opacity: 0.95,
     fillColor: color,
     fillOpacity: 0.25,
@@ -107,7 +105,7 @@ function makeZoneGeoJSON(data, color, zoneType) {
         },
     });
 }
-const schoolZonesLayer = L.layerGroup([
+L.layerGroup([
     makeZoneGeoJSON(__middleZones, "#ea580c", "middle"),
     makeZoneGeoJSON(__elementaryZones, "#2563eb", "elementary"),
 ]).addTo(map);
@@ -412,9 +410,15 @@ const LINK_STYLE = `color:#2563eb;font-size:12px;text-decoration:none;display:in
 function zoneInfo(zone) {
     const props = zone.feature.properties;
     const label = props.label ? `Zone ${props.label}` : "";
-    const district = props.schooldist ? `District ${parseInt(props.schooldist)}` : "";
+    const district = props.schooldist
+        ? `District ${parseInt(props.schooldist)}`
+        : "";
     const remarks = props.remarks ?? "";
-    const dbns = (props.dbn ?? "").split(",").map((d) => d.trim()).filter(Boolean).join(", ");
+    const dbns = (props.dbn ?? "")
+        .split(",")
+        .map((d) => d.trim())
+        .filter(Boolean)
+        .join(", ");
     return [label, district, remarks, dbns].filter(Boolean).join(" · ");
 }
 function schoolZoneSection(zones) {
@@ -427,7 +431,9 @@ function schoolZoneSection(zones) {
 }
 function buildPopup(p, zones = []) {
     const s = p.sqr;
-    const dbnStr = p.dbn ? ` <span style="color:#94a3b8;font-size:10px;font-weight:normal">${p.dbn}</span>` : "";
+    const dbnStr = p.dbn
+        ? ` <span style="color:#94a3b8;font-size:10px;font-weight:normal">${p.dbn}</span>`
+        : "";
     const header = `<b style="font-size:14px">${p.name}</b>${dbnStr}<br><span style="color:#555;font-size:12px">${p.type}</span><br><span style="color:#777;font-size:11px">${p.address}, ${p.city}</span>`;
     const commute = p.commute
         ? `<div style="margin-top:4px;font-size:12px">Commute: <b>${p.commute}</b></div>`
@@ -462,7 +468,10 @@ oms.addListener("click", (marker) => {
         for (const zone of selectedSchoolZones) {
             zone.layer.setStyle(schoolZoneHighlight(zone.color));
             const zoneDbn = zone.feature.properties.dbn ?? "";
-            const dbns = zoneDbn.split(",").map((d) => d.trim()).filter(Boolean);
+            const dbns = zoneDbn
+                .split(",")
+                .map((d) => d.trim())
+                .filter(Boolean);
             const mainSchools = __points.filter((pt) => pt.dbn && dbns.includes(pt.dbn));
             for (const mainSchool of mainSchools) {
                 selectedMainSchoolCircles.push(L.circle([mainSchool.lat, mainSchool.lng], {
@@ -577,12 +586,4 @@ document.getElementById("toggle-zones").addEventListener("change", (e) => {
         map.addLayer(ringsLayer);
     else
         map.removeLayer(ringsLayer);
-});
-document
-    .getElementById("toggle-school-zones")
-    .addEventListener("change", (e) => {
-    if (e.target.checked)
-        map.addLayer(schoolZonesLayer);
-    else
-        map.removeLayer(schoolZonesLayer);
 });
