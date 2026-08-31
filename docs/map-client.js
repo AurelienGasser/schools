@@ -563,11 +563,22 @@ document.getElementById("legend-header").addEventListener("click", () => {
     legendEl.classList.toggle("collapsed");
 });
 // Layer toggles
-document.getElementById("toggle-zipcodes").addEventListener("change", (e) => {
-    if (e.target.checked)
-        map.addLayer(zipLayer);
-    else
-        map.removeLayer(zipLayer);
+document.querySelectorAll('input[name="overlay"]').forEach((el) => {
+    el.addEventListener("change", () => {
+        const val = document.querySelector('input[name="overlay"]:checked').value;
+        if (val === "zipcodes") {
+            map.addLayer(zipLayer);
+            map.removeLayer(ringsLayer);
+        }
+        else if (val === "zones") {
+            map.removeLayer(zipLayer);
+            map.addLayer(ringsLayer);
+        }
+        else {
+            map.removeLayer(zipLayer);
+            map.removeLayer(ringsLayer);
+        }
+    });
 });
 // Filters
 applyFilters();
@@ -581,9 +592,3 @@ document.querySelectorAll('input[name="commute-filter"]').forEach((el) => {
     el.addEventListener("change", applyFilters);
 });
 // Commute zone toggle
-document.getElementById("toggle-zones").addEventListener("change", (e) => {
-    if (e.target.checked)
-        map.addLayer(ringsLayer);
-    else
-        map.removeLayer(ringsLayer);
-});

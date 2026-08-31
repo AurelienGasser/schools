@@ -335,8 +335,9 @@ const html = `<!DOCTYPE html>
     </div>
     <div id="panel-body">
       <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
-        <label class="toggle-row"><input type="checkbox" id="toggle-zipcodes" checked />Real estate price</label>
-        <label class="toggle-row"><input type="checkbox" id="toggle-zones" />Commute zones</label>
+        <label class="radio-row"><input type="radio" name="overlay" value="zipcodes" checked />Real estate price</label>
+        <label class="radio-row"><input type="radio" name="overlay" value="zones" />Commute zones</label>
+        <label class="radio-row"><input type="radio" name="overlay" value="none" />None</label>
       </div>
       <div class="control-section-label">Academics (ELA &amp; Math)</div>
       <div style="display:flex;flex-direction:column;gap:6px;">
