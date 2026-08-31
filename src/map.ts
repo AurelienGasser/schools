@@ -366,14 +366,7 @@ const html = `<!DOCTYPE html>
       Controls <span id="panel-toggle">▼</span>
     </div>
     <div id="panel-body">
-      <div class="control-row">
-        <label class="control-label">
-          <span>Coverage radius</span><span id="radius-value">0.5 mi</span>
-        </label>
-        <input type="range" id="radius-slider" min="0.1" max="1.5" value="0.3" step="0.05" />
-      </div>
       <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
-        <label class="toggle-row"><input type="checkbox" id="toggle-circles" />Coverage circles</label>
         <label class="toggle-row"><input type="checkbox" id="toggle-zipcodes" checked />Zip codes</label>
         <label class="toggle-row"><input type="checkbox" id="toggle-zones" />Commute zones</label>
         <label class="toggle-row"><input type="checkbox" id="toggle-school-zones" checked />School zones</label>

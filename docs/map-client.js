@@ -1,11 +1,9 @@
 "use strict";
-const MILES_TO_METERS = 1609.34;
 const map = L.map("map").setView([40.6928, -73.956], 13);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxZoom: 19,
 }).addTo(map);
-const circleLayer = L.layerGroup();
 const pinLayer = L.layerGroup().addTo(map);
 function buildLayer(zones) {
     const layer = L.layerGroup();
@@ -113,24 +111,9 @@ const schoolZonesLayer = L.layerGroup([
     makeZoneGeoJSON(__middleZones, "#ea580c", "middle"),
     makeZoneGeoJSON(__elementaryZones, "#2563eb", "elementary"),
 ]).addTo(map);
-// Geo-referenced coverage zones
-const zones = __points.map((p) => L.circle([p.lat, p.lng], {
-    radius: 0.5 * MILES_TO_METERS,
-    color: p.color,
-    weight: 1.5,
-    fillColor: p.color,
-    fillOpacity: 0.08,
-    opacity: 0.2,
-    interactive: false,
-}).addTo(circleLayer));
-let selectedZone = null;
 let selectedSchoolZones = [];
 let selectedMainSchoolCircles = [];
 const deselect = () => {
-    if (selectedZone) {
-        selectedZone.setStyle({ opacity: 0.2 });
-        selectedZone = null;
-    }
     for (const z of selectedSchoolZones)
         z.layer.setStyle(schoolZoneStyle(z.color));
     selectedSchoolZones = [];
@@ -487,9 +470,6 @@ const oms = new OverlappingMarkerSpiderfier(map, {
 });
 oms.addListener("click", (marker) => {
     deselect();
-    selectedZone = marker._zone ?? null;
-    if (selectedZone)
-        selectedZone.setStyle({ opacity: 0.85 });
     const p = marker._p;
     if (p) {
         selectedSchoolZones = findZonesForPoint(p.lng, p.lat);
@@ -520,9 +500,8 @@ const RATING_RANK = {
 };
 const allMarkers = [];
 // Pins using SVG divIcon
-__points.forEach((p, i) => {
+__points.forEach((p) => {
     const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(buildPopup(p), { minWidth: 370 });
-    marker._zone = zones[i];
     marker._p = p;
     oms.addMarker(marker);
     marker.addTo(pinLayer);
@@ -589,12 +568,6 @@ document.getElementById("legend-header").addEventListener("click", () => {
     legendEl.classList.toggle("collapsed");
 });
 // Layer toggles
-document.getElementById("toggle-circles").addEventListener("change", (e) => {
-    if (e.target.checked)
-        map.addLayer(circleLayer);
-    else
-        map.removeLayer(circleLayer);
-});
 document.getElementById("toggle-zipcodes").addEventListener("change", (e) => {
     if (e.target.checked)
         map.addLayer(zipLayer);
@@ -626,14 +599,4 @@ document
         map.addLayer(schoolZonesLayer);
     else
         map.removeLayer(schoolZonesLayer);
-});
-// Radius slider
-const slider = document.getElementById("radius-slider");
-const radiusLabel = document.getElementById("radius-value");
-slider.addEventListener("input", () => {
-    const miles = Number(slider.value);
-    radiusLabel.textContent = `${miles} mi`;
-    const meters = miles * MILES_TO_METERS;
-    for (const z of zones)
-        z.setRadius(meters);
 });

@@ -33,7 +33,6 @@ declare const __zipCodes: {
 declare const __elementaryZones: any;
 declare const __middleZones: any;
 
-const MILES_TO_METERS = 1609.34;
 
 const map = L.map("map").setView([40.6928, -73.956], 13);
 
@@ -43,7 +42,6 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
 }).addTo(map);
 
-const circleLayer = L.layerGroup();
 const pinLayer = L.layerGroup().addTo(map);
 
 function buildLayer(zones: ZoneSet): any {
@@ -174,28 +172,10 @@ const schoolZonesLayer = L.layerGroup([
   makeZoneGeoJSON(__elementaryZones, "#2563eb", "elementary"),
 ]).addTo(map);
 
-// Geo-referenced coverage zones
-const zones = __points.map((p) =>
-  L.circle([p.lat, p.lng], {
-    radius: 0.5 * MILES_TO_METERS,
-    color: p.color,
-    weight: 1.5,
-    fillColor: p.color,
-    fillOpacity: 0.08,
-    opacity: 0.2,
-    interactive: false,
-  }).addTo(circleLayer),
-);
-
-let selectedZone: any = null;
 let selectedSchoolZones: ZoneEntry[] = [];
 let selectedMainSchoolCircles: any[] = [];
 
 const deselect = () => {
-  if (selectedZone) {
-    selectedZone.setStyle({ opacity: 0.2 });
-    selectedZone = null;
-  }
   for (const z of selectedSchoolZones) z.layer.setStyle(schoolZoneStyle(z.color));
   selectedSchoolZones = [];
   for (const c of selectedMainSchoolCircles) map.removeLayer(c);
@@ -643,8 +623,6 @@ const oms = new OverlappingMarkerSpiderfier(map, {
 
 oms.addListener("click", (marker: any) => {
   deselect();
-  selectedZone = marker._zone ?? null;
-  if (selectedZone) selectedZone.setStyle({ opacity: 0.85 });
   const p = marker._p;
   if (p) {
     selectedSchoolZones = findZonesForPoint(p.lng, p.lat);
@@ -680,12 +658,11 @@ const RATING_RANK: Record<string, number> = {
 const allMarkers: Array<{ marker: any; p: (typeof __points)[0] }> = [];
 
 // Pins using SVG divIcon
-__points.forEach((p, i) => {
+__points.forEach((p) => {
   const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(
     buildPopup(p),
     { minWidth: 370 },
   );
-  marker._zone = zones[i];
   marker._p = p;
   oms.addMarker(marker);
   marker.addTo(pinLayer);
@@ -772,10 +749,6 @@ document.getElementById("legend-header")!.addEventListener("click", () => {
 });
 
 // Layer toggles
-document.getElementById("toggle-circles")!.addEventListener("change", (e) => {
-  if ((e.target as HTMLInputElement).checked) map.addLayer(circleLayer);
-  else map.removeLayer(circleLayer);
-});
 document.getElementById("toggle-zipcodes")!.addEventListener("change", (e) => {
   if ((e.target as HTMLInputElement).checked) map.addLayer(zipLayer);
   else map.removeLayer(zipLayer);
@@ -806,12 +779,3 @@ document
     else map.removeLayer(schoolZonesLayer);
   });
 
-// Radius slider
-const slider = document.getElementById("radius-slider") as HTMLInputElement;
-const radiusLabel = document.getElementById("radius-value")!;
-slider.addEventListener("input", () => {
-  const miles = Number(slider.value);
-  radiusLabel.textContent = `${miles} mi`;
-  const meters = miles * MILES_TO_METERS;
-  for (const z of zones) z.setRadius(meters);
-});
