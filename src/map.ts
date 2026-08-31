@@ -39,6 +39,9 @@ const features = schools.features.filter(
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const outDir = resolve(__dirname, "../docs");
 
+const elementaryZonesJson = JSON.parse(readFileSync(resolve(__dirname, "../data/School_Zones_2024-2025_(Elementary_School)_20260830.geojson"), "utf-8"));
+const middleZonesJson = JSON.parse(readFileSync(resolve(__dirname, "../data/School_Zones_2024-2025_(Middle_School)_20260830.geojson"), "utf-8"));
+
 type PolygonEntry = {
   coordinates: number[][][][];
   color: string;
@@ -373,6 +376,7 @@ const html = `<!DOCTYPE html>
         <label class="toggle-row"><input type="checkbox" id="toggle-circles" />Coverage circles</label>
         <label class="toggle-row"><input type="checkbox" id="toggle-zipcodes" checked />Zip codes</label>
         <label class="toggle-row"><input type="checkbox" id="toggle-zones" />Commute zones</label>
+        <label class="toggle-row"><input type="checkbox" id="toggle-school-zones" checked />School zones</label>
       </div>
       <div class="control-section-label">Academics (ELA &amp; Math)</div>
       <div style="display:flex;flex-direction:column;gap:6px;">
@@ -409,7 +413,7 @@ const html = `<!DOCTYPE html>
       ${commuteLegend}
     </div>
   </div>
-  <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones })};const __zipCodes = ${JSON.stringify(zipCodesJson)};</script>
+  <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones })};const __zipCodes = ${JSON.stringify(zipCodesJson)};const __elementaryZones = ${JSON.stringify(elementaryZonesJson)};const __middleZones = ${JSON.stringify(middleZonesJson)};</script>
   <script src="./map-client.js?v=${Date.now()}"></script>
 </body>
 </html>`;

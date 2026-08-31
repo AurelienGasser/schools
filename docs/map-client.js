@@ -60,6 +60,59 @@ const zipLayer = L.geoJSON(__zipCodes, {
         });
     },
 }).addTo(map);
+const schoolZoneStyle = (color) => ({
+    color,
+    weight: 1,
+    opacity: 0.6,
+    fillColor: color,
+    fillOpacity: 0.08,
+});
+const schoolZoneHighlight = (color) => ({
+    color,
+    weight: 2.5,
+    opacity: 0.95,
+    fillColor: color,
+    fillOpacity: 0.25,
+});
+const allZones = [];
+function pointInRing(x, y, ring) {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const [xi, yi] = ring[i];
+        const [xj, yj] = ring[j];
+        if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
+            inside = !inside;
+    }
+    return inside;
+}
+function findZonesForPoint(lng, lat) {
+    const found = [];
+    for (const z of allZones) {
+        if (found.some((f) => f.zoneType === z.zoneType))
+            continue;
+        const geom = z.feature.geometry;
+        const polys = geom.type === "MultiPolygon" ? geom.coordinates : [geom.coordinates];
+        const hit = polys.some((poly) => pointInRing(lng, lat, poly[0]) &&
+            poly.slice(1).every((hole) => !pointInRing(lng, lat, hole)));
+        if (hit)
+            found.push(z);
+        if (found.length === 2)
+            break;
+    }
+    return found;
+}
+function makeZoneGeoJSON(data, color, zoneType) {
+    return L.geoJSON(data, {
+        style: () => schoolZoneStyle(color),
+        onEachFeature(feature, layer) {
+            allZones.push({ feature, layer, color, zoneType });
+        },
+    });
+}
+const schoolZonesLayer = L.layerGroup([
+    makeZoneGeoJSON(__middleZones, "#ea580c", "middle"),
+    makeZoneGeoJSON(__elementaryZones, "#2563eb", "elementary"),
+]).addTo(map);
 // Geo-referenced coverage zones
 const zones = __points.map((p) => L.circle([p.lat, p.lng], {
     radius: 0.5 * MILES_TO_METERS,
@@ -71,11 +124,19 @@ const zones = __points.map((p) => L.circle([p.lat, p.lng], {
     interactive: false,
 }).addTo(circleLayer));
 let selectedZone = null;
+let selectedSchoolZones = [];
+let selectedMainSchoolCircles = [];
 const deselect = () => {
     if (selectedZone) {
         selectedZone.setStyle({ opacity: 0.2 });
         selectedZone = null;
     }
+    for (const z of selectedSchoolZones)
+        z.layer.setStyle(schoolZoneStyle(z.color));
+    selectedSchoolZones = [];
+    for (const c of selectedMainSchoolCircles)
+        map.removeLayer(c);
+    selectedMainSchoolCircles = [];
 };
 // SVG pin helpers — 40x40 viewbox, shape centered at (20,20)
 const R = 10; // shape radius
@@ -379,9 +440,26 @@ function ethnicityBar(s) {
     return `<div style="margin-top:6px"><div style="font-size:11px;color:#555;margin-bottom:3px">Ethnicity</div><div style="display:flex;border-radius:3px;overflow:hidden;height:10px;border:1px solid #e5e5e5">${segments}</div><div style="display:flex;flex-wrap:wrap;gap:4px 8px;margin-top:4px">${labels}</div></div>`;
 }
 const LINK_STYLE = `color:#2563eb;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:6px;margin-right:12px`;
-function buildPopup(p) {
+function zoneInfo(zone) {
+    const props = zone.feature.properties;
+    const label = props.label ? `Zone ${props.label}` : "";
+    const district = props.schooldist ? `District ${parseInt(props.schooldist)}` : "";
+    const remarks = props.remarks ?? "";
+    const dbns = (props.dbn ?? "").split(",").map((d) => d.trim()).filter(Boolean).join(", ");
+    return [label, district, remarks, dbns].filter(Boolean).join(" · ");
+}
+function schoolZoneSection(zones) {
+    const elem = zones.find((z) => z.zoneType === "elementary");
+    const mid = zones.find((z) => z.zoneType === "middle");
+    if (!elem && !mid)
+        return "";
+    const row = (label, color, zone) => `<div style="font-size:11px;margin-top:3px"><span style="color:${color}">●</span> <b>${label}:</b> ${zone ? zoneInfo(zone) : "—"}</div>`;
+    return `<details style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;font-weight:600;color:#374151;user-select:none">School zones</summary><div style="margin-top:4px">${row("Elementary", "#2563eb", elem)}${row("Middle", "#ea580c", mid)}</div></details>`;
+}
+function buildPopup(p, zones = []) {
     const s = p.sqr;
-    const header = `<b style="font-size:14px">${p.name}</b><br><span style="color:#555;font-size:12px">${p.type}</span><br><span style="color:#777;font-size:11px">${p.address}, ${p.city}</span>`;
+    const dbnStr = p.dbn ? ` <span style="color:#94a3b8;font-size:10px;font-weight:normal">${p.dbn}</span>` : "";
+    const header = `<b style="font-size:14px">${p.name}</b>${dbnStr}<br><span style="color:#555;font-size:12px">${p.type}</span><br><span style="color:#777;font-size:11px">${p.address}, ${p.city}</span>`;
     const commute = p.commute
         ? `<div style="margin-top:4px;font-size:12px">Commute: <b>${p.commute}</b></div>`
         : "";
@@ -395,10 +473,10 @@ function buildPopup(p) {
         ? `<div style="margin-top:4px">${googleLink}${dashboardLink}</div>`
         : "";
     if (!s)
-        return `<div style="max-width:280px">${header}${commute}${links}</div>`;
+        return `<div style="max-width:280px">${header}${commute}${links}${schoolZoneSection(zones)}</div>`;
     const rows = POPUP_FIELDS.map(({ label, key, isRating, ratingKey, scoreRange, invert }) => fmtRow(label, s[key] ?? "", isRating, ratingKey !== undefined ? (s[ratingKey] ?? "") : undefined, scoreRange, invert)).join("");
     const table = `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>`;
-    return `<div>${header}${commute}${links}${table}${academicSection(s)}${surveySection(s)}${ethnicityBar(s)}</div>`;
+    return `<div>${header}${commute}${links}${table}${academicSection(s)}${surveySection(s)}${ethnicityBar(s)}${schoolZoneSection(zones)}</div>`;
 }
 // Spiderifier for overlapping pins
 const oms = new OverlappingMarkerSpiderfier(map, {
@@ -412,6 +490,26 @@ oms.addListener("click", (marker) => {
     selectedZone = marker._zone ?? null;
     if (selectedZone)
         selectedZone.setStyle({ opacity: 0.85 });
+    const p = marker._p;
+    if (p) {
+        selectedSchoolZones = findZonesForPoint(p.lng, p.lat);
+        for (const zone of selectedSchoolZones) {
+            zone.layer.setStyle(schoolZoneHighlight(zone.color));
+            const zoneDbn = zone.feature.properties.dbn ?? "";
+            const dbns = zoneDbn.split(",").map((d) => d.trim()).filter(Boolean);
+            const mainSchools = __points.filter((pt) => pt.dbn && dbns.includes(pt.dbn));
+            for (const mainSchool of mainSchools) {
+                selectedMainSchoolCircles.push(L.circle([mainSchool.lat, mainSchool.lng], {
+                    radius: 80,
+                    color: zone.color,
+                    weight: 3,
+                    fillOpacity: 0,
+                    interactive: false,
+                }).addTo(map));
+            }
+        }
+        marker.setPopupContent(buildPopup(p, selectedSchoolZones));
+    }
     marker.openPopup();
 });
 const RATING_RANK = {
@@ -425,6 +523,7 @@ const allMarkers = [];
 __points.forEach((p, i) => {
     const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(buildPopup(p), { minWidth: 370 });
     marker._zone = zones[i];
+    marker._p = p;
     oms.addMarker(marker);
     marker.addTo(pinLayer);
     allMarkers.push({ marker, p });
@@ -519,6 +618,14 @@ document.getElementById("toggle-zones").addEventListener("change", (e) => {
         map.addLayer(ringsLayer);
     else
         map.removeLayer(ringsLayer);
+});
+document
+    .getElementById("toggle-school-zones")
+    .addEventListener("change", (e) => {
+    if (e.target.checked)
+        map.addLayer(schoolZonesLayer);
+    else
+        map.removeLayer(schoolZonesLayer);
 });
 // Radius slider
 const slider = document.getElementById("radius-slider");
