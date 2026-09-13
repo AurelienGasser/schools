@@ -310,6 +310,51 @@ const html = `<!DOCTYPE html>
     .radio-row { display: flex; align-items: center; gap: 8px; color: #444; cursor: pointer; }
     .radio-row input[type=radio] { accent-color: #3b82f6; width: 14px; height: 14px; cursor: pointer; }
     .control-section-label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #888; margin-top: 10px; margin-bottom: 4px; }
+    #search-box {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      overflow: hidden;
+      width: 280px;
+    }
+    #search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: sans-serif;
+      min-width: 0;
+    }
+    #search-btn {
+      border: none;
+      background: #2563eb;
+      color: white;
+      padding: 0 12px;
+      cursor: pointer;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    #search-btn:hover { background: #1d4ed8; }
+    #search-key-btn {
+      border: none;
+      background: none;
+      color: #94a3b8;
+      padding: 0 8px;
+      cursor: pointer;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    #search-key-btn:hover { color: #64748b; }
+    @media (max-width: 640px) {
+      #search-box { width: calc(100vw - 24px); top: 8px; }
+    }
     @media (max-width: 640px) {
       #panel, #legend { font-size: 16px; }
       #panel { min-width: 220px; }
@@ -329,6 +374,11 @@ const html = `<!DOCTYPE html>
 </head>
 <body>
   <div id="map"></div>
+  <div id="search-box">
+    <input id="search-input" type="text" autocomplete="off" spellcheck="false" />
+    <button id="search-key-btn" title="Change API key">&#x1F511;</button>
+    <button id="search-btn">&#x2192;</button>
+  </div>
   <div id="panel">
     <div id="panel-header">
       Controls <span id="panel-toggle">▼</span>
