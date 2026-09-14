@@ -342,17 +342,7 @@ const html = `<!DOCTYPE html>
       flex-shrink: 0;
     }
     #search-btn:hover { background: #1d4ed8; }
-    #search-key-btn {
-      border: none;
-      background: none;
-      color: #94a3b8;
-      padding: 0 8px;
-      cursor: pointer;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-    #search-key-btn:hover { color: #64748b; }
-    @media (max-width: 640px) {
+@media (max-width: 640px) {
       #search-box { width: calc(100vw - 24px); top: 8px; }
     }
     @media (max-width: 640px) {
@@ -376,7 +366,6 @@ const html = `<!DOCTYPE html>
   <div id="map"></div>
   <div id="search-box">
     <input id="search-input" type="text" autocomplete="off" spellcheck="false" />
-    <button id="search-key-btn" title="Change API key">&#x1F511;</button>
     <button id="search-btn">&#x2192;</button>
   </div>
   <div id="panel">

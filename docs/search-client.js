@@ -1,43 +1,24 @@
 "use strict";
-const GEOCODE_KEY_LS = "mapbox_api_key";
-let geocodeKey = localStorage.getItem(GEOCODE_KEY_LS) ?? "";
 const searchInput = document.getElementById("search-input");
-const searchKeyBtn = document.getElementById("search-key-btn");
-function updateSearchPlaceholder() {
-    searchInput.placeholder = geocodeKey ? "Search address…" : "Enter Mapbox API key…";
-    searchInput.type = geocodeKey ? "text" : "password";
-    searchKeyBtn.style.display = geocodeKey ? "" : "none";
-}
-updateSearchPlaceholder();
+searchInput.placeholder = "Search address…";
 let searchMarker = null;
 async function handleSearch() {
     const val = searchInput.value.trim();
     if (!val)
         return;
-    if (!geocodeKey) {
-        geocodeKey = val;
-        localStorage.setItem(GEOCODE_KEY_LS, geocodeKey);
-        searchInput.value = "";
-        updateSearchPlaceholder();
-        return;
-    }
     try {
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(val)}.json?access_token=${geocodeKey}&types=address,place,poi&country=US&proximity=-73.956,40.693`;
-        const resp = await fetch(url);
-        if (resp.status === 401 || resp.status === 403) {
-            geocodeKey = "";
-            localStorage.removeItem(GEOCODE_KEY_LS);
-            updateSearchPlaceholder();
-            searchInput.value = "";
-            return;
-        }
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=1&countrycodes=us&viewbox=-74.26,40.92,-73.68,40.49&bounded=0`;
+        const resp = await fetch(url, {
+            headers: { "Accept-Language": "en", "User-Agent": "aureliengasser-schools" },
+        });
         const data = await resp.json();
-        const feature = data.features?.[0];
-        if (!feature) {
+        const result = data[0];
+        if (!result) {
             searchInput.select();
             return;
         }
-        const [lng, lat] = feature.center;
+        const lat = parseFloat(result.lat);
+        const lng = parseFloat(result.lon);
         if (searchMarker)
             map.removeLayer(searchMarker);
         searchMarker = L.marker([lat, lng], {
@@ -48,7 +29,7 @@ async function handleSearch() {
                 iconAnchor: [7, 7],
             }),
         })
-            .bindPopup(feature.place_name)
+            .bindPopup(result.display_name)
             .addTo(map)
             .openPopup();
         map.setView([lat, lng], 15);
@@ -62,10 +43,4 @@ document.getElementById("search-btn").addEventListener("click", handleSearch);
 searchInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter")
         handleSearch();
-});
-searchKeyBtn.addEventListener("click", () => {
-    geocodeKey = "";
-    localStorage.removeItem(GEOCODE_KEY_LS);
-    searchInput.value = "";
-    updateSearchPlaceholder();
 });
