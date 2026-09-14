@@ -422,16 +422,18 @@ const html = `<!DOCTYPE html>
   </div>
   <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones })};const __zipCodes = ${JSON.stringify(zipCodesJson)};const __elementaryZones = ${JSON.stringify(elementaryZonesJson)};const __middleZones = ${JSON.stringify(middleZonesJson)};</script>
   <script src="./map-client.js?v=${Date.now()}"></script>
+  <script src="./search-client.js?v=${Date.now()}"></script>
 </body>
 </html>`;
 
 const outPath = resolve(outDir, "map.html");
 writeFileSync(outPath, html, "utf-8");
 
-const clientSrc = resolve(__dirname, "map-client.ts");
-execSync(
-  `pnpm exec tsc --target ES2022 --module ESNext --outDir ${outDir} --skipLibCheck --ignoreConfig ${clientSrc}`,
-  { stdio: "inherit" },
-);
+const tscFlags = `--target ES2022 --module ESNext --outDir ${outDir} --skipLibCheck --ignoreConfig`;
+for (const src of ["map-client.ts", "search-client.ts"]) {
+  execSync(`pnpm exec tsc ${tscFlags} ${resolve(__dirname, src)}`, {
+    stdio: "inherit",
+  });
+}
 
 console.log(`Written to ${outPath} + map-client.js`);
