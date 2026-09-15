@@ -706,6 +706,11 @@ function applyFilters(): void {
       sqr?.["Metric Rating - Average Student Proficiency, ELA"] ?? "";
     const mathRating =
       sqr?.["Metric Rating - Average Student Proficiency, Math"] ?? "";
+    const safetyRating = sqr?.["Safety and School Climate - Rating"] ?? "";
+    const msPassRating =
+      sqr?.[
+        "Metric Rating - MS Adjusted Core Course Pass Rate of Former Students"
+      ] ?? "";
     const hasData = Boolean(elaRating || mathRating);
     let passesAcademic: boolean;
     if (!hasData) {
@@ -713,7 +718,7 @@ function applyFilters(): void {
     } else if (minRank < 0) {
       passesAcademic = true;
     } else {
-      const ranks = [elaRating, mathRating]
+      const ranks = [elaRating, mathRating, safetyRating, msPassRating]
         .filter(Boolean)
         .map((r) => RATING_RANK[r] ?? -1);
       passesAcademic = Math.min(...ranks) >= minRank;
