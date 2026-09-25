@@ -623,34 +623,39 @@ const oms = new OverlappingMarkerSpiderfier(map, {
   legColors: { usual: "#94a3b8", highlighted: "#3b82f6" },
 });
 
+function selectZonesForPoint(lat: number, lng: number): ZoneEntry[] {
+  selectedSchoolZones = findZonesForPoint(lng, lat);
+  for (const zone of selectedSchoolZones) {
+    zone.layer.setStyle(schoolZoneHighlight(zone.color));
+    const zoneDbn = zone.feature.properties.dbn ?? "";
+    const dbns = zoneDbn
+      .split(",")
+      .map((d: string) => d.trim())
+      .filter(Boolean);
+    const mainSchools = __schoolPoints.filter(
+      (pt) => pt.dbn && dbns.includes(pt.dbn),
+    );
+    for (const mainSchool of mainSchools) {
+      selectedMainSchoolCircles.push(
+        L.circleMarker([mainSchool.lat, mainSchool.lng], {
+          radius: 22,
+          color: zone.color,
+          weight: 3,
+          fillOpacity: 0,
+          interactive: false,
+        }).addTo(map),
+      );
+    }
+  }
+  return selectedSchoolZones;
+}
+
 oms.addListener("click", (marker: any) => {
   deselect();
   const p = marker._p;
   if (p) {
-    selectedSchoolZones = findZonesForPoint(p.lng, p.lat);
-    for (const zone of selectedSchoolZones) {
-      zone.layer.setStyle(schoolZoneHighlight(zone.color));
-      const zoneDbn = zone.feature.properties.dbn ?? "";
-      const dbns = zoneDbn
-        .split(",")
-        .map((d: string) => d.trim())
-        .filter(Boolean);
-      const mainSchools = __schoolPoints.filter(
-        (pt) => pt.dbn && dbns.includes(pt.dbn),
-      );
-      for (const mainSchool of mainSchools) {
-        selectedMainSchoolCircles.push(
-          L.circleMarker([mainSchool.lat, mainSchool.lng], {
-            radius: 22,
-            color: zone.color,
-            weight: 3,
-            fillOpacity: 0,
-            interactive: false,
-          }).addTo(map),
-        );
-      }
-    }
-    marker.setPopupContent(buildPopup(p, selectedSchoolZones));
+    const zones = selectZonesForPoint(p.lat, p.lng);
+    marker.setPopupContent(buildPopup(p, zones));
   }
   marker.openPopup();
 });

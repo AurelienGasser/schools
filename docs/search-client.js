@@ -21,6 +21,10 @@ async function handleSearch() {
         const lng = parseFloat(result.lon);
         if (searchMarker)
             map.removeLayer(searchMarker);
+        deselect();
+        const zones = selectZonesForPoint(lat, lng);
+        const closeLink = `<div style="text-align:right;margin-top:6px"><a href="#" onclick="document.querySelector('.leaflet-popup-close-button').click();return false;" style="font-size:11px;color:#94a3b8;text-decoration:none">close</a></div>`;
+        const popupHtml = `<div style="max-width:280px"><b style="font-size:13px">${result.display_name}</b>${schoolZoneSection(zones)}${closeLink}</div>`;
         searchMarker = L.marker([lat, lng], {
             icon: L.divIcon({
                 html: `<div style="width:14px;height:14px;background:#ef4444;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>`,
@@ -29,7 +33,7 @@ async function handleSearch() {
                 iconAnchor: [7, 7],
             }),
         })
-            .bindPopup(result.display_name)
+            .bindPopup(popupHtml)
             .addTo(map)
             .openPopup();
         map.setView([lat, lng], 15);
