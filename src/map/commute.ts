@@ -38,35 +38,15 @@ export const COMMUTE_ZONE_COLORS = [
   "#ef4444",
 ];
 
-export function commuteRange(
-  lng: number,
-  lat: number,
-): { min?: number; max?: number } {
-  for (let i = 0; i < commuteZonesSorted.length; i++) {
-    const { name, minutes } = commuteZonesSorted[i];
-    if (
-      polygons[name].some((e) => pointInMultiPolygon(lng, lat, e.coordinates))
-    ) {
-      return i === 0
-        ? { max: minutes }
-        : { min: commuteZonesSorted[i - 1].minutes, max: minutes };
-    }
-  }
-  const last = commuteZonesSorted.at(-1);
-  return { min: last!.minutes };
-}
-
-export const getCommuteString = ({
-  min,
-  max,
-}: {
-  min?: number;
-  max?: number;
-}): string => {
-  if (min == undefined) return `< ${max} min`;
-  if (max == undefined) return `> ${min} min`;
-  return `${min}-${max} min`;
-};
+export const commuteLegend = commuteZonesSorted
+  .map((z, i) => {
+    const label =
+      i === 0
+        ? `< ${z.minutes} min`
+        : `${commuteZonesSorted[i - 1].minutes}–${z.minutes} min`;
+    return `<div class="legend-item"><span class="dot" style="background:${COMMUTE_ZONE_COLORS[i]}"></span>${label}</div>`;
+  })
+  .join("\n");
 
 // Rings mode: subtract each smaller zone from the next to get non-overlapping bands
 export const commuteRingZones = commuteZonesSorted.map((z, i) => {
@@ -85,6 +65,36 @@ export const commuteRingZones = commuteZonesSorted.map((z, i) => {
     entries: [{ coordinates: coords }],
   };
 });
+
+export const getCommuteString = ({
+  min,
+  max,
+}: {
+  min?: number;
+  max?: number;
+}): string => {
+  if (min == undefined) return `< ${max} min`;
+  if (max == undefined) return `> ${min} min`;
+  return `${min}-${max} min`;
+};
+
+export function commuteRange(
+  lng: number,
+  lat: number,
+): { min?: number; max?: number } {
+  for (let i = 0; i < commuteZonesSorted.length; i++) {
+    const { name, minutes } = commuteZonesSorted[i];
+    if (
+      polygons[name].some((e) => pointInMultiPolygon(lng, lat, e.coordinates))
+    ) {
+      return i === 0
+        ? { max: minutes }
+        : { min: commuteZonesSorted[i - 1].minutes, max: minutes };
+    }
+  }
+  const last = commuteZonesSorted.at(-1);
+  return { min: last!.minutes };
+}
 
 function pointInMultiPolygon(
   x: number,

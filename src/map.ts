@@ -10,8 +10,7 @@ import {
   commuteRange,
   getCommuteString,
   commuteRingZones,
-  COMMUTE_ZONE_COLORS,
-  commuteZonesSorted,
+  commuteLegend,
 } from "./map/commute.js";
 
 const schools = schoolsJson as unknown as SchoolsResponse;
@@ -90,16 +89,6 @@ const legend = Object.entries(COLORS)
     ([label, color]) =>
       `<div class="legend-item"><span class="dot" style="background:${color}"></span>${label}</div>`,
   )
-  .join("\n");
-
-const commuteLegend = commuteZonesSorted
-  .map((z, i) => {
-    const label =
-      i === 0
-        ? `< ${z.minutes} min`
-        : `${commuteZonesSorted[i - 1].minutes}–${z.minutes} min`;
-    return `<div class="legend-item"><span class="dot" style="background:${COMMUTE_ZONE_COLORS[i]}"></span>${label}</div>`;
-  })
   .join("\n");
 
 const html = `<!DOCTYPE html>
