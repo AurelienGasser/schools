@@ -21,7 +21,7 @@ type ZoneSet = Array<{
   color: string;
   entries: Array<{ coordinates: number[][][][] }>;
 }>;
-declare const __polygonSets: { rings: ZoneSet };
+declare const __commutePolygonSets: { rings: ZoneSet };
 declare const __zipCodes: {
   type: string;
   features: Array<{
@@ -70,7 +70,7 @@ function buildLayer(zones: ZoneSet): any {
   return layer;
 }
 
-const ringsLayer = buildLayer(__polygonSets.rings);
+const ringsLayer = buildLayer(__commutePolygonSets.rings);
 
 const zipPrices = __zipCodes.features
   .map((f) => f.properties.avgPrice)

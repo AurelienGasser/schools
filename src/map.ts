@@ -1,11 +1,18 @@
-import { writeFileSync, readdirSync, readFileSync, existsSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "node:child_process";
-import polygonClipping from "polygon-clipping";
 import type { SchoolsResponse } from "./types.js";
 import schoolsJson from "../data/schools.json" with { type: "json" };
 import zipCodesJson from "../data/zip-codes.json" with { type: "json" };
+
+import {
+  commuteRange,
+  getCommuteString,
+  commuteRingZones,
+  COMMUTE_ZONE_COLORS,
+  commuteZonesSorted,
+} from "./map/commute.js";
 
 const schools = schoolsJson as unknown as SchoolsResponse;
 
@@ -43,135 +50,6 @@ const middleZonesJson = JSON.parse(
     "utf-8",
   ),
 );
-
-type PolygonEntry = {
-  coordinates: number[][][][];
-  color: string;
-  label: string;
-};
-
-const polygonsDir = resolve(__dirname, "../data/polygons");
-
-function loadPolygonFile(f: string): PolygonEntry[] {
-  const raw = JSON.parse(readFileSync(resolve(polygonsDir, f), "utf-8"));
-  const fileLabel = f.replace(/\.json$/, "");
-  const features =
-    raw.type === "FeatureCollection"
-      ? raw.features
-      : raw.type === "Feature"
-        ? [raw]
-        : [{ geometry: raw, properties: {} }];
-  return features
-    .filter(
-      (feat: any) =>
-        feat.geometry?.type === "MultiPolygon" ||
-        feat.geometry?.type === "Polygon",
-    )
-    .map((feat: any) => ({
-      coordinates:
-        feat.geometry.type === "MultiPolygon"
-          ? feat.geometry.coordinates
-          : [feat.geometry.coordinates],
-      color: feat.properties?.color ?? "#ef4444",
-      label: feat.properties?.label ?? feat.properties?.name ?? fileLabel,
-    }));
-}
-
-const polygonFiles: string[] = existsSync(polygonsDir)
-  ? readdirSync(polygonsDir)
-      .filter((f) => f.endsWith(".json"))
-      .map((f) => f.replace(/\.json$/, ""))
-  : [];
-
-const polygons: Record<string, PolygonEntry[]> = Object.fromEntries(
-  polygonFiles.map((name) => [name, loadPolygonFile(`${name}.json`)]),
-);
-
-function pointInRing(x: number, y: number, ring: number[][]): boolean {
-  let inside = false;
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
-      inside = !inside;
-  }
-  return inside;
-}
-
-function pointInMultiPolygon(
-  x: number,
-  y: number,
-  coords: number[][][][],
-): boolean {
-  return coords.some(
-    (polygon) =>
-      pointInRing(x, y, polygon[0]) &&
-      polygon.slice(1).every((hole) => !pointInRing(x, y, hole)),
-  );
-}
-
-// Zones sorted ascending by minute value parsed from filename (e.g. "30-min" → 30)
-const zonesSorted = polygonFiles
-  .map((name) => ({ name, minutes: parseInt(name) }))
-  .filter((z) => !isNaN(z.minutes))
-  .sort((a, b) => a.minutes - b.minutes);
-
-// Colors assigned in ascending order: green (close) → orange → red (far)
-const ZONE_COLORS = ["#22c55e", "#16a34a", "#ca8a04", "#f97316", "#ef4444"];
-
-type ClipCoords = [number, number][][][];
-
-function zoneCoords(name: string): ClipCoords {
-  return polygons[name].flatMap((e) => e.coordinates) as ClipCoords;
-}
-
-// Rings mode: subtract each smaller zone from the next to get non-overlapping bands
-const ringZones = zonesSorted.map((z, i) => {
-  const current = zoneCoords(z.name);
-  const coords =
-    i === 0
-      ? current
-      : (polygonClipping.difference(
-          current,
-          zoneCoords(zonesSorted[i - 1].name),
-        ) as number[][][][]);
-  return {
-    name: z.name,
-    minutes: z.minutes,
-    color: ZONE_COLORS[i] ?? "#6b7280",
-    entries: [{ coordinates: coords }],
-  };
-});
-
-function commuteRange(
-  lng: number,
-  lat: number,
-): { min?: number; max?: number } {
-  for (let i = 0; i < zonesSorted.length; i++) {
-    const { name, minutes } = zonesSorted[i];
-    if (
-      polygons[name].some((e) => pointInMultiPolygon(lng, lat, e.coordinates))
-    ) {
-      return i === 0
-        ? { max: minutes }
-        : { min: zonesSorted[i - 1].minutes, max: minutes };
-    }
-  }
-  const last = zonesSorted.at(-1);
-  return { min: last!.minutes };
-}
-
-const getCommuteString = ({
-  min,
-  max,
-}: {
-  min?: number;
-  max?: number;
-}): string => {
-  if (min == undefined) return `< ${max} min`;
-  if (max == undefined) return `> ${min} min`;
-  return `${min}-${max} min`;
-};
 
 function schoolTypeFromSqr(
   sqr: Record<string, string> | undefined,
@@ -214,13 +92,13 @@ const legend = Object.entries(COLORS)
   )
   .join("\n");
 
-const commuteLegend = zonesSorted
+const commuteLegend = commuteZonesSorted
   .map((z, i) => {
     const label =
       i === 0
         ? `< ${z.minutes} min`
-        : `${zonesSorted[i - 1].minutes}–${z.minutes} min`;
-    return `<div class="legend-item"><span class="dot" style="background:${ZONE_COLORS[i]}"></span>${label}</div>`;
+        : `${commuteZonesSorted[i - 1].minutes}–${z.minutes} min`;
+    return `<div class="legend-item"><span class="dot" style="background:${COMMUTE_ZONE_COLORS[i]}"></span>${label}</div>`;
   })
   .join("\n");
 
@@ -409,7 +287,7 @@ const html = `<!DOCTYPE html>
       ${commuteLegend}
     </div>
   </div>
-  <script>const __points = ${JSON.stringify(points)};const __polygonSets = ${JSON.stringify({ rings: ringZones })};const __zipCodes = ${JSON.stringify(zipCodesJson)};const __elementaryZones = ${JSON.stringify(elementaryZonesJson)};const __middleZones = ${JSON.stringify(middleZonesJson)};</script>
+  <script>const __points = ${JSON.stringify(points)};const __commutePolygonSets = ${JSON.stringify({ rings: commuteRingZones })};const __zipCodes = ${JSON.stringify(zipCodesJson)};const __elementaryZones = ${JSON.stringify(elementaryZonesJson)};const __middleZones = ${JSON.stringify(middleZonesJson)};</script>
   <script src="./map-client.js?v=${Date.now()}"></script>
   <script src="./search-client.js?v=${Date.now()}"></script>
 </body>

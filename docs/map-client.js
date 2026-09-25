@@ -23,7 +23,7 @@ function buildLayer(zones) {
     }
     return layer;
 }
-const ringsLayer = buildLayer(__polygonSets.rings);
+const ringsLayer = buildLayer(__commutePolygonSets.rings);
 const zipPrices = __zipCodes.features
     .map((f) => f.properties.avgPrice)
     .filter((p) => p !== null);
