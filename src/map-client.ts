@@ -594,8 +594,10 @@ function buildPopup(
       ? `<div style="margin-top:4px">${googleLink}${dashboardLink}</div>`
       : "";
 
+  const closeLink = `<div style="text-align:right;margin-top:6px"><a href="#" onclick="document.querySelector('.leaflet-popup-close-button').click();return false;" style="font-size:11px;color:#94a3b8;text-decoration:none">close</a></div>`;
+
   if (!s)
-    return `<div style="max-width:280px">${header}${commute}${links}${schoolZoneSection(zones)}</div>`;
+    return `<div style="max-width:280px">${header}${commute}${links}${schoolZoneSection(zones)}${closeLink}</div>`;
 
   const rows = POPUP_FIELDS.map(
     ({ label, key, isRating, ratingKey, scoreRange, invert }) =>
@@ -610,7 +612,7 @@ function buildPopup(
   ).join("");
 
   const table = `<table style="margin-top:6px;font-size:12px;border-collapse:collapse">${rows}</table>`;
-  return `<div>${header}${commute}${links}${table}${academicSection(s)}${surveySection(s)}${ethnicityBar(s)}${schoolZoneSection(zones)}</div>`;
+  return `<div>${header}${commute}${links}${table}${academicSection(s)}${surveySection(s)}${ethnicityBar(s)}${schoolZoneSection(zones)}${closeLink}</div>`;
 }
 
 // Spiderifier for overlapping pins
