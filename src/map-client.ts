@@ -1,6 +1,6 @@
 declare const L: any;
 declare const OverlappingMarkerSpiderfier: any;
-declare const __points: Array<{
+declare const __schoolPoints: Array<{
   lat: number;
   lng: number;
   color: string;
@@ -22,7 +22,7 @@ type ZoneSet = Array<{
   entries: Array<{ coordinates: number[][][][] }>;
 }>;
 declare const __commutePolygonSets: { rings: ZoneSet };
-declare const __zipCodes: {
+declare const __realEstatePriceZipCodes: {
   type: string;
   features: Array<{
     type: string;
@@ -46,7 +46,7 @@ L.tileLayer(
   null,
 ).addTo(map);
 
-const pinLayer = L.layerGroup().addTo(map);
+const schoolPinsLayer = L.layerGroup().addTo(map);
 
 function buildLayer(zones: ZoneSet): any {
   const layer = L.layerGroup();
@@ -72,7 +72,7 @@ function buildLayer(zones: ZoneSet): any {
 
 const ringsLayer = buildLayer(__commutePolygonSets.rings);
 
-const zipPrices = __zipCodes.features
+const zipPrices = __realEstatePriceZipCodes.features
   .map((f) => f.properties.avgPrice)
   .filter((p): p is number => p !== null);
 const zipMinPrice = Math.min(...zipPrices);
@@ -89,7 +89,7 @@ function zipPriceColor(price: number | null): {
   return { fillColor: `hsl(${hue}, 100%, ${lightness}%)`, fillOpacity: 0.55 };
 }
 
-const zipLayer = L.geoJSON(__zipCodes, {
+const zipLayer = L.geoJSON(__realEstatePriceZipCodes, {
   style(feature: any) {
     const { fillColor, fillOpacity } = zipPriceColor(
       feature.properties.avgPrice,
@@ -263,7 +263,7 @@ function makePinSvg(
   return `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">${shapeEl}</svg>`;
 }
 
-function makePinIcon(p: (typeof __points)[0]): any {
+function makePinIcon(p: (typeof __schoolPoints)[0]): any {
   return L.divIcon({
     html: makePinSvg(p.schoolType, p.color),
     className: "",
@@ -568,7 +568,10 @@ function schoolZoneSection(zones: ZoneEntry[]): string {
   return `<details style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;font-weight:600;color:#374151;user-select:none">School zones</summary><div style="margin-top:4px">${row("Elementary", "#2563eb", elem)}${row("Middle", "#ea580c", mid)}</div></details>`;
 }
 
-function buildPopup(p: (typeof __points)[0], zones: ZoneEntry[] = []): string {
+function buildPopup(
+  p: (typeof __schoolPoints)[0],
+  zones: ZoneEntry[] = [],
+): string {
   const s = p.sqr;
   const dbnStr = p.dbn
     ? ` <span style="color:#94a3b8;font-size:10px;font-weight:normal">${p.dbn}</span>`
@@ -630,7 +633,7 @@ oms.addListener("click", (marker: any) => {
         .split(",")
         .map((d: string) => d.trim())
         .filter(Boolean);
-      const mainSchools = __points.filter(
+      const mainSchools = __schoolPoints.filter(
         (pt) => pt.dbn && dbns.includes(pt.dbn),
       );
       for (const mainSchool of mainSchools) {
@@ -657,10 +660,10 @@ const RATING_RANK: Record<string, number> = {
   Excellent: 3,
 };
 
-const allMarkers: Array<{ marker: any; p: (typeof __points)[0] }> = [];
+const allMarkers: Array<{ marker: any; p: (typeof __schoolPoints)[0] }> = [];
 
 // Pins using SVG divIcon
-__points.forEach((p) => {
+__schoolPoints.forEach((p) => {
   const isMobile = window.innerWidth <= 640;
   const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(
     buildPopup(p),
@@ -670,7 +673,7 @@ __points.forEach((p) => {
   );
   marker._p = p;
   oms.addMarker(marker);
-  marker.addTo(pinLayer);
+  marker.addTo(schoolPinsLayer);
   allMarkers.push({ marker, p });
 });
 
@@ -725,10 +728,10 @@ function applyFilters(): void {
     }
 
     const visible = passesCommute && passesAcademic;
-    if (visible && !pinLayer.hasLayer(marker)) {
-      pinLayer.addLayer(marker);
-    } else if (!visible && pinLayer.hasLayer(marker)) {
-      pinLayer.removeLayer(marker);
+    if (visible && !schoolPinsLayer.hasLayer(marker)) {
+      schoolPinsLayer.addLayer(marker);
+    } else if (!visible && schoolPinsLayer.hasLayer(marker)) {
+      schoolPinsLayer.removeLayer(marker);
     }
   }
 }

@@ -276,7 +276,7 @@ const html = `<!DOCTYPE html>
       ${commuteLegend}
     </div>
   </div>
-  <script>const __points = ${JSON.stringify(points)};const __commutePolygonSets = ${JSON.stringify({ rings: commuteRingZones })};const __zipCodes = ${JSON.stringify(zipCodesJson)};const __elementaryZones = ${JSON.stringify(elementaryZonesJson)};const __middleZones = ${JSON.stringify(middleZonesJson)};</script>
+  <script>const __schoolPoints = ${JSON.stringify(points)};const __commutePolygonSets = ${JSON.stringify({ rings: commuteRingZones })};const __realEstatePriceZipCodes = ${JSON.stringify(zipCodesJson)};const __elementaryZones = ${JSON.stringify(elementaryZonesJson)};const __middleZones = ${JSON.stringify(middleZonesJson)};</script>
   <script src="./map-client.js?v=${Date.now()}"></script>
   <script src="./search-client.js?v=${Date.now()}"></script>
 </body>

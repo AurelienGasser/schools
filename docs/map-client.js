@@ -4,7 +4,7 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }, [{ header: "X-Requested-With", value: "aureliengasser-schools" }], null).addTo(map);
-const pinLayer = L.layerGroup().addTo(map);
+const schoolPinsLayer = L.layerGroup().addTo(map);
 function buildLayer(zones) {
     const layer = L.layerGroup();
     for (const zone of zones) {
@@ -24,7 +24,7 @@ function buildLayer(zones) {
     return layer;
 }
 const ringsLayer = buildLayer(__commutePolygonSets.rings);
-const zipPrices = __zipCodes.features
+const zipPrices = __realEstatePriceZipCodes.features
     .map((f) => f.properties.avgPrice)
     .filter((p) => p !== null);
 const zipMinPrice = Math.min(...zipPrices);
@@ -37,7 +37,7 @@ function zipPriceColor(price) {
     const lightness = Math.round(70 - t * 30);
     return { fillColor: `hsl(${hue}, 100%, ${lightness}%)`, fillOpacity: 0.55 };
 }
-const zipLayer = L.geoJSON(__zipCodes, {
+const zipLayer = L.geoJSON(__realEstatePriceZipCodes, {
     style(feature) {
         const { fillColor, fillOpacity } = zipPriceColor(feature.properties.avgPrice);
         return {
@@ -472,7 +472,7 @@ oms.addListener("click", (marker) => {
                 .split(",")
                 .map((d) => d.trim())
                 .filter(Boolean);
-            const mainSchools = __points.filter((pt) => pt.dbn && dbns.includes(pt.dbn));
+            const mainSchools = __schoolPoints.filter((pt) => pt.dbn && dbns.includes(pt.dbn));
             for (const mainSchool of mainSchools) {
                 selectedMainSchoolCircles.push(L.circleMarker([mainSchool.lat, mainSchool.lng], {
                     radius: 22,
@@ -495,14 +495,14 @@ const RATING_RANK = {
 };
 const allMarkers = [];
 // Pins using SVG divIcon
-__points.forEach((p) => {
+__schoolPoints.forEach((p) => {
     const isMobile = window.innerWidth <= 640;
     const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(buildPopup(p), isMobile
         ? { maxWidth: window.innerWidth - 24 }
         : { minWidth: 370, maxWidth: 420 });
     marker._p = p;
     oms.addMarker(marker);
-    marker.addTo(pinLayer);
+    marker.addTo(schoolPinsLayer);
     allMarkers.push({ marker, p });
 });
 function applyFilters() {
@@ -537,11 +537,11 @@ function applyFilters() {
             passesAcademic = Math.min(...ranks) >= minRank;
         }
         const visible = passesCommute && passesAcademic;
-        if (visible && !pinLayer.hasLayer(marker)) {
-            pinLayer.addLayer(marker);
+        if (visible && !schoolPinsLayer.hasLayer(marker)) {
+            schoolPinsLayer.addLayer(marker);
         }
-        else if (!visible && pinLayer.hasLayer(marker)) {
-            pinLayer.removeLayer(marker);
+        else if (!visible && schoolPinsLayer.hasLayer(marker)) {
+            schoolPinsLayer.removeLayer(marker);
         }
     }
 }
