@@ -211,21 +211,19 @@ const html = `<!DOCTYPE html>
     #search-btn:hover { background: #1d4ed8; }
 @media (max-width: 640px) {
       #search-box { width: calc(100vw - 24px); top: 8px; }
-    }
-    @media (max-width: 640px) {
-      #panel, #legend { font-size: 16px; }
-      #panel { min-width: 220px; }
-      #panel-header, #legend-header { padding: 14px 16px; font-size: 14px; }
-      #panel-body { padding: 14px 16px 18px; }
-      #legend-body { padding: 6px 16px 18px; }
-      #legend h4 { font-size: 13px; margin-top: 14px; margin-bottom: 8px; }
-      .legend-item { gap: 10px; margin-bottom: 8px; }
-      .dot { width: 16px; height: 16px; }
-      .toggle-row, .radio-row { padding: 5px 0; gap: 12px; }
-      .toggle-row input[type=checkbox], .radio-row input[type=radio] { width: 20px; height: 20px; }
-      .control-section-label { font-size: 13px; margin-top: 14px; }
+      #panel { min-width: 0; top: 52px; }
+      #panel, #legend { font-size: 11px; }
+      #panel-header, #legend-header { padding: 6px 10px; font-size: 10px; }
+      #panel-body { padding: 8px 10px 10px; }
+      #legend-body { padding: 4px 10px 10px; }
+      #legend h4 { font-size: 10px; margin-top: 8px; margin-bottom: 4px; }
+      .legend-item { gap: 6px; margin-bottom: 4px; }
+      .dot { width: 10px; height: 10px; }
+      .toggle-row, .radio-row { padding: 2px 0; gap: 6px; }
+      .control-section-label { font-size: 10px; margin-top: 8px; }
       .leaflet-popup-content-wrapper { font-size: 15px !important; }
       .leaflet-popup-content { font-size: 15px !important; }
+      #panel.collapsed #panel-label { display: none; }
     }
   </style>
 </head>
@@ -237,7 +235,7 @@ const html = `<!DOCTYPE html>
   </div>
   <div id="panel">
     <div id="panel-header">
-      Controls <span id="panel-toggle">▼</span>
+      <span id="panel-label">Controls</span> <span id="panel-toggle">▼</span>
     </div>
     <div id="panel-body">
       <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
