@@ -1,4 +1,4 @@
-import { pointInGeom } from "./common/geometry.js";
+import { pointInGeom } from "../common/geometry.js";
 
 declare const L: any;
 declare const OverlappingMarkerSpiderfier: any;

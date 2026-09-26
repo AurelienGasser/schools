@@ -22,7 +22,7 @@ function parseRow(line: string): string[] {
 
 // --- Average sale prices per zip code ---
 const csvText = readFileSync(
-  resolve(__dirname, "../data/sale_prices.csv"),
+  resolve(__dirname, "../../data/sale_prices.csv"),
   "utf-8",
 ).replace(/^﻿/, "");
 const csvLines = csvText.split("\n").filter(Boolean);
@@ -54,7 +54,7 @@ const rawGeoJson = JSON.parse(
   readFileSync(
     resolve(
       __dirname,
-      "../data/Modified_Zip_Code_Tabulation_Areas_(MODZCTA)_20260828.geojson",
+      "../../data/Modified_Zip_Code_Tabulation_Areas_(MODZCTA)_20260828.geojson",
     ),
     "utf-8",
   ),
@@ -86,7 +86,7 @@ const features = rawGeoJson.features.flatMap((f: any) => {
 
 const out = { type: "FeatureCollection", features };
 writeFileSync(
-  resolve(__dirname, "../data/zip-codes.json"),
+  resolve(__dirname, "../../data/zip-codes.json"),
   JSON.stringify(out),
 );
 

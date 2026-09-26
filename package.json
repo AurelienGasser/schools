@@ -4,13 +4,10 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
-    "map": "tsx src/map.ts",
-    "fetch-datasets": "tsx src/fetch-datasets.ts",
-    "enrich-schools": "tsx src/enrich-schools.ts",
-    "fetch-zip-codes": "tsx src/fetch-zip-codes.ts"
+    "enrich-schools": "tsx src/scripts/enrich-schools.ts",
+    "fetch-zip-codes": "tsx src/scripts/fetch-zip-codes.ts",
+    "add-dbn": "tsx src/scripts/add-dbn.ts"
   },
   "keywords": [],
   "author": "",

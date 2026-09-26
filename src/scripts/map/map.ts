@@ -3,15 +3,15 @@ import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "node:child_process";
 import type { SchoolsResponse } from "./types.js";
-import schoolsJson from "../data/schools.json" with { type: "json" };
-import zipCodesJson from "../data/zip-codes.json" with { type: "json" };
+import schoolsJson from "../../../data/schools.json" with { type: "json" };
+import zipCodesJson from "../../../data/zip-codes.json" with { type: "json" };
 
 import {
   commuteRange,
   getCommuteString,
   commuteRingZones,
   commuteLegend,
-} from "./map/commute.js";
+} from "./commute.js";
 
 const schools = schoolsJson as unknown as SchoolsResponse;
 
@@ -29,13 +29,13 @@ const features = schools.features.filter(
 );
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const outDir = resolve(__dirname, "../docs");
+const outDir = resolve(__dirname, "../../../docs");
 
 const elementaryZonesJson = JSON.parse(
   readFileSync(
     resolve(
       __dirname,
-      "../data/School_Zones_2024-2025_(Elementary_School)_20260830.geojson",
+      "../../../data/School_Zones_2024-2025_(Elementary_School)_20260830.geojson",
     ),
     "utf-8",
   ),
@@ -44,7 +44,7 @@ const middleZonesJson = JSON.parse(
   readFileSync(
     resolve(
       __dirname,
-      "../data/School_Zones_2024-2025_(Middle_School)_20260830.geojson",
+      "../../../data/School_Zones_2024-2025_(Middle_School)_20260830.geojson",
     ),
     "utf-8",
   ),
@@ -283,8 +283,8 @@ const outPath = resolve(outDir, "map.html");
 writeFileSync(outPath, html, "utf-8");
 
 execSync(
-  `pnpm exec esbuild ${resolve(__dirname, "search-client.ts")} --bundle --target=es2022 --format=iife --outfile=${resolve(outDir, "app.js")}`,
+  `pnpm exec esbuild ${resolve(__dirname, "../../client/search-client.ts")} --bundle --target=es2022 --format=iife --outfile=${resolve(outDir, "app.js")}`,
   { stdio: "inherit" },
 );
 
-console.log(`Written to ${outPath} + map-client.js`);
+console.log(`Written to ${outPath} + app.js`);

@@ -1,7 +1,7 @@
 import { resolve } from "path";
 import { readdirSync, readFileSync, existsSync } from "fs";
 import polygonClipping from "polygon-clipping";
-import { pointInMultiPolygon } from "../common/geometry.js";
+import { pointInMultiPolygon } from "../../common/geometry.js";
 const __dirname = resolve();
 
 type PolygonEntry = {

@@ -18,7 +18,7 @@
     );
   }
 
-  // src/map-client.ts
+  // src/client/map-client.ts
   var map = L.map("map").setView([40.6928, -73.956], 13);
   L.tileLayer(
     "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -595,7 +595,7 @@
     el.addEventListener("change", applyFilters);
   });
 
-  // src/search-client.ts
+  // src/client/search-client.ts
   var searchInput = document.getElementById("search-input");
   searchInput.placeholder = "Search address\u2026";
   var searchMarker = null;

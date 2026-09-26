@@ -3,7 +3,7 @@ import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const path = resolve(__dirname, "../data/schools.json");
+const path = resolve(__dirname, "../../data/schools.json");
 
 const BOROUGH: Record<string, string> = {
   KINGS: "K",
@@ -94,5 +94,5 @@ console.log("No borough:", noBorough.length);
 console.log("No district:", noDistrict.length);
 console.log(`Assigned DBN: ${assigned} `);
 
-writeFileSync(path, JSON.stringify(schoolsJson), "utf-8");
+writeFileSync(path, JSON.stringify(schoolsJson, undefined, 2), "utf-8");
 console.log("Written to data/schools.json");

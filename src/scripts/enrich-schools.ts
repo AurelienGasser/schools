@@ -3,7 +3,7 @@ import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const dataDir = resolve(__dirname, "../data");
+const dataDir = resolve(__dirname, "../../data");
 
 // 1. Read selected column names
 const selectedColumns = new Set(
