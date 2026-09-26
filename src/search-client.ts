@@ -39,8 +39,13 @@ async function handleSearch() {
       }),
     })
       .bindPopup(popupHtml)
-      .addTo(map)
-      .openPopup();
+      .addTo(map);
+    searchMarker.on("click", (e: any) => {
+      L.DomEvent.stopPropagation(e);
+      deselect();
+      selectZonesForPoint(lat, lng);
+    });
+    searchMarker.openPopup();
     map.setView([lat, lng], 15);
     searchInput.value = "";
   } catch {
