@@ -275,19 +275,16 @@ const html = `<!DOCTYPE html>
     </div>
   </div>
   <script>const __schoolPoints = ${JSON.stringify(points)};const __commutePolygonSets = ${JSON.stringify({ rings: commuteRingZones })};const __realEstatePriceZipCodes = ${JSON.stringify(zipCodesJson)};const __elementaryZones = ${JSON.stringify(elementaryZonesJson)};const __middleZones = ${JSON.stringify(middleZonesJson)};</script>
-  <script src="./map-client.js?v=${Date.now()}"></script>
-  <script src="./search-client.js?v=${Date.now()}"></script>
+  <script src="./app.js?v=${Date.now()}"></script>
 </body>
 </html>`;
 
 const outPath = resolve(outDir, "map.html");
 writeFileSync(outPath, html, "utf-8");
 
-const tscFlags = `--target ES2022 --module ESNext --outDir ${outDir} --skipLibCheck --ignoreConfig`;
-for (const src of ["map-client.ts", "search-client.ts"]) {
-  execSync(`pnpm exec tsc ${tscFlags} ${resolve(__dirname, src)}`, {
-    stdio: "inherit",
-  });
-}
+execSync(
+  `pnpm exec esbuild ${resolve(__dirname, "search-client.ts")} --bundle --target=es2022 --format=iife --outfile=${resolve(outDir, "app.js")}`,
+  { stdio: "inherit" },
+);
 
 console.log(`Written to ${outPath} + map-client.js`);

@@ -1,4 +1,4 @@
-"use strict";
+import { map, deselect, selectZonesForPoint, schoolZoneSection } from './map-client.js';
 const searchInput = document.getElementById("search-input");
 searchInput.placeholder = "Search address…";
 let searchMarker = null;

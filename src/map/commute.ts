@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { readdirSync, readFileSync, existsSync } from "fs";
 import polygonClipping from "polygon-clipping";
+import { pointInMultiPolygon } from "../common/geometry.js";
 const __dirname = resolve();
 
 type PolygonEntry = {
@@ -94,29 +95,6 @@ export function commuteRange(
   }
   const last = commuteZonesSorted.at(-1);
   return { min: last!.minutes };
-}
-
-function pointInMultiPolygon(
-  x: number,
-  y: number,
-  coords: number[][][][],
-): boolean {
-  return coords.some(
-    (polygon) =>
-      pointInRing(x, y, polygon[0]) &&
-      polygon.slice(1).every((hole) => !pointInRing(x, y, hole)),
-  );
-}
-
-function pointInRing(x: number, y: number, ring: number[][]): boolean {
-  let inside = false;
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
-      inside = !inside;
-  }
-  return inside;
 }
 
 function loadPolygonFile(f: string): PolygonEntry[] {

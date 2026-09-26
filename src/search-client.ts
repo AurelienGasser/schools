@@ -1,8 +1,6 @@
+import { map, deselect, selectZonesForPoint, schoolZoneSection } from './map-client.js';
+
 declare const L: any;
-declare const map: any;
-declare function deselect(): void;
-declare function selectZonesForPoint(lat: number, lng: number): any[];
-declare function schoolZoneSection(zones: any[]): string;
 
 const searchInput = document.getElementById("search-input") as HTMLInputElement;
 searchInput.placeholder = "Search address…";

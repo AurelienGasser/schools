@@ -1,5 +1,5 @@
-"use strict";
-const map = L.map("map").setView([40.6928, -73.956], 13);
+import { pointInGeom } from './common/geometry.js';
+export const map = L.map("map").setView([40.6928, -73.956], 13);
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -71,31 +71,22 @@ const schoolZoneHighlight = (color) => ({
     fillOpacity: 0.25,
 });
 const allZones = [];
-function pointInRing(x, y, ring) {
-    let inside = false;
-    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-        const [xi, yi] = ring[i];
-        const [xj, yj] = ring[j];
-        if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
-            inside = !inside;
-    }
-    return inside;
-}
 function findZonesForPoint(lng, lat) {
     const found = [];
     for (const z of allZones) {
         if (found.some((f) => f.zoneType === z.zoneType))
             continue;
-        const geom = z.feature.geometry;
-        const polys = geom.type === "MultiPolygon" ? geom.coordinates : [geom.coordinates];
-        const hit = polys.some((poly) => pointInRing(lng, lat, poly[0]) &&
-            poly.slice(1).every((hole) => !pointInRing(lng, lat, hole)));
-        if (hit)
+        if (pointInGeom(lng, lat, z.feature.geometry))
             found.push(z);
         if (found.length === 2)
             break;
     }
     return found;
+}
+function schoolsInZone(zone) {
+    const relevantTypes = zone.zoneType === "elementary" ? ["elementary", "k8"] : ["middle", "k8"];
+    return __schoolPoints.filter((p) => relevantTypes.includes(p.schoolType) &&
+        pointInGeom(p.lng, p.lat, zone.feature.geometry));
 }
 function makeZoneGeoJSON(data, color, zoneType) {
     return L.geoJSON(data, {
@@ -111,13 +102,19 @@ L.layerGroup([
 ]).addTo(map);
 let selectedSchoolZones = [];
 let selectedMainSchoolCircles = [];
-const deselect = () => {
+let selectedFadedMarkers = [];
+export const deselect = () => {
     for (const z of selectedSchoolZones)
         z.layer.setStyle(schoolZoneStyle(z.color));
     selectedSchoolZones = [];
     for (const c of selectedMainSchoolCircles)
         map.removeLayer(c);
     selectedMainSchoolCircles = [];
+    for (const m of selectedFadedMarkers) {
+        map.removeLayer(m);
+        m.setOpacity(1);
+    }
+    selectedFadedMarkers = [];
 };
 // SVG pin helpers — 40x40 viewbox, shape centered at (20,20)
 const R = 10; // shape radius
@@ -421,7 +418,7 @@ function zoneInfo(zone) {
         .join(", ");
     return [label, district, remarks, dbns].filter(Boolean).join(" · ");
 }
-function schoolZoneSection(zones) {
+export function schoolZoneSection(zones) {
     const elem = zones.find((z) => z.zoneType === "elementary");
     const mid = zones.find((z) => z.zoneType === "middle");
     if (!elem && !mid)
@@ -461,17 +458,11 @@ const oms = new OverlappingMarkerSpiderfier(map, {
     legWeight: 2,
     legColors: { usual: "#94a3b8", highlighted: "#3b82f6" },
 });
-function selectZonesForPoint(lat, lng) {
+export function selectZonesForPoint(lat, lng) {
     selectedSchoolZones = findZonesForPoint(lng, lat);
     for (const zone of selectedSchoolZones) {
         zone.layer.setStyle(schoolZoneHighlight(zone.color));
-        const zoneDbn = zone.feature.properties.dbn ?? "";
-        const dbns = zoneDbn
-            .split(",")
-            .map((d) => d.trim())
-            .filter(Boolean);
-        const mainSchools = __schoolPoints.filter((pt) => pt.dbn && dbns.includes(pt.dbn));
-        for (const mainSchool of mainSchools) {
+        for (const mainSchool of schoolsInZone(zone)) {
             selectedMainSchoolCircles.push(L.circleMarker([mainSchool.lat, mainSchool.lng], {
                 radius: 22,
                 color: zone.color,
@@ -479,6 +470,12 @@ function selectZonesForPoint(lat, lng) {
                 fillOpacity: 0,
                 interactive: false,
             }).addTo(map));
+            const entry = allMarkers.find((m) => m.p === mainSchool);
+            if (entry && !schoolPinsLayer.hasLayer(entry.marker)) {
+                entry.marker.setOpacity(0.35);
+                entry.marker.addTo(map);
+                selectedFadedMarkers.push(entry.marker);
+            }
         }
     }
     return selectedSchoolZones;

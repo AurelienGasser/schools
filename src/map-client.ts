@@ -1,3 +1,5 @@
+import { pointInGeom } from "./common/geometry.js";
+
 declare const L: any;
 declare const OverlappingMarkerSpiderfier: any;
 declare const __schoolPoints: Array<{
@@ -33,7 +35,7 @@ declare const __realEstatePriceZipCodes: {
 declare const __elementaryZones: any;
 declare const __middleZones: any;
 
-const map = L.map("map").setView([40.6928, -73.956], 13);
+export const map = L.map("map").setView([40.6928, -73.956], 13);
 
 L.tileLayer(
   "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -136,33 +138,24 @@ type ZoneEntry = {
 };
 const allZones: ZoneEntry[] = [];
 
-function pointInRing(x: number, y: number, ring: number[][]): boolean {
-  let inside = false;
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
-      inside = !inside;
-  }
-  return inside;
-}
-
 function findZonesForPoint(lng: number, lat: number): ZoneEntry[] {
   const found: ZoneEntry[] = [];
   for (const z of allZones) {
     if (found.some((f) => f.zoneType === z.zoneType)) continue;
-    const geom = z.feature.geometry;
-    const polys: number[][][][] =
-      geom.type === "MultiPolygon" ? geom.coordinates : [geom.coordinates];
-    const hit = polys.some(
-      (poly) =>
-        pointInRing(lng, lat, poly[0]) &&
-        poly.slice(1).every((hole) => !pointInRing(lng, lat, hole)),
-    );
-    if (hit) found.push(z);
+    if (pointInGeom(lng, lat, z.feature.geometry)) found.push(z);
     if (found.length === 2) break;
   }
   return found;
+}
+
+function schoolsInZone(zone: ZoneEntry): typeof __schoolPoints {
+  const relevantTypes =
+    zone.zoneType === "elementary" ? ["elementary", "k8"] : ["middle", "k8"];
+  return __schoolPoints.filter(
+    (p) =>
+      relevantTypes.includes(p.schoolType) &&
+      pointInGeom(p.lng, p.lat, zone.feature.geometry),
+  );
 }
 
 function makeZoneGeoJSON(
@@ -185,13 +178,19 @@ L.layerGroup([
 
 let selectedSchoolZones: ZoneEntry[] = [];
 let selectedMainSchoolCircles: any[] = [];
+let selectedFadedMarkers: any[] = [];
 
-const deselect = () => {
+export const deselect = () => {
   for (const z of selectedSchoolZones)
     z.layer.setStyle(schoolZoneStyle(z.color));
   selectedSchoolZones = [];
   for (const c of selectedMainSchoolCircles) map.removeLayer(c);
   selectedMainSchoolCircles = [];
+  for (const m of selectedFadedMarkers) {
+    map.removeLayer(m);
+    m.setOpacity(1);
+  }
+  selectedFadedMarkers = [];
 };
 
 // SVG pin helpers — 40x40 viewbox, shape centered at (20,20)
@@ -559,7 +558,7 @@ function zoneInfo(zone: ZoneEntry): string {
   return [label, district, remarks, dbns].filter(Boolean).join(" · ");
 }
 
-function schoolZoneSection(zones: ZoneEntry[]): string {
+export function schoolZoneSection(zones: ZoneEntry[]): string {
   const elem = zones.find((z) => z.zoneType === "elementary");
   const mid = zones.find((z) => z.zoneType === "middle");
   if (!elem && !mid) return "";
@@ -623,7 +622,7 @@ const oms = new OverlappingMarkerSpiderfier(map, {
   legColors: { usual: "#94a3b8", highlighted: "#3b82f6" },
 });
 
-function selectZonesForPoint(lat: number, lng: number): ZoneEntry[] {
+export function selectZonesForPoint(lat: number, lng: number): ZoneEntry[] {
   selectedSchoolZones = findZonesForPoint(lng, lat);
   for (const zone of selectedSchoolZones) {
     zone.layer.setStyle(schoolZoneHighlight(zone.color));
@@ -645,6 +644,14 @@ function selectZonesForPoint(lat: number, lng: number): ZoneEntry[] {
           interactive: false,
         }).addTo(map),
       );
+    }
+    for (const toShow of [...mainSchools, ...schoolsInZone(zone)]) {
+      const entry = allMarkers.find((m) => m.p === toShow);
+      if (entry && !schoolPinsLayer.hasLayer(entry.marker)) {
+        entry.marker.setOpacity(0.45);
+        entry.marker.addTo(map);
+        selectedFadedMarkers.push(entry.marker);
+      }
     }
   }
   return selectedSchoolZones;
