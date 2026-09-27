@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsx src/scripts/map/map.ts",
     "enrich-schools": "tsx src/scripts/enrich-schools.ts",
     "fetch-zip-codes": "tsx src/scripts/fetch-zip-codes.ts",
     "add-dbn": "tsx src/scripts/add-dbn.ts"

@@ -2129,7 +2129,7 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000070864,
         "SED_CODE": "310500010514",
-        "district": "5",
+        "district": "05",
         "sqr": {
           "School Name": "New Design Middle School",
           "School Type": "Middle",
@@ -2221,7 +2221,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000058050,
         "SED_CODE": "310300010862",
-        "district": "3",
+        "district": "03",
         "sqr": {
           "School Name": "Mott Hall II",
           "School Type": "Middle",
@@ -3913,8 +3913,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000089611,
         "SED_CODE": "310200010297",
-        "district": "2",
-        "DBN": "2M297",
+        "district": "02",
+        "DBN": "02M297",
         "sqr": {
           "School Name": "M.S. 297",
           "School Type": "Middle",
@@ -6142,8 +6142,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047036,
         "SED_CODE": "310600010018",
-        "district": "6",
-        "DBN": "6M018",
+        "district": "06",
+        "DBN": "06M018",
         "sqr": {
           "School Name": "P.S. 018 Park Terrace",
           "School Type": "K-8",
@@ -6235,7 +6235,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000058107,
         "SED_CODE": "310600010278",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "Paula Hedbavny School",
           "School Type": "K-8",
@@ -6327,7 +6327,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000065461,
         "SED_CODE": "310300010421",
-        "district": "3",
+        "district": "03",
         "sqr": {
           "School Name": "West Prep Academy",
           "School Type": "Middle",
@@ -8368,7 +8368,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048387,
         "SED_CODE": "310200010114",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "East Side Middle School",
           "School Type": "Middle",
@@ -8670,7 +8670,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000046730,
         "SED_CODE": "310300011610",
-        "district": "3",
+        "district": "03",
         "sqr": {
           "School Name": "Young Women's Leadership School",
           "School Type": "Middle",
@@ -8762,8 +8762,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048393,
         "SED_CODE": "310200010059",
-        "district": "2",
-        "DBN": "2M059",
+        "district": "02",
+        "DBN": "02M059",
         "sqr": {
           "School Name": "P.S. 059 Beekman Hill International",
           "School Type": "Elementary",
@@ -8855,7 +8855,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000093010,
         "SED_CODE": "310200011395",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -74.01237705329909,
@@ -11559,7 +11559,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047254,
         "SED_CODE": "310400010072",
-        "district": "4",
+        "district": "04",
         "sqr": {
           "School Name": "The Lexington Academy",
           "School Type": "K-8",
@@ -11772,7 +11772,7 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048525,
         "SED_CODE": "310100010361",
-        "district": "1",
+        "district": "01",
         "sqr": {
           "School Name": "The Children's Workshop School",
           "School Type": "Elementary",
@@ -11864,8 +11864,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047432,
         "SED_CODE": "310300010245",
-        "district": "3",
-        "DBN": "3M245"
+        "district": "03",
+        "DBN": "03M245"
       },
       "geometry": {
         "x": -73.97793764933066,
@@ -11894,7 +11894,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047446,
         "SED_CODE": "310300010185",
-        "district": "3",
+        "district": "03",
         "sqr": {
           "School Name": "The Locke School of Arts and Engineering",
           "School Type": "Elementary",
@@ -11986,7 +11986,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047447,
         "SED_CODE": "310300010191",
-        "district": "3",
+        "district": "03",
         "sqr": {
           "School Name": "The Riverside School for Makers and Artists",
           "School Type": "K-8",
@@ -12078,8 +12078,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047474,
         "SED_CODE": "310300010145",
-        "district": "3",
-        "DBN": "3M145",
+        "district": "03",
+        "DBN": "03M145",
         "sqr": {
           "School Name": "P.S. 145, The Bloomingdale School",
           "School Type": "Elementary",
@@ -12171,7 +12171,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048380,
         "SED_CODE": "310200010260",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "The Clinton School",
           "School Type": "Middle",
@@ -12263,8 +12263,8 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048497,
         "SED_CODE": "310100010188",
-        "district": "1",
-        "DBN": "1M188",
+        "district": "01",
+        "DBN": "01M188",
         "sqr": {
           "School Name": "P.S. 188 The Island School",
           "School Type": "K-8",
@@ -12356,7 +12356,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000058060,
         "SED_CODE": "310600010328",
-        "district": "6"
+        "district": "06"
       },
       "geometry": {
         "x": -73.93732151274688,
@@ -12385,7 +12385,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000059107,
         "SED_CODE": "310200011303",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.99358576368662,
@@ -12414,7 +12414,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000059112,
         "SED_CODE": "310200011313",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -74.00233018943999,
@@ -12443,7 +12443,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000075013,
         "SED_CODE": "310200010343",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "The Peck Slip School",
           "School Type": "Elementary",
@@ -12535,7 +12535,7 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000077809,
         "SED_CODE": "310500011148",
-        "district": "5",
+        "district": "05",
         "sqr": {
           "School Name": "Eagle Academy for Young Men of Harlem",
           "School Type": "Middle",
@@ -12627,7 +12627,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000083457,
         "SED_CODE": "310200010340",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "Sixth Avenue Elementary School",
           "School Type": "Elementary",
@@ -12719,7 +12719,7 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000058082,
         "SED_CODE": "310100010315",
-        "district": "1",
+        "district": "01",
         "sqr": {
           "School Name": "The East Village Community School",
           "School Type": "Elementary",
@@ -12811,7 +12811,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000059105,
         "SED_CODE": "310300010334",
-        "district": "3",
+        "district": "03",
         "sqr": {
           "School Name": "The Anderson School",
           "School Type": "K-8",
@@ -12931,7 +12931,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000089612,
         "SED_CODE": "310400010310",
-        "district": "4"
+        "district": "04"
       },
       "geometry": {
         "x": -73.94492485517232,
@@ -12960,7 +12960,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047017,
         "SED_CODE": "310600010223",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "The Mott Hall School",
           "School Type": "Middle",
@@ -13052,7 +13052,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047227,
         "SED_CODE": "310400010182",
-        "district": "4",
+        "district": "04",
         "sqr": {
           "School Name": "The Bilingual Bicultural School",
           "School Type": "Elementary",
@@ -13144,7 +13144,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000060415,
         "SED_CODE": "310600010368",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "The William Lynch School",
           "School Type": "Elementary",
@@ -13236,7 +13236,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000065459,
         "SED_CODE": "310300011403",
-        "district": "3"
+        "district": "03"
       },
       "geometry": {
         "x": -73.9742044186426,
@@ -13293,7 +13293,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000046715,
         "SED_CODE": "310400011680",
-        "district": "4"
+        "district": "04"
       },
       "geometry": {
         "x": -73.94667374196177,
@@ -13322,7 +13322,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000046759,
         "SED_CODE": "310600011462",
-        "district": "6"
+        "district": "06"
       },
       "geometry": {
         "x": -73.92662677057173,
@@ -13351,7 +13351,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000058030,
         "SED_CODE": "310400010825",
-        "district": "4"
+        "district": "04"
       },
       "geometry": {
         "x": -73.93373648883141,
@@ -13380,7 +13380,7 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000070865,
         "SED_CODE": "310500010517",
-        "district": "5",
+        "district": "05",
         "sqr": {
           "School Name": "Teachers College Community School",
           "School Type": "K-8",
@@ -14670,8 +14670,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048414,
         "SED_CODE": "310200010011",
-        "district": "2",
-        "DBN": "2M011",
+        "district": "02",
+        "DBN": "02M011",
         "sqr": {
           "School Name": "P.S. 011: The Sarah J. Garnet Elementary School",
           "School Type": "Elementary",
@@ -14763,8 +14763,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048383,
         "SED_CODE": "310200010150",
-        "district": "2",
-        "DBN": "2M150",
+        "district": "02",
+        "DBN": "02M150",
         "sqr": {
           "School Name": "P.S. 150",
           "School Type": "Elementary",
@@ -14948,7 +14948,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000077808,
         "SED_CODE": "310200010281",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "The River School",
           "School Type": "Elementary",
@@ -19007,7 +19007,7 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000058094,
         "SED_CODE": "310100010332",
-        "district": "1",
+        "district": "01",
         "sqr": {
           "School Name": "University Neighborhood Middle School",
           "School Type": "Middle",
@@ -19099,7 +19099,7 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000059127,
         "SED_CODE": "310500010318",
-        "district": "5",
+        "district": "05",
         "sqr": {
           "School Name": "Thurgood Marshall Academy Lower School",
           "School Type": "Elementary",
@@ -19405,8 +19405,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000069138,
         "SED_CODE": "310200010267",
-        "district": "2",
-        "DBN": "2M267",
+        "district": "02",
+        "DBN": "02M267",
         "sqr": {
           "School Name": "East Side Elementary School, PS 267",
           "School Type": "Elementary",
@@ -29403,8 +29403,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048381,
         "SED_CODE": "310200010289",
-        "district": "2",
-        "DBN": "2M289",
+        "district": "02",
+        "DBN": "02M289",
         "sqr": {
           "School Name": "I.S. 289",
           "School Type": "Middle",
@@ -29496,8 +29496,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048358,
         "SED_CODE": "310200010290",
-        "district": "2",
-        "DBN": "2M290",
+        "district": "02",
+        "DBN": "02M290",
         "sqr": {
           "School Name": "P.S. 290 Manhattan New School",
           "School Type": "Elementary",
@@ -29589,7 +29589,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000057112,
         "SED_CODE": "310200010312",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -74.00227778685371,
@@ -29618,8 +29618,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000059103,
         "SED_CODE": "310200010347",
-        "district": "2",
-        "DBN": "2M47"
+        "district": "02",
+        "DBN": "02M47"
       },
       "geometry": {
         "x": -73.98162967381056,
@@ -29648,7 +29648,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000065455,
         "SED_CODE": "310200010397",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "Spruce Street School",
           "School Type": "K-8",
@@ -29740,7 +29740,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048362,
         "SED_CODE": "310200010414",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -74.00227778685371,
@@ -29769,8 +29769,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000075014,
         "SED_CODE": "310200010527",
-        "district": "2",
-        "DBN": "2M527",
+        "district": "02",
+        "DBN": "02M527",
         "sqr": {
           "School Name": "P.S. 527 - East Side School for Social Action",
           "School Type": "Elementary",
@@ -29862,7 +29862,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000083451,
         "SED_CODE": "310200011280",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -74.00117092547788,
@@ -29891,7 +29891,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000083463,
         "SED_CODE": "310200011282",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -74.00117092547788,
@@ -29920,7 +29920,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000058023,
         "SED_CODE": "310200011294",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.98959598171743,
@@ -29949,7 +29949,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000058095,
         "SED_CODE": "310200011300",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.99358576368662,
@@ -29978,7 +29978,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000059120,
         "SED_CODE": "310200011305",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.98959598171743,
@@ -30007,7 +30007,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000059086,
         "SED_CODE": "310200011308",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.98959598171743,
@@ -30036,7 +30036,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000062349,
         "SED_CODE": "310200011376",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -74.0048369544953,
@@ -30065,7 +30065,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000065452,
         "SED_CODE": "310200011392",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -74.00233018943999,
@@ -30094,7 +30094,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000065453,
         "SED_CODE": "310200011393",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.99085183120147,
@@ -30123,7 +30123,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000046782,
         "SED_CODE": "310200011407",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "Institute for Collaborative Education",
           "School Type": "Middle",
@@ -30215,7 +30215,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000065457,
         "SED_CODE": "310200011422",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "Quest to Learn",
           "School Type": "Middle",
@@ -30307,7 +30307,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000046815,
         "SED_CODE": "310200011439",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.99222564068577,
@@ -30336,7 +30336,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000056086,
         "SED_CODE": "310200011442",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "Ballet Tech, NYC Public School for Dance",
           "School Type": "K-8",
@@ -30456,7 +30456,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000070863,
         "SED_CODE": "310200011507",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.99085183120147,
@@ -30485,7 +30485,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000075015,
         "SED_CODE": "310200011533",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.98745132650973,
@@ -30514,7 +30514,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000075018,
         "SED_CODE": "310200011546",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.98745132650973,
@@ -30543,7 +30543,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000057158,
         "SED_CODE": "310200011551",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -74.01181828695682,
@@ -30572,7 +30572,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000046729,
         "SED_CODE": "310200011605",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -74.00233018943999,
@@ -30601,8 +30601,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047477,
         "SED_CODE": "310300010009",
-        "district": "3",
-        "DBN": "3M009",
+        "district": "03",
+        "DBN": "03M009",
         "sqr": {
           "School Name": "P.S. 009 Sarah Anderson",
           "School Type": "Elementary",
@@ -30694,8 +30694,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047463,
         "SED_CODE": "310300010054",
-        "district": "3",
-        "DBN": "3M054",
+        "district": "03",
+        "DBN": "03M054",
         "sqr": {
           "School Name": "J.H.S. 054 Booker T. Washington",
           "School Type": "Middle",
@@ -30787,8 +30787,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047464,
         "SED_CODE": "310300010075",
-        "district": "3",
-        "DBN": "3M075",
+        "district": "03",
+        "DBN": "03M075",
         "sqr": {
           "School Name": "P.S. 075 Emily Dickinson",
           "School Type": "Elementary",
@@ -30880,8 +30880,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047466,
         "SED_CODE": "310300010084",
-        "district": "3",
-        "DBN": "3M084",
+        "district": "03",
+        "DBN": "03M084",
         "sqr": {
           "School Name": "P.S. 084 Lillian Weber",
           "School Type": "Elementary",
@@ -30973,8 +30973,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047467,
         "SED_CODE": "310300010087",
-        "district": "3",
-        "DBN": "3M087",
+        "district": "03",
+        "DBN": "03M087",
         "sqr": {
           "School Name": "P.S. 087 William Sherman",
           "School Type": "Elementary",
@@ -31066,8 +31066,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047471,
         "SED_CODE": "310300010149",
-        "district": "3",
-        "DBN": "3M149",
+        "district": "03",
+        "DBN": "03M149",
         "sqr": {
           "School Name": "P.S. 149 Sojourner Truth",
           "School Type": "K-8",
@@ -31159,8 +31159,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047472,
         "SED_CODE": "310300010163",
-        "district": "3",
-        "DBN": "3M163",
+        "district": "03",
+        "DBN": "03M163",
         "sqr": {
           "School Name": "P.S. 163 Alfred E. Smith",
           "School Type": "Elementary",
@@ -31252,8 +31252,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047461,
         "SED_CODE": "310300010165",
-        "district": "3",
-        "DBN": "3M165",
+        "district": "03",
+        "DBN": "03M165",
         "sqr": {
           "School Name": "P.S. 165 Robert E. Simon",
           "School Type": "Elementary",
@@ -31345,8 +31345,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047445,
         "SED_CODE": "310300010180",
-        "district": "3",
-        "DBN": "3M180",
+        "district": "03",
+        "DBN": "03M180",
         "sqr": {
           "School Name": "P.S. 180 Hugo Newman",
           "School Type": "K-8",
@@ -31438,8 +31438,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047448,
         "SED_CODE": "310300010199",
-        "district": "3",
-        "DBN": "3M199",
+        "district": "03",
+        "DBN": "03M199",
         "sqr": {
           "School Name": "P.S. 199 Jessie Isador Straus",
           "School Type": "Elementary",
@@ -31531,7 +31531,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047451,
         "SED_CODE": "310300010241",
-        "district": "3",
+        "district": "03",
         "sqr": {
           "School Name": "STEM Institute of Manhattan",
           "School Type": "Elementary",
@@ -31651,8 +31651,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047452,
         "SED_CODE": "310300010242",
-        "district": "3",
-        "DBN": "3M242",
+        "district": "03",
+        "DBN": "03M242",
         "sqr": {
           "School Name": "P.S. 242 - The Young Diplomats Magnet Academy",
           "School Type": "Elementary",
@@ -31744,7 +31744,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047455,
         "SED_CODE": "310300010256",
-        "district": "3",
+        "district": "03",
         "sqr": {
           "School Name": "Lafayette Academy",
           "School Type": "Middle",
@@ -31836,8 +31836,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047456,
         "SED_CODE": "310300010258",
-        "district": "3",
-        "DBN": "3M258",
+        "district": "03",
+        "DBN": "03M258",
         "sqr": {
           "School Name": "Community Action School - MS 258",
           "School Type": "Middle",
@@ -31929,8 +31929,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000069141,
         "SED_CODE": "310300010452",
-        "district": "3",
-        "DBN": "3M452",
+        "district": "03",
+        "DBN": "03M452",
         "sqr": {
           "School Name": "P.S. 452",
           "School Type": "Elementary",
@@ -32022,7 +32022,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000065458,
         "SED_CODE": "310300011402",
-        "district": "3"
+        "district": "03"
       },
       "geometry": {
         "x": -73.9742044186426,
@@ -32051,7 +32051,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000065460,
         "SED_CODE": "310300011404",
-        "district": "3"
+        "district": "03"
       },
       "geometry": {
         "x": -73.9742044186426,
@@ -32080,7 +32080,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000046784,
         "SED_CODE": "310300011415",
-        "district": "3"
+        "district": "03"
       },
       "geometry": {
         "x": -73.95408179434502,
@@ -32109,7 +32109,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000065462,
         "SED_CODE": "310300011859",
-        "district": "3",
+        "district": "03",
         "sqr": {
           "School Name": "Special Music School",
           "School Type": "K-8",
@@ -32201,7 +32201,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000058015,
         "SED_CODE": "310300011860",
-        "district": "3",
+        "district": "03",
         "sqr": {
           "School Name": "Frederick Douglass Academy II Secondary School",
           "School Type": "Middle",
@@ -32293,8 +32293,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047246,
         "SED_CODE": "310400010007",
-        "district": "4",
-        "DBN": "4M007",
+        "district": "04",
+        "DBN": "04M007",
         "sqr": {
           "School Name": "P.S. 007 Samuel Stern",
           "School Type": "K-8",
@@ -32386,7 +32386,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000058079,
         "SED_CODE": "310400010012",
-        "district": "4",
+        "district": "04",
         "sqr": {
           "School Name": "Tag Young Scholars",
           "School Type": "K-8",
@@ -32478,8 +32478,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047248,
         "SED_CODE": "310400010038",
-        "district": "4",
-        "DBN": "4M038",
+        "district": "04",
+        "DBN": "04M038",
         "sqr": {
           "School Name": "P.S. 38 Roberto Clemente",
           "School Type": "Elementary",
@@ -32571,8 +32571,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047255,
         "SED_CODE": "310400010083",
-        "district": "4",
-        "DBN": "4M083",
+        "district": "04",
+        "DBN": "04M083",
         "sqr": {
           "School Name": "P.S. 083 Luis Munoz Rivera",
           "School Type": "Elementary",
@@ -32664,8 +32664,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047256,
         "SED_CODE": "310400010096",
-        "district": "4",
-        "DBN": "4M096",
+        "district": "04",
+        "DBN": "04M096",
         "sqr": {
           "School Name": "P.S. 096 Joseph Lanzetta",
           "School Type": "K-8",
@@ -32757,8 +32757,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047259,
         "SED_CODE": "310400010102",
-        "district": "4",
-        "DBN": "4M102",
+        "district": "04",
+        "DBN": "04M102",
         "sqr": {
           "School Name": "P.S. 102 Jacques Cartier",
           "School Type": "Elementary",
@@ -32850,8 +32850,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047260,
         "SED_CODE": "310400010108",
-        "district": "4",
-        "DBN": "4M108",
+        "district": "04",
+        "DBN": "04M108",
         "sqr": {
           "School Name": "P.S. 108 Assemblyman Angelo Del Toro Educational Complex",
           "School Type": "K-8",
@@ -32943,8 +32943,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047242,
         "SED_CODE": "310400010112",
-        "district": "4",
-        "DBN": "4M112"
+        "district": "04",
+        "DBN": "04M112"
       },
       "geometry": {
         "x": -73.93045230662274,
@@ -32973,8 +32973,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047224,
         "SED_CODE": "310400010146",
-        "district": "4",
-        "DBN": "4M146",
+        "district": "04",
+        "DBN": "04M146",
         "sqr": {
           "School Name": "P.S. 146 Ann M. Short",
           "School Type": "Elementary",
@@ -33066,8 +33066,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047225,
         "SED_CODE": "310400010155",
-        "district": "4",
-        "DBN": "4M155",
+        "district": "04",
+        "DBN": "04M155",
         "sqr": {
           "School Name": "P.S. 155 William Paca",
           "School Type": "Elementary",
@@ -33159,8 +33159,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047226,
         "SED_CODE": "310400010171",
-        "district": "4",
-        "DBN": "4M171",
+        "district": "04",
+        "DBN": "04M171",
         "sqr": {
           "School Name": "P.S. 171 Patrick Henry",
           "School Type": "K-8",
@@ -33252,8 +33252,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047228,
         "SED_CODE": "310400010206",
-        "district": "4",
-        "DBN": "4M206",
+        "district": "04",
+        "DBN": "04M206",
         "sqr": {
           "School Name": "P.S. 206 Jose Celso Barbosa",
           "School Type": "K-8",
@@ -33345,8 +33345,8 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047229,
         "SED_CODE": "310400010224",
-        "district": "4",
-        "DBN": "4M224",
+        "district": "04",
+        "DBN": "04M224",
         "sqr": {
           "School Name": "M.S. 224 Manhattan East School for Arts & Academics",
           "School Type": "Middle",
@@ -33438,7 +33438,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000062348,
         "SED_CODE": "310400010375",
-        "district": "4",
+        "district": "04",
         "sqr": {
           "School Name": "Mosaic Preparatory Academy",
           "School Type": "Elementary",
@@ -33530,7 +33530,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000062350,
         "SED_CODE": "310400010377",
-        "district": "4",
+        "district": "04",
         "sqr": {
           "School Name": "Renaissance School of the Arts",
           "School Type": "Middle",
@@ -33622,7 +33622,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000057992,
         "SED_CODE": "310400010497",
-        "district": "4",
+        "district": "04",
         "sqr": {
           "School Name": "Central Park East I",
           "School Type": "Elementary",
@@ -33714,7 +33714,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000046781,
         "SED_CODE": "310400011435",
-        "district": "4"
+        "district": "04"
       },
       "geometry": {
         "x": -73.93373648883141,
@@ -33743,8 +33743,8 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048517,
         "SED_CODE": "310100010015",
-        "district": "1",
-        "DBN": "1M015",
+        "district": "01",
+        "DBN": "01M015",
         "sqr": {
           "School Name": "P.S. 015 Roberto Clemente",
           "School Type": "Elementary",
@@ -33836,8 +33836,8 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048519,
         "SED_CODE": "310100010020",
-        "district": "1",
-        "DBN": "1M020",
+        "district": "01",
+        "DBN": "01M020",
         "sqr": {
           "School Name": "P.S. 020 Anna Silver",
           "School Type": "Elementary",
@@ -33929,8 +33929,8 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048522,
         "SED_CODE": "310100010034",
-        "district": "1",
-        "DBN": "1M034",
+        "district": "01",
+        "DBN": "01M034",
         "sqr": {
           "School Name": "P.S. 034 Franklin D. Roosevelt",
           "School Type": "K-8",
@@ -34022,8 +34022,8 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048510,
         "SED_CODE": "310100010063",
-        "district": "1",
-        "DBN": "1M63",
+        "district": "01",
+        "DBN": "01M63",
         "sqr": {
           "School Name": "The STAR Academy - P.S.63",
           "School Type": "Elementary",
@@ -34115,8 +34115,8 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048511,
         "SED_CODE": "310100010064",
-        "district": "1",
-        "DBN": "1M064",
+        "district": "01",
+        "DBN": "01M064",
         "sqr": {
           "School Name": "P.S. 064 Robert Simon",
           "School Type": "Elementary",
@@ -34208,8 +34208,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047146,
         "SED_CODE": "310500010036",
-        "district": "5",
-        "DBN": "5M036",
+        "district": "05",
+        "DBN": "05M036",
         "sqr": {
           "School Name": "P.S. 036 Margaret Douglas",
           "School Type": "Elementary",
@@ -34301,8 +34301,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047132,
         "SED_CODE": "310500010046",
-        "district": "5",
-        "DBN": "5M046",
+        "district": "05",
+        "DBN": "05M046",
         "sqr": {
           "School Name": "P.S. 046 Arthur Tappan",
           "School Type": "K-8",
@@ -34394,8 +34394,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047133,
         "SED_CODE": "310500010092",
-        "district": "5",
-        "DBN": "5M092",
+        "district": "05",
+        "DBN": "05M092",
         "sqr": {
           "School Name": "P.S. 092 Mary McLeod Bethune",
           "School Type": "Elementary",
@@ -34487,8 +34487,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047134,
         "SED_CODE": "310500010123",
-        "district": "5",
-        "DBN": "5M123",
+        "district": "05",
+        "DBN": "05M123",
         "sqr": {
           "School Name": "P.S. 123 Mahalia Jackson",
           "School Type": "K-8",
@@ -34580,8 +34580,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047154,
         "SED_CODE": "310500010125",
-        "district": "5",
-        "DBN": "5M125",
+        "district": "05",
+        "DBN": "05M125",
         "sqr": {
           "School Name": "P.S. 125 Ralph Bunche",
           "School Type": "Elementary",
@@ -34673,8 +34673,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047155,
         "SED_CODE": "310500010129",
-        "district": "5",
-        "DBN": "5M129",
+        "district": "05",
+        "DBN": "05M129",
         "sqr": {
           "School Name": "P.S. 129 John H. Finley",
           "School Type": "Elementary",
@@ -34766,8 +34766,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047156,
         "SED_CODE": "310500010133",
-        "district": "5",
-        "DBN": "5M133",
+        "district": "05",
+        "DBN": "05M133",
         "sqr": {
           "School Name": "P.S. 133 Fred R Moore",
           "School Type": "Elementary",
@@ -34859,8 +34859,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047158,
         "SED_CODE": "310500010154",
-        "district": "5",
-        "DBN": "5M154",
+        "district": "05",
+        "DBN": "05M154",
         "sqr": {
           "School Name": "P.S. 154 Harriet Tubman",
           "School Type": "Elementary",
@@ -34952,8 +34952,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047159,
         "SED_CODE": "310500010161",
-        "district": "5",
-        "DBN": "5M161",
+        "district": "05",
+        "DBN": "05M161",
         "sqr": {
           "School Name": "P.S. 161 Pedro Albizu Campos",
           "School Type": "K-8",
@@ -35045,8 +35045,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047141,
         "SED_CODE": "310500010175",
-        "district": "5",
-        "DBN": "5M175",
+        "district": "05",
+        "DBN": "05M175",
         "sqr": {
           "School Name": "P.S. 175 Henry H Garnet",
           "School Type": "Elementary",
@@ -35138,8 +35138,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047142,
         "SED_CODE": "310500010194",
-        "district": "5",
-        "DBN": "5M194",
+        "district": "05",
+        "DBN": "05M194",
         "sqr": {
           "School Name": "P.S. 194 Countee Cullen",
           "School Type": "Elementary",
@@ -35231,8 +35231,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047111,
         "SED_CODE": "310500010197",
-        "district": "5",
-        "DBN": "5M197",
+        "district": "05",
+        "DBN": "05M197",
         "sqr": {
           "School Name": "P.S. 197 John B. Russwurm",
           "School Type": "Elementary",
@@ -35324,8 +35324,8 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048514,
         "SED_CODE": "310100010134",
-        "district": "1",
-        "DBN": "1M134",
+        "district": "01",
+        "DBN": "01M134",
         "sqr": {
           "School Name": "P.S. 134 Henrietta Szold",
           "School Type": "Elementary",
@@ -35417,8 +35417,8 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048516,
         "SED_CODE": "310100010140",
-        "district": "1",
-        "DBN": "1M140",
+        "district": "01",
+        "DBN": "01M140",
         "sqr": {
           "School Name": "P.S. 140 Nathan Straus",
           "School Type": "K-8",
@@ -35510,8 +35510,8 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048495,
         "SED_CODE": "310100010142",
-        "district": "1",
-        "DBN": "1M142",
+        "district": "01",
+        "DBN": "01M142",
         "sqr": {
           "School Name": "P.S. 142 Amalia Castro",
           "School Type": "Elementary",
@@ -35603,8 +35603,8 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048496,
         "SED_CODE": "310100010184",
-        "district": "1",
-        "DBN": "1M184",
+        "district": "01",
+        "DBN": "01M184",
         "sqr": {
           "School Name": "P.S. 184m Shuang Wen",
           "School Type": "K-8",
@@ -35696,7 +35696,7 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000058054,
         "SED_CODE": "310100010363",
-        "district": "1",
+        "district": "01",
         "sqr": {
           "School Name": "Neighborhood School",
           "School Type": "Elementary",
@@ -35788,7 +35788,7 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000058010,
         "SED_CODE": "310100010364",
-        "district": "1",
+        "district": "01",
         "sqr": {
           "School Name": "Earth School",
           "School Type": "Elementary",
@@ -35880,7 +35880,7 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000062351,
         "SED_CODE": "310100010378",
-        "district": "1",
+        "district": "01",
         "sqr": {
           "School Name": "School for Global Leaders",
           "School Type": "Middle",
@@ -35972,7 +35972,7 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000058093,
         "SED_CODE": "310100010839",
-        "district": "1",
+        "district": "01",
         "sqr": {
           "School Name": "Tompkins Square Middle School",
           "School Type": "Middle",
@@ -36064,7 +36064,7 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000058020,
         "SED_CODE": "310100011292",
-        "district": "1"
+        "district": "01"
       },
       "geometry": {
         "x": -73.98631103630366,
@@ -36093,7 +36093,7 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047128,
         "SED_CODE": "310500010286",
-        "district": "5",
+        "district": "05",
         "sqr": {
           "School Name": "Urban Assembly Academy for Future Leaders",
           "School Type": "Middle",
@@ -36185,7 +36185,7 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000077810,
         "SED_CODE": "310500011157",
-        "district": "5"
+        "district": "05"
       },
       "geometry": {
         "x": -73.93909032828068,
@@ -36214,7 +36214,7 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000060372,
         "SED_CODE": "310500011362",
-        "district": "5",
+        "district": "05",
         "sqr": {
           "School Name": "Columbia Secondary School",
           "School Type": "Middle",
@@ -36306,7 +36306,7 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000046774,
         "SED_CODE": "310100011450",
-        "district": "1",
+        "district": "01",
         "sqr": {
           "School Name": "East Side Community School",
           "School Type": "Middle",
@@ -36398,7 +36398,7 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000046721,
         "SED_CODE": "310100011458",
-        "district": "1"
+        "district": "01"
       },
       "geometry": {
         "x": -73.99059929925122,
@@ -36427,8 +36427,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048411,
         "SED_CODE": "310200010001",
-        "district": "2",
-        "DBN": "2M001",
+        "district": "02",
+        "DBN": "02M001",
         "sqr": {
           "School Name": "P.S. 001 Alfred E. Smith",
           "School Type": "Elementary",
@@ -36520,8 +36520,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048421,
         "SED_CODE": "310200010002",
-        "district": "2",
-        "DBN": "2M002",
+        "district": "02",
+        "DBN": "02M002",
         "sqr": {
           "School Name": "P.S. 002 Meyer London",
           "School Type": "Elementary",
@@ -36613,8 +36613,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048412,
         "SED_CODE": "310200010003",
-        "district": "2",
-        "DBN": "2M003",
+        "district": "02",
+        "DBN": "02M003",
         "sqr": {
           "School Name": "P.S. 003 Charrette School",
           "School Type": "Elementary",
@@ -36706,8 +36706,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048413,
         "SED_CODE": "310200010006",
-        "district": "2",
-        "DBN": "2M006",
+        "district": "02",
+        "DBN": "02M006",
         "sqr": {
           "School Name": "P.S. 006 Lillie D. Blake",
           "School Type": "Elementary",
@@ -36799,8 +36799,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048401,
         "SED_CODE": "310200010033",
-        "district": "2",
-        "DBN": "2M033",
+        "district": "02",
+        "DBN": "02M033",
         "sqr": {
           "School Name": "P.S. 033 Chelsea Prep",
           "School Type": "Elementary",
@@ -36892,8 +36892,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047033,
         "SED_CODE": "310600010004",
-        "district": "6",
-        "DBN": "6M004",
+        "district": "06",
+        "DBN": "06M004",
         "sqr": {
           "School Name": "P.S. 004 Duke Ellington",
           "School Type": "Elementary",
@@ -36985,8 +36985,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047034,
         "SED_CODE": "310600010005",
-        "district": "6",
-        "DBN": "6M005",
+        "district": "06",
+        "DBN": "06M005",
         "sqr": {
           "School Name": "P.S. 005 Ellen Lurie",
           "School Type": "Elementary",
@@ -37078,8 +37078,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047035,
         "SED_CODE": "310600010008",
-        "district": "6",
-        "DBN": "6M008",
+        "district": "06",
+        "DBN": "06M008",
         "sqr": {
           "School Name": "P.S. 008 Luis Belliard",
           "School Type": "Elementary",
@@ -37171,8 +37171,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047038,
         "SED_CODE": "310600010028",
-        "district": "6",
-        "DBN": "6M028",
+        "district": "06",
+        "DBN": "06M028",
         "sqr": {
           "School Name": "P.S. 028 Wright Brothers",
           "School Type": "Elementary",
@@ -37264,8 +37264,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047009,
         "SED_CODE": "310600010098",
-        "district": "6",
-        "DBN": "6M098",
+        "district": "06",
+        "DBN": "06M098",
         "sqr": {
           "School Name": "P.S. 098 Shorac Kappock",
           "School Type": "Elementary",
@@ -37357,8 +37357,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047010,
         "SED_CODE": "310600010115",
-        "district": "6",
-        "DBN": "6M115",
+        "district": "06",
+        "DBN": "06M115",
         "sqr": {
           "School Name": "P.S. 115 Alexander Humboldt",
           "School Type": "Elementary",
@@ -37450,8 +37450,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047012,
         "SED_CODE": "310600010128",
-        "district": "6",
-        "DBN": "6M128",
+        "district": "06",
+        "DBN": "06M128",
         "sqr": {
           "School Name": "P.S. 128 Audubon",
           "School Type": "Elementary",
@@ -37543,8 +37543,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047013,
         "SED_CODE": "310600010132",
-        "district": "6",
-        "DBN": "6M132",
+        "district": "06",
+        "DBN": "06M132",
         "sqr": {
           "School Name": "P.S. 132 Juan Pablo Duarte",
           "School Type": "Elementary",
@@ -37636,8 +37636,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047022,
         "SED_CODE": "310600010143",
-        "district": "6",
-        "DBN": "6M143",
+        "district": "06",
+        "DBN": "06M143",
         "sqr": {
           "School Name": "J.H.S. 143 Eleanor Roosevelt",
           "School Type": "Middle",
@@ -37729,8 +37729,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047023,
         "SED_CODE": "310600010152",
-        "district": "6",
-        "DBN": "6M152",
+        "district": "06",
+        "DBN": "06M152",
         "sqr": {
           "School Name": "P.S. 152 Dyckman Valley",
           "School Type": "Elementary",
@@ -37822,8 +37822,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048390,
         "SED_CODE": "310200010041",
-        "district": "2",
-        "DBN": "2M041",
+        "district": "02",
+        "DBN": "02M041",
         "sqr": {
           "School Name": "P.S. 041 Greenwich Village",
           "School Type": "Elementary",
@@ -37915,8 +37915,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048391,
         "SED_CODE": "310200010042",
-        "district": "2",
-        "DBN": "2M042",
+        "district": "02",
+        "DBN": "02M042",
         "sqr": {
           "School Name": "P.S. 042 Benjamin Altman",
           "School Type": "Elementary",
@@ -38008,7 +38008,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000046858,
         "SED_CODE": "310200010047",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.98162967381056,
@@ -38037,8 +38037,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048396,
         "SED_CODE": "310200010077",
-        "district": "2",
-        "DBN": "2M077",
+        "district": "02",
+        "DBN": "02M077",
         "sqr": {
           "School Name": "P.S. 77 Lower Lab School",
           "School Type": "Elementary",
@@ -38130,8 +38130,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048397,
         "SED_CODE": "310200010089",
-        "district": "2",
-        "DBN": "2M089",
+        "district": "02",
+        "DBN": "02M089",
         "sqr": {
           "School Name": "P.S. 89",
           "School Type": "Elementary",
@@ -38223,8 +38223,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048398,
         "SED_CODE": "310200010104",
-        "district": "2",
-        "DBN": "2M104",
+        "district": "02",
+        "DBN": "02M104",
         "sqr": {
           "School Name": "J.H.S. 104 Simon Baruch",
           "School Type": "Middle",
@@ -38316,8 +38316,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048403,
         "SED_CODE": "310200010111",
-        "district": "2",
-        "DBN": "2M111",
+        "district": "02",
+        "DBN": "02M111",
         "sqr": {
           "School Name": "P.S. 111 Adolph S. Ochs",
           "School Type": "Elementary",
@@ -38409,8 +38409,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048388,
         "SED_CODE": "310200010116",
-        "district": "2",
-        "DBN": "2M116",
+        "district": "02",
+        "DBN": "02M116",
         "sqr": {
           "School Name": "P.S. 116 Mary Lindley Murray",
           "School Type": "Elementary",
@@ -38502,8 +38502,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048389,
         "SED_CODE": "310200010124",
-        "district": "2",
-        "DBN": "2M124",
+        "district": "02",
+        "DBN": "02M124",
         "sqr": {
           "School Name": "P.S. 124 Yung Wing",
           "School Type": "Elementary",
@@ -38595,8 +38595,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048399,
         "SED_CODE": "310200010126",
-        "district": "2",
-        "DBN": "2M126",
+        "district": "02",
+        "DBN": "02M126",
         "sqr": {
           "School Name": "P.S. 126 Jacob August Riis",
           "School Type": "K-8",
@@ -38688,8 +38688,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048400,
         "SED_CODE": "310200010130",
-        "district": "2",
-        "DBN": "2M130",
+        "district": "02",
+        "DBN": "02M130",
         "sqr": {
           "School Name": "P.S. 130 Hernando De Soto",
           "School Type": "Elementary",
@@ -38781,8 +38781,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048382,
         "SED_CODE": "310200010131",
-        "district": "2",
-        "DBN": "2M131",
+        "district": "02",
+        "DBN": "02M131",
         "sqr": {
           "School Name": "M.S. 131",
           "School Type": "Middle",
@@ -38874,8 +38874,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047005,
         "SED_CODE": "310600010153",
-        "district": "6",
-        "DBN": "6M153",
+        "district": "06",
+        "DBN": "06M153",
         "sqr": {
           "School Name": "P.S. 153 Adam Clayton Powell",
           "School Type": "Elementary",
@@ -38967,8 +38967,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047007,
         "SED_CODE": "310600010173",
-        "district": "6",
-        "DBN": "6M173",
+        "district": "06",
+        "DBN": "06M173",
         "sqr": {
           "School Name": "P.S./I.S. 173 Fort Washington School in the Heights",
           "School Type": "K-8",
@@ -39060,8 +39060,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000046991,
         "SED_CODE": "310600010187",
-        "district": "6",
-        "DBN": "6M187",
+        "district": "06",
+        "DBN": "06M187",
         "sqr": {
           "School Name": "P.S./I.S. 187 Hudson Cliffs",
           "School Type": "K-8",
@@ -39153,8 +39153,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000046992,
         "SED_CODE": "310600010189",
-        "district": "6",
-        "DBN": "6M189",
+        "district": "06",
+        "DBN": "06M189",
         "sqr": {
           "School Name": "P.S. 189",
           "School Type": "Elementary",
@@ -39246,8 +39246,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000046993,
         "SED_CODE": "310600010192",
-        "district": "6",
-        "DBN": "6M192",
+        "district": "06",
+        "DBN": "06M192",
         "sqr": {
           "School Name": "P.S. 192 Jacob H. Schiff",
           "School Type": "Elementary",
@@ -39339,7 +39339,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000083447,
         "SED_CODE": "310600010209",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "Hamilton Grange Middle School",
           "School Type": "Middle",
@@ -39431,7 +39431,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000057975,
         "SED_CODE": "310600010311",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "Amistad Dual Language School",
           "School Type": "K-8",
@@ -39523,7 +39523,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000058053,
         "SED_CODE": "310600010314",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "Muscota",
           "School Type": "Elementary",
@@ -39615,8 +39615,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000058056,
         "SED_CODE": "310600010319",
-        "district": "6",
-        "DBN": "6M319",
+        "district": "06",
+        "DBN": "06M319",
         "sqr": {
           "School Name": "M.S. 319 - Maria Teresa",
           "School Type": "Middle",
@@ -39708,8 +39708,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000059089,
         "SED_CODE": "310600010322",
-        "district": "6",
-        "DBN": "6M322",
+        "district": "06",
+        "DBN": "06M322",
         "sqr": {
           "School Name": "Middle School 322",
           "School Type": "Middle",
@@ -39801,8 +39801,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000058062,
         "SED_CODE": "310600010324",
-        "district": "6",
-        "DBN": "6M324",
+        "district": "06",
+        "DBN": "06M324",
         "sqr": {
           "School Name": "M.S. 324 - Patria Mirabal",
           "School Type": "Middle",
@@ -39894,7 +39894,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048384,
         "SED_CODE": "310200010151",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "Yorkville Community School",
           "School Type": "Elementary",
@@ -39986,8 +39986,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048371,
         "SED_CODE": "310200010167",
-        "district": "2",
-        "DBN": "2M167",
+        "district": "02",
+        "DBN": "02M167",
         "sqr": {
           "School Name": "J.H.S. 167 Robert F. Wagner",
           "School Type": "Middle",
@@ -40079,7 +40079,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000083464,
         "SED_CODE": "310200010177",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "Yorkville East Middle School",
           "School Type": "Middle",
@@ -40171,8 +40171,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048374,
         "SED_CODE": "310200010198",
-        "district": "2",
-        "DBN": "2M198",
+        "district": "02",
+        "DBN": "02M198",
         "sqr": {
           "School Name": "P.S. 198 Isidor E. Ida Straus",
           "School Type": "Elementary",
@@ -40264,8 +40264,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048375,
         "SED_CODE": "310200010212",
-        "district": "2",
-        "DBN": "2M212",
+        "district": "02",
+        "DBN": "02M212",
         "sqr": {
           "School Name": "P.S. 212 Midtown West",
           "School Type": "Elementary",
@@ -40357,8 +40357,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048378,
         "SED_CODE": "310200010234",
-        "district": "2",
-        "DBN": "2M234",
+        "district": "02",
+        "DBN": "02M234",
         "sqr": {
           "School Name": "P.S. 234 Independence School",
           "School Type": "Elementary",
@@ -40450,7 +40450,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000065451,
         "SED_CODE": "310200010276",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "Battery Park City School",
           "School Type": "K-8",
@@ -40542,7 +40542,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000060397,
         "SED_CODE": "310600010366",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "Washington Heights Academy",
           "School Type": "K-8",
@@ -40634,7 +40634,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000075019,
         "SED_CODE": "310600010513",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "Castle Bridge School",
           "School Type": "Elementary",
@@ -40726,8 +40726,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047021,
         "SED_CODE": "310600010528",
-        "district": "6",
-        "DBN": "6M528",
+        "district": "06",
+        "DBN": "06M528",
         "sqr": {
           "School Name": "I.S. 528 Bea Fuller Rodgers School",
           "School Type": "Middle",
@@ -40819,7 +40819,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000083449,
         "SED_CODE": "310600011211",
-        "district": "6"
+        "district": "06"
       },
       "geometry": {
         "x": -73.92476128021023,
@@ -40848,7 +40848,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000059072,
         "SED_CODE": "310600011293",
-        "district": "6"
+        "district": "06"
       },
       "geometry": {
         "x": -73.93013171259743,
@@ -40877,7 +40877,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000059614,
         "SED_CODE": "310600011346",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "Community Health Academy of the Heights",
           "School Type": "Middle",
@@ -40969,7 +40969,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000059619,
         "SED_CODE": "310600011348",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "Washington Heights Expeditionary Learning School",
           "School Type": "K-8",
@@ -65901,8 +65901,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047015,
         "SED_CODE": "310600010210",
-        "district": "6",
-        "DBN": "6M210",
+        "district": "06",
+        "DBN": "06M210",
         "sqr": {
           "School Name": "P.S./I.S. 210 - Twenty-first Century Academy for Community Leadership",
           "School Type": "K-8",
@@ -66407,7 +66407,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000085448,
         "SED_CODE": "310300011291",
-        "district": "3",
+        "district": "03",
         "sqr": {
           "School Name": "West End Secondary School",
           "School Type": "Middle",
@@ -66499,8 +66499,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047145,
         "SED_CODE": "310500010030",
-        "district": "5",
-        "DBN": "5M030",
+        "district": "05",
+        "DBN": "05M030",
         "sqr": {
           "School Name": "P.S. 030 Hernandez/Hughes",
           "School Type": "Elementary",
@@ -66592,7 +66592,7 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000046704,
         "SED_CODE": "310500011670",
-        "district": "5"
+        "district": "05"
       },
       "geometry": {
         "x": -73.94422185754883,
@@ -66621,8 +66621,8 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047039,
         "SED_CODE": "310600010048",
-        "district": "6",
-        "DBN": "6M048",
+        "district": "06",
+        "DBN": "06M048",
         "sqr": {
           "School Name": "P.S. 048 P.O. Michael J. Buczek",
           "School Type": "Elementary",
@@ -66714,7 +66714,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000046990,
         "SED_CODE": "310600010178",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "Professor Juan Bosch Public School",
           "School Type": "Elementary",
@@ -67803,8 +67803,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047457,
         "SED_CODE": "310300010333",
-        "district": "3",
-        "DBN": "3M333",
+        "district": "03",
+        "DBN": "03M333",
         "sqr": {
           "School Name": "P.S. 333 Manhattan School for Children",
           "School Type": "K-8",
@@ -67896,7 +67896,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000059081,
         "SED_CODE": "310200010896",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "Lower Manhattan Community Middle School",
           "School Type": "Middle",
@@ -68564,8 +68564,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047434,
         "SED_CODE": "310300010247",
-        "district": "3",
-        "DBN": "3M247"
+        "district": "03",
+        "DBN": "03M247"
       },
       "geometry": {
         "x": -73.97793764933066,
@@ -68594,8 +68594,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047462,
         "SED_CODE": "310300010166",
-        "district": "3",
-        "DBN": "3M166",
+        "district": "03",
+        "DBN": "03M166",
         "sqr": {
           "School Name": "P.S. 166 The Richard Rodgers School of The Arts and Technology",
           "School Type": "Elementary",
@@ -68687,7 +68687,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000047253,
         "SED_CODE": "310400010057",
-        "district": "4"
+        "district": "04"
       },
       "geometry": {
         "x": -73.94144474179069,
@@ -68745,8 +68745,8 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000047125,
         "SED_CODE": "310500010200",
-        "district": "5",
-        "DBN": "5M200",
+        "district": "05",
+        "DBN": "05M200",
         "sqr": {
           "School Name": "P.S. 200- The James McCune Smith School",
           "School Type": "Elementary",
@@ -69436,7 +69436,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000046820,
         "SED_CODE": "310200011225",
-        "district": "2",
+        "district": "02",
         "sqr": {
           "School Name": "Ella Baker School",
           "School Type": "K-8",
@@ -69528,8 +69528,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048386,
         "SED_CODE": "310200010158",
-        "district": "2",
-        "DBN": "2M158",
+        "district": "02",
+        "DBN": "02M158",
         "sqr": {
           "School Name": "P.S. 158 Bayard Taylor",
           "School Type": "Elementary",
@@ -69621,8 +69621,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048372,
         "SED_CODE": "310200010183",
-        "district": "2",
-        "DBN": "2M183",
+        "district": "02",
+        "DBN": "02M183",
         "sqr": {
           "School Name": "P.S. 183 Robert L. Stevenson",
           "School Type": "Elementary",
@@ -69981,7 +69981,7 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000058091,
         "SED_CODE": "310300011307",
-        "district": "3"
+        "district": "03"
       },
       "geometry": {
         "x": -73.9849604650727,
@@ -72702,7 +72702,7 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000059618,
         "SED_CODE": "310500011369",
-        "district": "5"
+        "district": "05"
       },
       "geometry": {
         "x": -73.95555777542904,
@@ -72731,7 +72731,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000077811,
         "SED_CODE": "310600010103",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "Dos Puentes Elementary School",
           "School Type": "Elementary",
@@ -72823,8 +72823,8 @@
         "SDL_DESC": "NYC GEOG DIST 3",
         "INSTIT_ID": 800000047430,
         "SED_CODE": "310300010243",
-        "district": "3",
-        "DBN": "3M243",
+        "district": "03",
+        "DBN": "03M243",
         "sqr": {
           "School Name": "M.S. 243 Center School",
           "School Type": "Middle",
@@ -74866,7 +74866,7 @@
         "SDL_DESC": "NYC GEOG DIST 6",
         "INSTIT_ID": 800000047040,
         "SED_CODE": "310600010052",
-        "district": "6",
+        "district": "06",
         "sqr": {
           "School Name": "Harold O. Levy School",
           "School Type": "Middle",
@@ -75050,7 +75050,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000058069,
         "SED_CODE": "310400010037",
-        "district": "4",
+        "district": "04",
         "sqr": {
           "School Name": "River East Elementary",
           "School Type": "Elementary",
@@ -75142,7 +75142,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000057993,
         "SED_CODE": "310400010964",
-        "district": "4",
+        "district": "04",
         "sqr": {
           "School Name": "Central Park East II",
           "School Type": "K-8",
@@ -75920,8 +75920,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048392,
         "SED_CODE": "310200010051",
-        "district": "2",
-        "DBN": "2M051",
+        "district": "02",
+        "DBN": "02M051",
         "sqr": {
           "School Name": "P.S. 051 Elias Howe",
           "School Type": "Elementary",
@@ -76013,8 +76013,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048402,
         "SED_CODE": "310200010040",
-        "district": "2",
-        "DBN": "2M040",
+        "district": "02",
+        "DBN": "02M040",
         "sqr": {
           "School Name": "P.S. 040 Augustus Saint-Gaudens",
           "School Type": "Elementary",
@@ -76190,8 +76190,8 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000048379,
         "SED_CODE": "310200010255",
-        "district": "2",
-        "DBN": "2M255",
+        "district": "02",
+        "DBN": "02M255",
         "sqr": {
           "School Name": "M.S. 255 Salk School of Science",
           "School Type": "Middle",
@@ -76283,7 +76283,7 @@
         "SDL_DESC": "NYC GEOG DIST 4",
         "INSTIT_ID": 800000062346,
         "SED_CODE": "310400010372",
-        "district": "4",
+        "district": "04",
         "sqr": {
           "School Name": "Esperanza Preparatory Academy",
           "School Type": "Middle",
@@ -77581,8 +77581,8 @@
         "SDL_DESC": "NYC GEOG DIST 1",
         "INSTIT_ID": 800000048513,
         "SED_CODE": "310100010110",
-        "district": "1",
-        "DBN": "1M110",
+        "district": "01",
+        "DBN": "01M110",
         "sqr": {
           "School Name": "P.S. 110 Florence Nightingale",
           "School Type": "Elementary",
@@ -77786,7 +77786,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000046823,
         "SED_CODE": "310200011500",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.98111612778087,
@@ -77815,7 +77815,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000069136,
         "SED_CODE": "310200011427",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.98111612778087,
@@ -77844,7 +77844,7 @@
         "SDL_DESC": "NYC GEOG DIST 2",
         "INSTIT_ID": 800000069137,
         "SED_CODE": "310200011432",
-        "district": "2"
+        "district": "02"
       },
       "geometry": {
         "x": -73.98111612778087,
@@ -77873,7 +77873,7 @@
         "SDL_DESC": "NYC GEOG DIST 5",
         "INSTIT_ID": 800000046764,
         "SED_CODE": "310500011499",
-        "district": "5",
+        "district": "05",
         "sqr": {
           "School Name": "Frederick Douglass Academy",
           "School Type": "Middle",

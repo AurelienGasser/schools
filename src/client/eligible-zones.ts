@@ -1,6 +1,7 @@
 import {
   map,
   allZones,
+  allMarkers,
   passingDbns,
   parseDbns,
 } from "./map-client.js";
@@ -60,5 +61,32 @@ const unzonedElemLayer = L.geoJSON(null, {
     unzonedElemLayer.addTo(map);
   } else {
     map.removeLayer(unzonedElemLayer);
+  }
+});
+
+const missingSchoolElemLayer = L.geoJSON(null, {
+  style: {
+    color: "#dc2626",
+    weight: 2.5,
+    opacity: 0.9,
+    fillColor: "#dc2626",
+    fillOpacity: 0.35,
+  },
+  interactive: false,
+});
+
+(document.getElementById("show-missing-school-elem-zones") as HTMLInputElement).addEventListener("change", (e) => {
+  if ((e.target as HTMLInputElement).checked) {
+    const knownDbns = new Set(allMarkers.map(({ p }) => p.dbn).filter(Boolean));
+    missingSchoolElemLayer.clearLayers();
+    for (const z of allZones) {
+      if (z.zoneType !== "elementary") continue;
+      const dbns = parseDbns(z.feature.properties.dbn);
+      if (dbns.length > 0 && !dbns.some((d) => knownDbns.has(d)))
+        missingSchoolElemLayer.addData(z.feature);
+    }
+    missingSchoolElemLayer.addTo(map);
+  } else {
+    map.removeLayer(missingSchoolElemLayer);
   }
 });

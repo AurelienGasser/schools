@@ -70,6 +70,31 @@
       map.removeLayer(unzonedElemLayer);
     }
   });
+  var missingSchoolElemLayer = L.geoJSON(null, {
+    style: {
+      color: "#dc2626",
+      weight: 2.5,
+      opacity: 0.9,
+      fillColor: "#dc2626",
+      fillOpacity: 0.35
+    },
+    interactive: false
+  });
+  document.getElementById("show-missing-school-elem-zones").addEventListener("change", (e) => {
+    if (e.target.checked) {
+      const knownDbns = new Set(allMarkers.map(({ p }) => p.dbn).filter(Boolean));
+      missingSchoolElemLayer.clearLayers();
+      for (const z of allZones) {
+        if (z.zoneType !== "elementary") continue;
+        const dbns = parseDbns(z.feature.properties.dbn);
+        if (dbns.length > 0 && !dbns.some((d) => knownDbns.has(d)))
+          missingSchoolElemLayer.addData(z.feature);
+      }
+      missingSchoolElemLayer.addTo(map);
+    } else {
+      map.removeLayer(missingSchoolElemLayer);
+    }
+  });
 
   // src/client/map-client.ts
   var map = L.map("map").setView([40.6928, -73.956], 13);

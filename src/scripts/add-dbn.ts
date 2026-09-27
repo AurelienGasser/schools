@@ -31,7 +31,17 @@ function extractSchoolNumber(name: string): string | null {
 function extractDistrict(sdlDesc: string): string | null {
   // Works for "NYC GEOG DIST 21", "NYC D75 PROGRAMS", "NYC CHARTER DIST 84"
   const m = /\d+/.exec(sdlDesc);
-  return m ? m[0] : null;
+  if (!m) {
+    return null;
+  }
+  switch (m.length) {
+    case 1:
+      return m[0].padStart(2, "0");
+    case 2:
+      return m[0];
+    default:
+      throw new Error(`Unexpected school district name: ${m}`);
+  }
 }
 
 const schoolsJson = JSON.parse(readFileSync(path, "utf-8"));
