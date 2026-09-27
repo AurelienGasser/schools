@@ -560,7 +560,7 @@
       for (const toShow of [...mainSchools, ...schoolsInZone(zone)]) {
         const entry = allMarkers.find((m) => m.p === toShow);
         if (entry && !schoolPinsLayer.hasLayer(entry.marker)) {
-          entry.marker.setOpacity(0.45);
+          if (!academicPassingMarkers.has(toShow)) entry.marker.setOpacity(0.45);
           entry.marker.addTo(map);
           selectedFadedMarkers.push(entry.marker);
         }
@@ -585,6 +585,7 @@
   };
   var allMarkers = [];
   var passingDbns = /* @__PURE__ */ new Set();
+  var academicPassingMarkers = /* @__PURE__ */ new Set();
   __schoolPoints.forEach((p) => {
     const isMobile2 = window.innerWidth <= 640;
     const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(
@@ -597,6 +598,7 @@
     allMarkers.push({ marker, p });
   });
   function applyFilters() {
+    academicPassingMarkers.clear();
     const academicValue = document.querySelector(
       'input[name="academic-filter"]:checked'
     )?.value ?? "any";
@@ -625,6 +627,7 @@
         const ranks = [elaRating, mathRating, safetyRating, msPassRating].filter(Boolean).map((r) => RATING_RANK[r] ?? -1);
         passesAcademic = Math.min(...ranks) >= minRank;
       }
+      if (passesAcademic) academicPassingMarkers.add(p);
       const passesFilters = passesCommute && passesAcademic;
       const visible = !hideSchools && passesFilters;
       if (visible && !schoolPinsLayer.hasLayer(marker)) {
@@ -639,7 +642,15 @@
     }
     updateEligibleZonesLayer();
   }
-  map.on("click", deselect);
+  map.on("click", (e) => {
+    deselect();
+    const overlayVal = document.querySelector('input[name="overlay"]:checked')?.value;
+    if (overlayVal !== "zipcodes") return;
+    const zones = selectZonesForPoint(e.latlng.lat, e.latlng.lng);
+    if (zones.length === 0) return;
+    const closeLink = `<div style="text-align:right;margin-top:6px"><a href="#" onclick="document.querySelector('.leaflet-popup-close-button').click();return false;" style="font-size:11px;color:#94a3b8;text-decoration:none">close</a></div>`;
+    L.popup().setLatLng(e.latlng).setContent(`<div>${schoolZoneSection(zones)}${closeLink}</div>`).openOn(map);
+  });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       map.closePopup();

@@ -195,7 +195,7 @@ const html = `<!DOCTYPE html>
       top: 12px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 1000;
+      z-index: 650;
       display: flex;
       background: white;
       border-radius: 6px;

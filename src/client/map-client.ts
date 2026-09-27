@@ -176,7 +176,6 @@ L.layerGroup([
   makeZoneGeoJSON(__elementaryZones, "#2563eb", "elementary"),
 ]).addTo(map);
 
-
 let selectedSchoolZones: ZoneEntry[] = [];
 let selectedMainSchoolCircles: any[] = [];
 let selectedFadedMarkers: any[] = [];
@@ -641,7 +640,7 @@ export function selectZonesForPoint(lat: number, lng: number): ZoneEntry[] {
     for (const toShow of [...mainSchools, ...schoolsInZone(zone)]) {
       const entry = allMarkers.find((m) => m.p === toShow);
       if (entry && !schoolPinsLayer.hasLayer(entry.marker)) {
-        entry.marker.setOpacity(0.45);
+        if (!academicPassingMarkers.has(toShow)) entry.marker.setOpacity(0.45);
         entry.marker.addTo(map);
         selectedFadedMarkers.push(entry.marker);
       }
@@ -667,8 +666,10 @@ const RATING_RANK: Record<string, number> = {
   Excellent: 3,
 };
 
-export const allMarkers: Array<{ marker: any; p: (typeof __schoolPoints)[0] }> = [];
+export const allMarkers: Array<{ marker: any; p: (typeof __schoolPoints)[0] }> =
+  [];
 export const passingDbns = new Set<string>();
+const academicPassingMarkers = new Set<(typeof __schoolPoints)[0]>();
 
 // Pins using SVG divIcon
 __schoolPoints.forEach((p) => {
@@ -686,6 +687,7 @@ __schoolPoints.forEach((p) => {
 });
 
 function applyFilters(): void {
+  academicPassingMarkers.clear();
   const academicValue =
     (
       document.querySelector(
@@ -738,6 +740,7 @@ function applyFilters(): void {
       passesAcademic = Math.min(...ranks) >= minRank;
     }
 
+    if (passesAcademic) academicPassingMarkers.add(p);
     const passesFilters = passesCommute && passesAcademic;
     const visible = !hideSchools && passesFilters;
     if (visible && !schoolPinsLayer.hasLayer(marker)) {
@@ -753,7 +756,20 @@ function applyFilters(): void {
   updateEligibleZonesLayer();
 }
 
-map.on("click", deselect);
+map.on("click", (e: any) => {
+  deselect();
+  const overlayVal = (
+    document.querySelector('input[name="overlay"]:checked') as HTMLInputElement
+  )?.value;
+  if (overlayVal !== "zipcodes") return;
+  const zones = selectZonesForPoint(e.latlng.lat, e.latlng.lng);
+  if (zones.length === 0) return;
+  const closeLink = `<div style="text-align:right;margin-top:6px"><a href="#" onclick="document.querySelector('.leaflet-popup-close-button').click();return false;" style="font-size:11px;color:#94a3b8;text-decoration:none">close</a></div>`;
+  L.popup()
+    .setLatLng(e.latlng)
+    .setContent(`<div>${schoolZoneSection(zones)}${closeLink}</div>`)
+    .openOn(map);
+});
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
@@ -814,4 +830,3 @@ document.querySelectorAll('input[name="commute-filter"]').forEach((el) => {
 document
   .getElementById("hide-schools")!
   .addEventListener("change", applyFilters);
-
