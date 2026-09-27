@@ -12,6 +12,8 @@ import {
   commuteRingZones,
   commuteLegend,
 } from "./commute.js";
+import { pointInGeom } from "../../common/geometry.js";
+import { parseDbns } from "../../common/helpers.js";
 
 const schools = schoolsJson as unknown as SchoolsResponse;
 
@@ -83,6 +85,17 @@ const points = features
   }))
   .filter((s) => !s.commuteRange.min || s.commuteRange.min != 60)
   .map((s) => ({ ...s, commute: getCommuteString(s.commuteRange) }));
+
+function getNonEmptyZones(zonesJson: any): any {
+  const filtered = zonesJson.features.filter((f: any) => {
+    const hasDbn = parseDbns(f.properties?.dbn).length > 0;
+    return hasDbn || points.some((p) => pointInGeom(p.lng, p.lat, f.geometry));
+  });
+  return { ...zonesJson, features: filtered };
+}
+
+const nonEmptyElementaryZones = getNonEmptyZones(elementaryZonesJson);
+const nonEmptyMiddleZones = getNonEmptyZones(middleZonesJson);
 
 const legend = Object.entries(COLORS)
   .map(
@@ -262,8 +275,8 @@ const html = `<!DOCTYPE html>
       <label class="toggle-row"><input type="checkbox" id="hide-schools" />Hide all schools</label>
       <div class="control-section-label" style="margin-top:10px">Zones</div>
       <label class="toggle-row"><input type="checkbox" id="show-eligible-zones" />Eligible zones</label>
-      <label class="toggle-row"><input type="checkbox" id="show-unzoned-elem-zones" />Unzoned elem. zones</label>
-      <label class="toggle-row"><input type="checkbox" id="show-missing-school-elem-zones" />Elem. zoned school not found</label>
+      <label class="toggle-row"><input type="checkbox" id="show-no-zoned-school-zones" />No zoned school</label>
+      <label class="toggle-row"><input type="checkbox" id="show-zoned-school-not-found-zones" />Zoned school not found</label>
     </div>
   </div>
   <div id="legend">
@@ -280,7 +293,7 @@ const html = `<!DOCTYPE html>
       ${commuteLegend}
     </div>
   </div>
-  <script>const __schoolPoints = ${JSON.stringify(points)};const __commutePolygonSets = ${JSON.stringify({ rings: commuteRingZones })};const __realEstatePriceZipCodes = ${JSON.stringify(zipCodesJson)};const __elementaryZones = ${JSON.stringify(elementaryZonesJson)};const __middleZones = ${JSON.stringify(middleZonesJson)};</script>
+  <script>const __schoolPoints = ${JSON.stringify(points)};const __commutePolygonSets = ${JSON.stringify({ rings: commuteRingZones })};const __realEstatePriceZipCodes = ${JSON.stringify(zipCodesJson)};const __elementaryZones = ${JSON.stringify(nonEmptyElementaryZones)};const __middleZones = ${JSON.stringify(nonEmptyMiddleZones)};</script>
   <script src="./app.js?v=${Date.now()}"></script>
 </body>
 </html>`;

@@ -18,6 +18,11 @@
     );
   }
 
+  // src/common/helpers.ts
+  function parseDbns(dbn) {
+    return (dbn ?? "").split(",").map((d) => d.trim()).filter(Boolean);
+  }
+
   // src/client/eligible-zones.ts
   var eligibleZonesLayer = L.geoJSON(null, {
     style: {
@@ -47,7 +52,7 @@
       map.removeLayer(eligibleZonesLayer);
     }
   });
-  var unzonedElemLayer = L.geoJSON(null, {
+  var noZonedSchoolLayer = L.geoJSON(null, {
     style: {
       color: "#7c3aed",
       weight: 2.5,
@@ -57,20 +62,20 @@
     },
     interactive: false
   });
-  document.getElementById("show-unzoned-elem-zones").addEventListener("change", (e) => {
+  document.getElementById("show-no-zoned-school-zones").addEventListener("change", (e) => {
     if (e.target.checked) {
-      unzonedElemLayer.clearLayers();
+      noZonedSchoolLayer.clearLayers();
       for (const z of allZones) {
         if (z.zoneType !== "elementary") continue;
         if (parseDbns(z.feature.properties.dbn).length === 0)
-          unzonedElemLayer.addData(z.feature);
+          noZonedSchoolLayer.addData(z.feature);
       }
-      unzonedElemLayer.addTo(map);
+      noZonedSchoolLayer.addTo(map);
     } else {
-      map.removeLayer(unzonedElemLayer);
+      map.removeLayer(noZonedSchoolLayer);
     }
   });
-  var missingSchoolElemLayer = L.geoJSON(null, {
+  var zonedSchoolNotFoundLayer = L.geoJSON(null, {
     style: {
       color: "#dc2626",
       weight: 2.5,
@@ -80,19 +85,19 @@
     },
     interactive: false
   });
-  document.getElementById("show-missing-school-elem-zones").addEventListener("change", (e) => {
+  document.getElementById("show-zoned-school-not-found-zones").addEventListener("change", (e) => {
     if (e.target.checked) {
       const knownDbns = new Set(allMarkers.map(({ p }) => p.dbn).filter(Boolean));
-      missingSchoolElemLayer.clearLayers();
+      zonedSchoolNotFoundLayer.clearLayers();
       for (const z of allZones) {
         if (z.zoneType !== "elementary") continue;
         const dbns = parseDbns(z.feature.properties.dbn);
         if (dbns.length > 0 && !dbns.some((d) => knownDbns.has(d)))
-          missingSchoolElemLayer.addData(z.feature);
+          zonedSchoolNotFoundLayer.addData(z.feature);
       }
-      missingSchoolElemLayer.addTo(map);
+      zonedSchoolNotFoundLayer.addTo(map);
     } else {
-      map.removeLayer(missingSchoolElemLayer);
+      map.removeLayer(zonedSchoolNotFoundLayer);
     }
   });
 
@@ -201,9 +206,6 @@
     makeZoneGeoJSON(__middleZones, "#ea580c", "middle"),
     makeZoneGeoJSON(__elementaryZones, "#2563eb", "elementary")
   ]).addTo(map);
-  function parseDbns(dbn) {
-    return (dbn ?? "").split(",").map((d) => d.trim()).filter(Boolean);
-  }
   var selectedSchoolZones = [];
   var selectedMainSchoolCircles = [];
   var selectedFadedMarkers = [];

@@ -1,9 +1,9 @@
+import { parseDbns } from "../common/helpers.js";
 import {
   map,
   allZones,
   allMarkers,
   passingDbns,
-  parseDbns,
 } from "./map-client.js";
 
 declare const L: any;
@@ -39,7 +39,7 @@ export function updateEligibleZonesLayer(): void {
   }
 });
 
-const unzonedElemLayer = L.geoJSON(null, {
+const noZonedSchoolLayer = L.geoJSON(null, {
   style: {
     color: "#7c3aed",
     weight: 2.5,
@@ -50,21 +50,21 @@ const unzonedElemLayer = L.geoJSON(null, {
   interactive: false,
 });
 
-(document.getElementById("show-unzoned-elem-zones") as HTMLInputElement).addEventListener("change", (e) => {
+(document.getElementById("show-no-zoned-school-zones") as HTMLInputElement).addEventListener("change", (e) => {
   if ((e.target as HTMLInputElement).checked) {
-    unzonedElemLayer.clearLayers();
+    noZonedSchoolLayer.clearLayers();
     for (const z of allZones) {
       if (z.zoneType !== "elementary") continue;
       if (parseDbns(z.feature.properties.dbn).length === 0)
-        unzonedElemLayer.addData(z.feature);
+        noZonedSchoolLayer.addData(z.feature);
     }
-    unzonedElemLayer.addTo(map);
+    noZonedSchoolLayer.addTo(map);
   } else {
-    map.removeLayer(unzonedElemLayer);
+    map.removeLayer(noZonedSchoolLayer);
   }
 });
 
-const missingSchoolElemLayer = L.geoJSON(null, {
+const zonedSchoolNotFoundLayer = L.geoJSON(null, {
   style: {
     color: "#dc2626",
     weight: 2.5,
@@ -75,18 +75,19 @@ const missingSchoolElemLayer = L.geoJSON(null, {
   interactive: false,
 });
 
-(document.getElementById("show-missing-school-elem-zones") as HTMLInputElement).addEventListener("change", (e) => {
+(document.getElementById("show-zoned-school-not-found-zones") as HTMLInputElement).addEventListener("change", (e) => {
   if ((e.target as HTMLInputElement).checked) {
     const knownDbns = new Set(allMarkers.map(({ p }) => p.dbn).filter(Boolean));
-    missingSchoolElemLayer.clearLayers();
+    zonedSchoolNotFoundLayer.clearLayers();
     for (const z of allZones) {
       if (z.zoneType !== "elementary") continue;
       const dbns = parseDbns(z.feature.properties.dbn);
       if (dbns.length > 0 && !dbns.some((d) => knownDbns.has(d)))
-        missingSchoolElemLayer.addData(z.feature);
+        zonedSchoolNotFoundLayer.addData(z.feature);
     }
-    missingSchoolElemLayer.addTo(map);
+    zonedSchoolNotFoundLayer.addTo(map);
   } else {
-    map.removeLayer(missingSchoolElemLayer);
+    map.removeLayer(zonedSchoolNotFoundLayer);
   }
 });
+

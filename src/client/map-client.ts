@@ -1,4 +1,5 @@
 import { pointInGeom } from "../common/geometry.js";
+import { parseDbns } from "../common/helpers.js";
 import { updateEligibleZonesLayer } from "./eligible-zones.js";
 
 declare const L: any;
@@ -174,10 +175,6 @@ L.layerGroup([
   makeZoneGeoJSON(__middleZones, "#ea580c", "middle"),
   makeZoneGeoJSON(__elementaryZones, "#2563eb", "elementary"),
 ]).addTo(map);
-
-export function parseDbns(dbn: string | null | undefined): string[] {
-  return (dbn ?? "").split(",").map((d) => d.trim()).filter(Boolean);
-}
 
 
 let selectedSchoolZones: ZoneEntry[] = [];
