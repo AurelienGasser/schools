@@ -274,7 +274,7 @@ const html = `<!DOCTYPE html>
       <div class="control-section-label" style="margin-top:10px">Schools</div>
       <label class="toggle-row"><input type="checkbox" id="hide-schools" />Hide all schools</label>
       <div class="control-section-label" style="margin-top:10px">Zones</div>
-      <label class="toggle-row"><input type="checkbox" id="show-eligible-zones" />Eligible zones</label>
+      <label class="toggle-row"><input type="checkbox" id="show-eligible-zones" checked />Eligible zones</label>
       <label class="toggle-row"><input type="checkbox" id="show-no-zoned-school-zones" />No zoned school</label>
       <label class="toggle-row"><input type="checkbox" id="show-zoned-school-not-found-zones" />Zoned school not found</label>
     </div>

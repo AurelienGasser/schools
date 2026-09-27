@@ -756,6 +756,10 @@ function applyFilters(): void {
   updateEligibleZonesLayer();
 }
 
+const searchBox = document.getElementById("search-box")!;
+map.on("popupopen", () => { searchBox.style.visibility = "hidden"; });
+map.on("popupclose", () => { searchBox.style.visibility = ""; });
+
 map.on("click", (e: any) => {
   deselect();
   const overlayVal = (

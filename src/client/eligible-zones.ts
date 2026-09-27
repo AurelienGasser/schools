@@ -1,10 +1,5 @@
 import { parseDbns } from "../common/helpers.js";
-import {
-  map,
-  allZones,
-  allMarkers,
-  passingDbns,
-} from "./map-client.js";
+import { map, allZones, allMarkers, passingDbns } from "./map-client.js";
 
 declare const L: any;
 
@@ -22,6 +17,7 @@ export const eligibleZonesLayer = L.geoJSON(null, {
 export function updateEligibleZonesLayer(): void {
   const cb = document.getElementById("show-eligible-zones") as HTMLInputElement;
   if (!cb?.checked) return;
+  if (!map.hasLayer(eligibleZonesLayer)) eligibleZonesLayer.addTo(map);
   eligibleZonesLayer.clearLayers();
   for (const z of allZones) {
     if (z.zoneType !== "elementary") continue;
@@ -30,7 +26,9 @@ export function updateEligibleZonesLayer(): void {
   }
 }
 
-(document.getElementById("show-eligible-zones") as HTMLInputElement).addEventListener("change", (e) => {
+(
+  document.getElementById("show-eligible-zones") as HTMLInputElement
+).addEventListener("change", (e) => {
   if ((e.target as HTMLInputElement).checked) {
     eligibleZonesLayer.addTo(map);
     updateEligibleZonesLayer();
@@ -50,7 +48,9 @@ const noZonedSchoolLayer = L.geoJSON(null, {
   interactive: false,
 });
 
-(document.getElementById("show-no-zoned-school-zones") as HTMLInputElement).addEventListener("change", (e) => {
+(
+  document.getElementById("show-no-zoned-school-zones") as HTMLInputElement
+).addEventListener("change", (e) => {
   if ((e.target as HTMLInputElement).checked) {
     noZonedSchoolLayer.clearLayers();
     for (const z of allZones) {
@@ -75,7 +75,11 @@ const zonedSchoolNotFoundLayer = L.geoJSON(null, {
   interactive: false,
 });
 
-(document.getElementById("show-zoned-school-not-found-zones") as HTMLInputElement).addEventListener("change", (e) => {
+(
+  document.getElementById(
+    "show-zoned-school-not-found-zones",
+  ) as HTMLInputElement
+).addEventListener("change", (e) => {
   if ((e.target as HTMLInputElement).checked) {
     const knownDbns = new Set(allMarkers.map(({ p }) => p.dbn).filter(Boolean));
     zonedSchoolNotFoundLayer.clearLayers();
@@ -90,4 +94,3 @@ const zonedSchoolNotFoundLayer = L.geoJSON(null, {
     map.removeLayer(zonedSchoolNotFoundLayer);
   }
 });
-

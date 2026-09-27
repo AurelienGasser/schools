@@ -37,6 +37,7 @@
   function updateEligibleZonesLayer() {
     const cb = document.getElementById("show-eligible-zones");
     if (!cb?.checked) return;
+    if (!map.hasLayer(eligibleZonesLayer)) eligibleZonesLayer.addTo(map);
     eligibleZonesLayer.clearLayers();
     for (const z of allZones) {
       if (z.zoneType !== "elementary") continue;
@@ -85,7 +86,9 @@
     },
     interactive: false
   });
-  document.getElementById("show-zoned-school-not-found-zones").addEventListener("change", (e) => {
+  document.getElementById(
+    "show-zoned-school-not-found-zones"
+  ).addEventListener("change", (e) => {
     if (e.target.checked) {
       const knownDbns = new Set(allMarkers.map(({ p }) => p.dbn).filter(Boolean));
       zonedSchoolNotFoundLayer.clearLayers();
@@ -642,6 +645,13 @@
     }
     updateEligibleZonesLayer();
   }
+  var searchBox = document.getElementById("search-box");
+  map.on("popupopen", () => {
+    searchBox.style.visibility = "hidden";
+  });
+  map.on("popupclose", () => {
+    searchBox.style.visibility = "";
+  });
   map.on("click", (e) => {
     deselect();
     const overlayVal = document.querySelector('input[name="overlay"]:checked')?.value;
