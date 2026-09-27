@@ -37,3 +37,28 @@ export function updateEligibleZonesLayer(): void {
     map.removeLayer(eligibleZonesLayer);
   }
 });
+
+const unzonedElemLayer = L.geoJSON(null, {
+  style: {
+    color: "#7c3aed",
+    weight: 2.5,
+    opacity: 0.9,
+    fillColor: "#7c3aed",
+    fillOpacity: 0.35,
+  },
+  interactive: false,
+});
+
+(document.getElementById("show-unzoned-elem-zones") as HTMLInputElement).addEventListener("change", (e) => {
+  if ((e.target as HTMLInputElement).checked) {
+    unzonedElemLayer.clearLayers();
+    for (const z of allZones) {
+      if (z.zoneType !== "elementary") continue;
+      if (parseDbns(z.feature.properties.dbn).length === 0)
+        unzonedElemLayer.addData(z.feature);
+    }
+    unzonedElemLayer.addTo(map);
+  } else {
+    map.removeLayer(unzonedElemLayer);
+  }
+});

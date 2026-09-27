@@ -262,6 +262,7 @@ const html = `<!DOCTYPE html>
       <label class="toggle-row"><input type="checkbox" id="hide-schools" />Hide all schools</label>
       <div class="control-section-label" style="margin-top:10px">Zones</div>
       <label class="toggle-row"><input type="checkbox" id="show-eligible-zones" />Eligible zones</label>
+      <label class="toggle-row"><input type="checkbox" id="show-unzoned-elem-zones" />Unzoned elem. zones</label>
     </div>
   </div>
   <div id="legend">
