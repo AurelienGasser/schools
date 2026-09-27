@@ -18,6 +18,36 @@
     );
   }
 
+  // src/client/eligible-zones.ts
+  var eligibleZonesLayer = L.geoJSON(null, {
+    style: {
+      color: "#2563eb",
+      weight: 2.5,
+      opacity: 0.9,
+      fillColor: "#2563eb",
+      fillOpacity: 0.35
+    },
+    interactive: false
+  });
+  function updateEligibleZonesLayer() {
+    const cb = document.getElementById("show-eligible-zones");
+    if (!cb?.checked) return;
+    eligibleZonesLayer.clearLayers();
+    for (const z of allZones) {
+      if (z.zoneType !== "elementary") continue;
+      if (parseDbns(z.feature.properties.dbn).some((d) => passingDbns.has(d)))
+        eligibleZonesLayer.addData(z.feature);
+    }
+  }
+  document.getElementById("show-eligible-zones").addEventListener("change", (e) => {
+    if (e.target.checked) {
+      eligibleZonesLayer.addTo(map);
+      updateEligibleZonesLayer();
+    } else {
+      map.removeLayer(eligibleZonesLayer);
+    }
+  });
+
   // src/client/map-client.ts
   var map = L.map("map").setView([40.6928, -73.956], 13);
   L.tileLayer(
@@ -68,9 +98,7 @@
         feature.properties.avgPrice
       );
       return {
-        color: "#64748b",
-        weight: 1,
-        opacity: 0.5,
+        stroke: false,
         fillColor,
         fillOpacity
       };
@@ -125,6 +153,9 @@
     makeZoneGeoJSON(__middleZones, "#ea580c", "middle"),
     makeZoneGeoJSON(__elementaryZones, "#2563eb", "elementary")
   ]).addTo(map);
+  function parseDbns(dbn) {
+    return (dbn ?? "").split(",").map((d) => d.trim()).filter(Boolean);
+  }
   var selectedSchoolZones = [];
   var selectedMainSchoolCircles = [];
   var selectedFadedMarkers = [];
@@ -417,7 +448,7 @@
     const label = props.label ? `Zone ${props.label}` : "";
     const district = props.schooldist ? `District ${parseInt(props.schooldist)}` : "";
     const remarks = props.remarks ?? "";
-    const dbns = (props.dbn ?? "").split(",").map((d) => d.trim()).filter(Boolean).join(", ");
+    const dbns = parseDbns(props.dbn).join(", ");
     return [label, district, remarks, dbns].filter(Boolean).join(" \xB7 ");
   }
   function schoolZoneSection(zones) {
@@ -461,8 +492,7 @@
     selectedSchoolZones = findZonesForPoint(lng, lat);
     for (const zone of selectedSchoolZones) {
       zone.layer.setStyle(schoolZoneHighlight(zone.color));
-      const zoneDbn = zone.feature.properties.dbn ?? "";
-      const dbns = zoneDbn.split(",").map((d) => d.trim()).filter(Boolean);
+      const dbns = parseDbns(zone.feature.properties.dbn);
       const mainSchools = __schoolPoints.filter(
         (pt) => pt.dbn && dbns.includes(pt.dbn)
       );
@@ -504,6 +534,7 @@
     Excellent: 3
   };
   var allMarkers = [];
+  var passingDbns = /* @__PURE__ */ new Set();
   __schoolPoints.forEach((p) => {
     const isMobile2 = window.innerWidth <= 640;
     const marker = L.marker([p.lat, p.lng], { icon: makePinIcon(p) }).bindPopup(
@@ -525,6 +556,7 @@
       'input[name="commute-filter"]:checked'
     )?.value ?? "any";
     const maxCommute = commuteValue === "any" ? Infinity : parseInt(commuteValue);
+    const hideSchools = document.getElementById("hide-schools")?.checked ?? false;
     for (const { marker, p } of allMarkers) {
       const commuteMax = p.commuteRange.max ?? Infinity;
       const passesCommute = commuteMax <= maxCommute;
@@ -543,13 +575,19 @@
         const ranks = [elaRating, mathRating, safetyRating, msPassRating].filter(Boolean).map((r) => RATING_RANK[r] ?? -1);
         passesAcademic = Math.min(...ranks) >= minRank;
       }
-      const visible = passesCommute && passesAcademic;
+      const passesFilters = passesCommute && passesAcademic;
+      const visible = !hideSchools && passesFilters;
       if (visible && !schoolPinsLayer.hasLayer(marker)) {
         schoolPinsLayer.addLayer(marker);
       } else if (!visible && schoolPinsLayer.hasLayer(marker)) {
         schoolPinsLayer.removeLayer(marker);
       }
+      if (p.dbn) {
+        if (passesFilters) passingDbns.add(p.dbn);
+        else passingDbns.delete(p.dbn);
+      }
     }
+    updateEligibleZonesLayer();
   }
   map.on("click", deselect);
   document.addEventListener("keydown", (e) => {
@@ -594,6 +632,7 @@
   document.querySelectorAll('input[name="commute-filter"]').forEach((el) => {
     el.addEventListener("change", applyFilters);
   });
+  document.getElementById("hide-schools").addEventListener("change", applyFilters);
 
   // src/client/search-client.ts
   var searchInput = document.getElementById("search-input");

@@ -258,6 +258,10 @@ const html = `<!DOCTYPE html>
       <label class="radio-row"><input type="radio" name="commute-filter" value="45"/>≤ 45 min</label>
       <label class="radio-row"><input type="radio" name="commute-filter" value="any" />Any</label>
       </div>
+      <div class="control-section-label" style="margin-top:10px">Schools</div>
+      <label class="toggle-row"><input type="checkbox" id="hide-schools" />Hide all schools</label>
+      <div class="control-section-label" style="margin-top:10px">Zones</div>
+      <label class="toggle-row"><input type="checkbox" id="show-eligible-zones" />Eligible zones</label>
     </div>
   </div>
   <div id="legend">

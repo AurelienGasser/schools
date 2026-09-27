@@ -1,4 +1,5 @@
 import { pointInGeom } from "../common/geometry.js";
+import { updateEligibleZonesLayer } from "./eligible-zones.js";
 
 declare const L: any;
 declare const OverlappingMarkerSpiderfier: any;
@@ -48,7 +49,7 @@ L.tileLayer(
   null,
 ).addTo(map);
 
-const schoolPinsLayer = L.layerGroup().addTo(map);
+export const schoolPinsLayer = L.layerGroup().addTo(map);
 
 function buildLayer(zones: ZoneSet): any {
   const layer = L.layerGroup();
@@ -97,9 +98,7 @@ const zipLayer = L.geoJSON(__realEstatePriceZipCodes, {
       feature.properties.avgPrice,
     );
     return {
-      color: "#64748b",
-      weight: 1,
-      opacity: 0.5,
+      stroke: false,
       fillColor,
       fillOpacity,
     };
@@ -130,13 +129,13 @@ const schoolZoneHighlight = (color: string) => ({
   fillOpacity: 0.25,
 });
 
-type ZoneEntry = {
+export type ZoneEntry = {
   feature: any;
   layer: any;
   color: string;
   zoneType: "elementary" | "middle";
 };
-const allZones: ZoneEntry[] = [];
+export const allZones: ZoneEntry[] = [];
 
 function findZonesForPoint(lng: number, lat: number): ZoneEntry[] {
   const found: ZoneEntry[] = [];
@@ -175,6 +174,11 @@ L.layerGroup([
   makeZoneGeoJSON(__middleZones, "#ea580c", "middle"),
   makeZoneGeoJSON(__elementaryZones, "#2563eb", "elementary"),
 ]).addTo(map);
+
+export function parseDbns(dbn: string | null | undefined): string[] {
+  return (dbn ?? "").split(",").map((d) => d.trim()).filter(Boolean);
+}
+
 
 let selectedSchoolZones: ZoneEntry[] = [];
 let selectedMainSchoolCircles: any[] = [];
@@ -550,11 +554,7 @@ function zoneInfo(zone: ZoneEntry): string {
     ? `District ${parseInt(props.schooldist)}`
     : "";
   const remarks = props.remarks ?? "";
-  const dbns = (props.dbn ?? "")
-    .split(",")
-    .map((d: string) => d.trim())
-    .filter(Boolean)
-    .join(", ");
+  const dbns = parseDbns(props.dbn).join(", ");
   return [label, district, remarks, dbns].filter(Boolean).join(" · ");
 }
 
@@ -626,11 +626,7 @@ export function selectZonesForPoint(lat: number, lng: number): ZoneEntry[] {
   selectedSchoolZones = findZonesForPoint(lng, lat);
   for (const zone of selectedSchoolZones) {
     zone.layer.setStyle(schoolZoneHighlight(zone.color));
-    const zoneDbn = zone.feature.properties.dbn ?? "";
-    const dbns = zoneDbn
-      .split(",")
-      .map((d: string) => d.trim())
-      .filter(Boolean);
+    const dbns = parseDbns(zone.feature.properties.dbn);
     const mainSchools = __schoolPoints.filter(
       (pt) => pt.dbn && dbns.includes(pt.dbn),
     );
@@ -674,7 +670,8 @@ const RATING_RANK: Record<string, number> = {
   Excellent: 3,
 };
 
-const allMarkers: Array<{ marker: any; p: (typeof __schoolPoints)[0] }> = [];
+export const allMarkers: Array<{ marker: any; p: (typeof __schoolPoints)[0] }> = [];
+export const passingDbns = new Set<string>();
 
 // Pins using SVG divIcon
 __schoolPoints.forEach((p) => {
@@ -711,6 +708,9 @@ function applyFilters(): void {
       ) as HTMLInputElement
     )?.value ?? "any";
   const maxCommute = commuteValue === "any" ? Infinity : parseInt(commuteValue);
+  const hideSchools =
+    (document.getElementById("hide-schools") as HTMLInputElement)?.checked ??
+    false;
 
   for (const { marker, p } of allMarkers) {
     // Commute filter
@@ -741,13 +741,19 @@ function applyFilters(): void {
       passesAcademic = Math.min(...ranks) >= minRank;
     }
 
-    const visible = passesCommute && passesAcademic;
+    const passesFilters = passesCommute && passesAcademic;
+    const visible = !hideSchools && passesFilters;
     if (visible && !schoolPinsLayer.hasLayer(marker)) {
       schoolPinsLayer.addLayer(marker);
     } else if (!visible && schoolPinsLayer.hasLayer(marker)) {
       schoolPinsLayer.removeLayer(marker);
     }
+    if (p.dbn) {
+      if (passesFilters) passingDbns.add(p.dbn);
+      else passingDbns.delete(p.dbn);
+    }
   }
+  updateEligibleZonesLayer();
 }
 
 map.on("click", deselect);
@@ -808,3 +814,7 @@ document
 document.querySelectorAll('input[name="commute-filter"]').forEach((el) => {
   el.addEventListener("change", applyFilters);
 });
+document
+  .getElementById("hide-schools")!
+  .addEventListener("change", applyFilters);
+
